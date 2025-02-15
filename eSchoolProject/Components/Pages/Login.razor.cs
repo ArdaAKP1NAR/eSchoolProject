@@ -1,6 +1,7 @@
 using eSchoolDatabase;
 using eSchoolDatabase.Models;
 using eSchoolDatabase.Repositories.Interface;
+using eSchoolProject.Authorization.Interface;
 using eSchoolProject.Exceptions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -17,6 +18,8 @@ namespace eSchoolProject.Components.Pages
         [CascadingParameter] public HttpContext? httpContext { get; set; }
         [Inject] IServiceScopeFactory serviceScopeFactory { get; init; } = default!;
         [Inject] NavigationManager navigationManager { get; set; } = default!;
+        [Inject] IAuthorizationService AuthorizationService { get; init; } = default!;
+
 
         private async Task HandleLoginAsync()
         {

@@ -11,6 +11,6 @@ namespace eSchoolDatabase.ViewModels
     {
         public long Id { get; set; }
         public string Name { get; set; } = default!;
-        public AddressViewModel AddressViewModel { get; set; } = default!;
+        public AddressViewModel Address { get; set; } = default!;
     }
 }

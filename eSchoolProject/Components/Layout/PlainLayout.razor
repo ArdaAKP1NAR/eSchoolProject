@@ -1,5 +1,13 @@
 ﻿@inherits LayoutComponentBase
 @rendermode InteractiveWebAssembly
 <main>
-    @Body
+    <AuthorizeView>
+        <Authorized>
+            YOU ARE LOGGED IN BITCH RETURN TO YO MOMMA
+        </Authorized>
+        <NotAuthorized>
+            @Body
+
+        </NotAuthorized>
+    </AuthorizeView>
 </main>

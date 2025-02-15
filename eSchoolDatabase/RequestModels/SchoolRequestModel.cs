@@ -10,13 +10,13 @@ namespace eSchoolDatabase.RequestModel
     public class SchoolRequestModel
     {
         public string Name { get; set; } = default!;
-        public AddressRequestModel Adress { get; set; } = default!;
+        public AddressRequestModel Address { get; set; } = default!;
 
         public static SchoolRequestModel New()
         {
             return new()
             {
-                Adress = new()
+                Address = new()
             };
         }
     }

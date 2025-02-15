@@ -12,17 +12,17 @@ namespace eSchoolProject.Components.PopupComponent.Validator
                 .NotEmpty().WithMessage("Name cannot be empty.")
                             .Matches("^[a-zA-Z]+$").WithMessage("Name must contain only letters.");
 
-            RuleFor(a => a.Adress.City)
+            RuleFor(a => a.Address.City)
                 .NotNull().WithMessage("City is required.")
                 .NotEmpty().WithMessage("City cannot be empty.")
                             .Matches("^[a-zA-Z]+$").WithMessage("City must contain only letters.");
 
-            RuleFor(a => a.Adress.District)
+            RuleFor(a => a.Address.District)
                 .NotNull().WithMessage("District is required.")
                 .NotEmpty().WithMessage("District cannot be empty.")
                             .Matches("^[a-zA-Z]+$").WithMessage("District must contain only letters.");
 
-            RuleFor(a => a.Adress.Street)
+            RuleFor(a => a.Address.Street)
                 .NotNull().WithMessage("Street is required.")
                 .NotEmpty().WithMessage("Street cannot be empty.");
         }
