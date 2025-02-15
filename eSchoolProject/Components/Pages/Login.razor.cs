@@ -16,14 +16,14 @@ namespace eSchoolProject.Components.Pages
     {
         [SupplyParameterFromForm] public LoginModel loginModel { get; set; } = new();
         [CascadingParameter] public HttpContext? httpContext { get; set; }
-        [Inject] IServiceScopeFactory serviceScopeFactory { get; init; } = default!;
-        [Inject] NavigationManager navigationManager { get; set; } = default!;
+        [Inject] IServiceScopeFactory ServiceScopeFactory { get; init; } = default!;
+        [Inject] NavigationManager NavigationManager { get; set; } = default!;
         [Inject] IAuthorizationService AuthorizationService { get; init; } = default!;
 
 
         private async Task HandleLoginAsync()
         {
-            using var scope = serviceScopeFactory.CreateScope();
+            using var scope = ServiceScopeFactory.CreateScope();
             var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
 
             var user = await userRepository.GetAll()
@@ -44,7 +44,7 @@ namespace eSchoolProject.Components.Pages
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
                 await httpContext.SignInAsync(principal);
-                navigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/");
             }
         }
         public class LoginModel

@@ -21,7 +21,7 @@ namespace eSchoolDatabase
                 .HasOne(a => a.Student)
                 .WithMany()
                 .HasForeignKey(a => a.StudentId)
-                .OnDelete(DeleteBehavior.Restrict);  // Öğrenci silindiğinde Attendance kayıtları silinmez
+                .OnDelete(DeleteBehavior.Restrict);  // Ogrenci vbir attendance a bagliysa silinemez.
 
             modelBuilder.Entity<Grade>()
                 .HasOne(g => g.Student)

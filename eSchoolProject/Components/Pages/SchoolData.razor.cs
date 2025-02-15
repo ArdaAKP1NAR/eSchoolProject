@@ -10,7 +10,7 @@ namespace eSchoolProject.Components.Pages
     {
         [Inject] private IServiceScopeFactory ServiceScopeFactory { get; init; } = default!;
         [Inject] private NavigationManager NavigationManager { get; init; } = default!;
-        private CancellationTokenSource CancellationTokenSource = new();
+        private CancellationTokenSource cancellationTokenSource = new();
         private string FilterText = string.Empty;
         private bool IsSchoolPopupVisible = false;
         private MudDataGrid<SchoolViewModel> MudDataGrid { get; set; } = default!;
@@ -39,8 +39,8 @@ namespace eSchoolProject.Components.Pages
         }
         public void Dispose()
         {
-            CancellationTokenSource.Cancel();
-            CancellationTokenSource.Dispose();
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
         }
     }
 }
