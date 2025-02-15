@@ -1,0 +1,18 @@
+﻿.header-contain {
+    display: flex;
+    justify-content: end;
+}
+.add-button:hover {
+    background-color: darkgoldenrod;
+}
+.add-button {
+    border-radius: 5px;
+    border-color: transparent;
+    background-color: var(--bs-success);
+    float: right;
+    color: white;
+}
+
+.button-icon-alignment {
+    padding: 10px;
+}

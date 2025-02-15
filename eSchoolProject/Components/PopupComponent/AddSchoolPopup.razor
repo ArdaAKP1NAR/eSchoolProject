@@ -1,0 +1,24 @@
+﻿@using Blazored.FluentValidation
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<Popup IsVisible="IsSchoolPopupVisible" PopupClosed="Close">
+	<Body>
+		@if (SchoolRequestModel != null)
+		{
+			<EditForm OnValidSubmit="AddSchoolAsync" Model="SchoolRequestModel">
+				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
+				<h3>Add School</h3>
+				<MudTextField @bind-Value=SchoolRequestModel.Name For="@(() => SchoolRequestModel.Name)" Label="School name:" Variant="Variant.Text" />
+				<MudTextField @bind-Value="SchoolRequestModel.Adress.City" For="@(() => SchoolRequestModel.Adress.City)" Label="City" Variant="Variant.Text" />
+				<MudTextField @bind-Value="SchoolRequestModel.Adress.District" For="@(() => SchoolRequestModel.Adress.District)" Label="City" Variant="Variant.Text" />
+				<MudTextField @bind-Value="SchoolRequestModel.Adress.Street" For="@(() => SchoolRequestModel.Adress.Street)" Label="City" Variant="Variant.Text" />
+
+				<div class="popup-actions">
+					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Add</MudButton>
+				</div>
+			</EditForm>
+		}
+	</Body>
+</Popup>
+

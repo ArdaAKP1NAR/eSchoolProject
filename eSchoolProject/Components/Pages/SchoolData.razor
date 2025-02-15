@@ -1,0 +1,35 @@
+﻿@page "/SchoolData"
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using eSchoolDatabase.ViewModels
+@using eSchoolProject.Authorization
+
+@attribute [Authorize]
+<MudCard Elevation="2">
+	<div class="m-3">
+		<div class="header-contain">
+			<MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddSchoolPopup">
+			</MudButton>
+		</div>
+		<MudButton OnClick="NewSchoolAdded">nigga</MudButton>
+		<MudDataGrid @ref=MudDataGrid  T="SchoolViewModel" ServerData="LoadDataAsync" SortMode="SortMode.Multiple" Filterable="true">
+			<ToolBarContent>
+				<MudText Typo="Typo.h6">Schools</MudText>
+				<MudSpacer />
+				<MudTextField @bind-Value="FilterText" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+							  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
+				</MudTextField>
+			</ToolBarContent>
+			<Columns>
+				<PropertyColumn Property="x => x.Name" />
+				<PropertyColumn Property="x => x.AddressViewModel.City" />
+				<PropertyColumn Property="x => x.AddressViewModel.District" />
+				<PropertyColumn Property="x => x.AddressViewModel.Street" />
+			</Columns>
+		</MudDataGrid>
+	</div>
+</MudCard>
+<AddSchoolPopup 
+				IsSchoolPopupVisible="IsSchoolPopupVisible"
+				PopupClosed="() => {IsSchoolPopupVisible = false;}"
+				SaveClicked="NewSchoolAdded" />

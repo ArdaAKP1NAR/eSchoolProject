@@ -1,0 +1,31 @@
+﻿@page "/login"
+@using MudBlazor
+
+<div class="login-container">
+	<div class="login-box">
+		<!-- Sol Kısım: Görsel ve Tanıtım Yazısı -->
+		<div class="left-panel">
+			<div class="overlay"></div>
+			<div class="left-content">
+				<h1>Welcome Back</h1>
+				<p>Join us and manage your school activities easily with our system.</p>
+			</div>
+		</div>
+
+		<!-- Sağ Kısım: Giriş Formu -->
+		<div class="right-panel">
+			<div class="right-content">
+				<h2>Login</h2>
+				<EditForm FormName="login" Model="@loginModel" OnValidSubmit="HandleLoginAsync">
+					<div class="input-field">
+						<InputText Placeholder="Identity Number" @bind-Value="loginModel.IdentityNumber" Required="true" Variant="Variant.Outlined" Class="input-field" />
+					</div>
+					<div class="input-field">
+						<InputText Placeholder="Password" @bind-Value="loginModel.Password" Required="true" Variant="Variant.Outlined" InputType="InputType.Password" Class="input-field" />
+					</div>
+					<MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" FullWidth="true" Class="login-button" @formname="login">LOGIN</MudButton>
+				</EditForm>
+			</div>
+		</div>
+	</div>
+</div>

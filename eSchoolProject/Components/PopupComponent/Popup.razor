@@ -1,0 +1,10 @@
+﻿@if (IsVisible)
+{
+	<div class="popup-container">
+		<div class="popup-content">
+			<button class="popup-close-button" @onclick="Close">×</button>
+			@Body
+		</div>
+	</div>
+}
+
