@@ -14,7 +14,9 @@ namespace eSchoolProject.Components.Pages
         private string FilterText = string.Empty;
         private bool IsSchoolPopupVisible = false;
         private MudDataGrid<SchoolViewModel> MudDataGrid { get; set; } = default!;
-
+        private Func<SchoolViewModel, bool> QuickFilter => SchoolViewModel =>
+            string.IsNullOrWhiteSpace(FilterText) ||
+            SchoolViewModel.Name.Contains(FilterText,StringComparison.OrdinalIgnoreCase);
 
         private async Task<GridData<SchoolViewModel>> LoadDataAsync(GridState<SchoolViewModel> state)
         {
@@ -27,7 +29,10 @@ namespace eSchoolProject.Components.Pages
                 Items = schools,
                 TotalItems = schools.Count
             };
-  
+        }
+        private void NavigateToSchool(long Id)
+        {
+            NavigationManager.NavigateTo($"/SchoolOverView/{Id}");
         }
         private void OpenAddSchoolPopup()
         {

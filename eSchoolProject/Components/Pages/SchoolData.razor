@@ -8,13 +8,14 @@
 <MudCard Elevation="2">
 	<div class="m-3">
 		<div class="header-contain">
-			<MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddSchoolPopup">
+			<h2>School</h2>
+			<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddSchoolPopup"
+					   Style="justify-content: end; border-radius: 5px; background-color: var(--bs-success); float: right; color: white;">
 			</MudButton>
 		</div>
-		<MudButton OnClick="NewSchoolAdded">nigga</MudButton>
-		<MudDataGrid @ref=MudDataGrid  T="SchoolViewModel" ServerData="LoadDataAsync" SortMode="SortMode.Multiple" Filterable="true">
+		<MudDataGrid @ref=MudDataGrid T="SchoolViewModel" ServerData="LoadDataAsync" SortMode="SortMode.Multiple" Filterable="true">
 			<ToolBarContent>
-				<MudText Typo="Typo.h6">Schools</MudText>
+				<MudText Typo="Typo.h6">School List</MudText>
 				<MudSpacer />
 				<MudTextField @bind-Value="FilterText" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
 							  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
@@ -25,11 +26,18 @@
 				<PropertyColumn Property="x => x.Address.City" />
 				<PropertyColumn Property="x => x.Address.District" />
 				<PropertyColumn Property="x => x.Address.Street" />
+				<TemplateColumn Title="SchoolOverView">
+					<CellTemplate>
+						<MudButton Variant="Variant.Outlined" Color="Color.Dark" StartIcon="@Icons.Material.Filled.Info"
+								   OnClick="() => NavigateToSchool(context.Item.Id)">
+							School Info
+						</MudButton>
+					</CellTemplate>
+				</TemplateColumn>
 			</Columns>
 		</MudDataGrid>
 	</div>
 </MudCard>
-<AddSchoolPopup 
-				IsSchoolPopupVisible="IsSchoolPopupVisible"
+<AddSchoolPopup IsSchoolPopupVisible="IsSchoolPopupVisible"
 				PopupClosed="() => {IsSchoolPopupVisible = false;}"
 				SaveClicked="NewSchoolAdded" />

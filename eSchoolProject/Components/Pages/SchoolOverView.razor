@@ -1,0 +1,9 @@
+﻿@page "/SchoolOverView/{SchoolId:long}"
+<h3>SchoolOverView</h3>
+<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenManagerPopup">
+</MudButton>
+
+<ManagerManagementPopup IsManagerPopupVisible="IsManagerPopupVisible"
+						SchoolId="SchoolId" 
+						PopupClosed = "() => {IsManagerPopupVisible = false;}"
+						SaveClicked="OnManagerSaved" />

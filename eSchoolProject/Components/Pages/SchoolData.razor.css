@@ -1,9 +1,6 @@
 ﻿.header-contain {
     display: flex;
-    justify-content: end;
-}
-.add-button:hover {
-    background-color: darkgoldenrod;
+    justify-content: space-between;
 }
 .add-button {
     border-radius: 5px;

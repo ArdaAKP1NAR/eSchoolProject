@@ -18,7 +18,8 @@ namespace eSchoolProject.Mapper
             CreateMap<Address, AddressViewModel>().ReverseMap();
             CreateMap<AddressRequestModel, AddressViewModel>().ReverseMap();
 
-            CreateMap<Manager, ManagerRequestModel>();
+            CreateMap<Manager, ManagerRequestModel>().ReverseMap();
+            CreateMap<Manager, ManagerViewModel>().ReverseMap();
         }
     }
 }

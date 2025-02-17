@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eSchoolDatabase.RequestModel
+namespace eSchoolDatabase.ViewModels
 {
-    public class ManagerRequestModel
+    public class ManagerViewModel
     {
+        public long Id { get; set; }
         public string IdentityNumber { get; set; } = default!;
         public string Password { get; set; } = default!;
         public string Name { get; set; } = default!;

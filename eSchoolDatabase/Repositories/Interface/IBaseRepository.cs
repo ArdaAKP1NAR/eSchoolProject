@@ -7,7 +7,7 @@ namespace eSchoolDatabase.Repositories.Interface
         Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);
         Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
         Task DeleteAsyncById(long Id, CancellationToken cancellationToken = default);
-        IQueryable<T> GetAll();
+        IQueryable<T> GetAll(CancellationToken cancellationToken = default);
         Task<T?> GetByIdAsync(long Id, CancellationToken cancellationToken = default);
         Task<T?> GetByIdAsync(long? Id, CancellationToken cancellationToken = default);
         Task UpdateAsync(T entity, CancellationToken cancellationToken = default);

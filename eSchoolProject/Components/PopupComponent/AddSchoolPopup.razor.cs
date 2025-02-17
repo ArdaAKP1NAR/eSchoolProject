@@ -11,10 +11,9 @@ namespace eSchoolProject.Components.PopupComponent
     public partial class AddSchoolPopup
     {
         private bool _visible;
-
         [Inject] private IServiceScopeFactory ServiceScopeFactory { get; init; } = default!;
         [Inject] private ISnackbar Snackbar { get; init; } = default!;
-
+        private CancellationTokenSource cancellationTokenSource = new();
         [Parameter] public bool IsSchoolPopupVisible { get => _visible; set { visibleChanged(value); } }
         private SchoolRequestModel SchoolRequestModel { get; set; } = new();
         [Parameter] public EventCallback PopupClosed { get; set; }
@@ -36,15 +35,13 @@ namespace eSchoolProject.Components.PopupComponent
             using var scope = ServiceScopeFactory.CreateScope();
             var service = scope.ServiceProvider.GetRequiredService<ISchoolService>();
 
-            await service.AddSchoolAsync(SchoolRequestModel, new());
+            await service.AddSchoolAsync(SchoolRequestModel, cancellationTokenSource.Token);
             var schools = await service.GetAllSchoolsAsync();
 
             Snackbar.Add("School saved successfully!", Severity.Success);
             await SaveClicked.InvokeAsync();
-
+            IsSchoolPopupVisible = false;
         }
-
-
         private async Task Close()
         {
             IsSchoolPopupVisible = false;

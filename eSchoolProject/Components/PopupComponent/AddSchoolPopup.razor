@@ -15,6 +15,7 @@
 				<MudTextField @bind-Value="SchoolRequestModel.Address.Street" For="@(() => SchoolRequestModel.Address.Street)" Label="City" Variant="Variant.Text" />
 
 				<div class="popup-actions">
+					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="Close">Cancel</MudButton>
 					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Add</MudButton>
 				</div>
 			</EditForm>
