@@ -1,0 +1,145 @@
+﻿@page "/SchoolManagement/{SchoolId:long}"
+@if (schoolViewModel != null)
+{
+	<MudCard Elevation="2">
+		<div class="m-3">
+			<h3>School Overview: @schoolViewModel.Name</h3>
+			<LabelComponent Label="City">
+				@schoolViewModel.Address.City
+			</LabelComponent>
+			<LabelComponent Label="District">
+				@schoolViewModel.Address.District
+			</LabelComponent>
+			<LabelComponent Label="Street">
+				@schoolViewModel.Address.Street
+			</LabelComponent>
+
+			<div class="ard-tabcontainer">
+				<div @onclick="@(() => SetActiveTab("Managers"))" class=@((ActiveTab == "Managers" ? "tab-button-active" : "tab-button") + " tab-button-spacing" )>
+					<div class="tab-button-design">
+						Managers
+					</div>
+				</div>
+				<div @onclick="@(() => SetActiveTab("Teachers"))" class=@((ActiveTab == "Teachers" ? "tab-button-active" : "tab-button") + " tab-button-spacing" )>
+					<div class="tab-button-design">
+						Teachers
+					</div>
+				</div>
+				<div @onclick="@(() => SetActiveTab("Students"))" class=@((ActiveTab == "Students" ? "tab-button-active" : "tab-button") + " tab-button-spacing" )>
+					<div class="tab-button-design">
+						Students
+					</div>
+				</div>
+				<div @onclick="@(() => SetActiveTab("Classes"))" class=@((ActiveTab == "Classes" ? "tab-button-active" : "tab-button") + " tab-button-spacing" )>
+					<div class="tab-button-design">
+						Classes
+					</div>
+				</div>
+			</div>
+
+			@if (ActiveTab == "Managers")
+			{
+				<div class="tab-container">
+					<div class="tab-content">
+						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="@schoolViewModel.Managers.ToList()">
+							<ToolBarContent>
+								<MudText Typo="Typo.h6">Manager List</MudText>
+								<MudSpacer />
+								<div class="add-button-management">
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenManagerPopup" />
+								</div>
+							</ToolBarContent>
+							<Columns>
+								<PropertyColumn Property="x => x.Name" Title="Name" />
+								<PropertyColumn Property="x => x.IdentityNumber" Title="Identity number" />
+							</Columns>
+						</MudDataGrid>
+					</div>
+				</div>
+			}
+			@if (ActiveTab == "Teachers") // gerekli eklemeler yapılacak
+			{
+				<div class="tab-container">
+					<div class="tab-content">
+						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="@schoolViewModel.Teachers.ToList()">
+							<ToolBarContent>
+								<MudText Typo="Typo.h6">Teacher List</MudText>
+								<MudSpacer />
+								<div class="add-button-management">
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenTeacherPopup" />
+								</div>
+							</ToolBarContent>
+							<Columns>
+								<PropertyColumn Property="x => x.Name" Title="Name" />
+								<PropertyColumn Property="x => x.IdentityNumber" Title="Identity number" />
+								<PropertyColumn Property="x => x.PhoneNumber" Title="Phone number" />
+							</Columns>
+						</MudDataGrid>
+					</div>
+				</div>
+			}
+			@if (ActiveTab == "Students") // gerekli eklemeler yapılacak
+			{
+				<div class="tab-container">
+					<div class="tab-content">
+						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="@schoolViewModel.Students.ToList()">
+							<ToolBarContent>
+								<MudText Typo="Typo.h6">Student List</MudText>
+								<MudSpacer />
+								<div class="add-button-management">
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenStudentPopup" />
+								</div>
+							</ToolBarContent>
+							<Columns>
+								<PropertyColumn Property="x => x.Name" Title="Name" />
+								<PropertyColumn Property="x => x.StudentNumber" Title="Student number" />
+								<PropertyColumn Property="x => x.IdentityNumber" Title="Identity number" />
+								<PropertyColumn Property="x => x.ParentNumber" Title="Parent number" />
+								<PropertyColumn Property="x => x.BirthdayDate" Title="Birthday date" />
+								<PropertyColumn Property="x => x.Address.District" Title="District" />
+								<PropertyColumn Property="x => x.Address.Street" Title="Street" />
+							</Columns>
+						</MudDataGrid>
+					</div>
+				</div>
+			}
+			@if (ActiveTab == "Classes") // gerekli eklemeler yapılacak
+			{
+				<div class="tab-container">
+					<div class="tab-content">
+						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="@schoolViewModel.Classes.ToList()">
+							<ToolBarContent>
+								<MudText Typo="Typo.h6">Class List</MudText>
+								<MudSpacer />
+								<div class="add-button-management">
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenClassPopup" />
+								</div>
+							</ToolBarContent>
+							<Columns>
+								<PropertyColumn Property="x => x.ClassName" Title="Name" />
+							</Columns>
+						</MudDataGrid>
+					</div>
+				</div>
+			}
+		</div>
+	</MudCard>
+
+	<ManagerManagementPopup IsManagerPopupVisible="IsManagerPopupVisible"
+							SchoolId="SchoolId"
+							PopupClosed="() => {IsManagerPopupVisible = false;}"
+							SaveClicked="OnSavedAsync" />
+	<TeacherManagementPopup IsTeacherPopupVisible="IsTeacherPopupVisible"
+							SchoolId="SchoolId"
+							PopupClosed="() => {IsTeacherPopupVisible = false;}"
+							SaveClicked="OnSavedAsync" />
+	<StudentManagementPopup IsStudentPopupVisible="IsStudentPopupVisible"
+							SchoolId="SchoolId"
+							PopupClosed="() => {IsStudentPopupVisible = false;}"
+							SaveClicked="OnSavedAsync" />
+	<ClassManagementPopup IsClassPopupVisible="IsClassPopupVisible"
+						  SchoolId="SchoolId"
+						  PopupClosed="() => {IsClassPopupVisible = false;}"
+						  SaveClicked="OnSavedAsync" />
+
+}

@@ -4,15 +4,15 @@
 
 <Popup IsVisible="IsManagerPopupVisible" PopupClosed="Close">
 	<Body>
-		@if (ManagerRequestModel != null || SchoolId != 0)
+		@if (ManagerRequestModel != null && SchoolId != 0)
 		{
+			<h3>Add manager</h3>
 			<EditForm OnValidSubmit="AddManagerAsync" Model="ManagerRequestModel">
 				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
-				<h3>Add School</h3>
-				<MudTextField @bind-Value=ManagerRequestModel.Name For="@(() => ManagerRequestModel.Name)" Label="Manager name:" Variant="Variant.Text" />
-				<MudTextField @bind-Value="ManagerRequestModel.IdentityNumber" For="@(() => ManagerRequestModel.IdentityNumber)" Label="IdentityNumber" Variant="Variant.Text" />
-				<MudTextField @bind-Value="ManagerRequestModel.Password" For="@(() => ManagerRequestModel.Password)" Label="Password" Variant="Variant.Text" 
-					InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
+				<MudTextField @bind-Value=ManagerRequestModel.Name For="@(() => ManagerRequestModel.Name)" Label="Name" />
+				<MudTextField @bind-Value="ManagerRequestModel.IdentityNumber" For="@(() => ManagerRequestModel.IdentityNumber)" Label="Identity number" />
+				<MudTextField @bind-Value="ManagerRequestModel.Password" For="@(() => ManagerRequestModel.Password)" Label="Password"
+							  InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
 							  OnAdornmentClick="PasswordVisibility" AdornmentAriaLabel="Show Password" />
 
 				<div class="popup-actions">

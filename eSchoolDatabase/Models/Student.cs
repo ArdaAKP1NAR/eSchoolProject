@@ -21,10 +21,10 @@ namespace eSchoolDatabase.Models
         public long AddressId { get; set; }
         [MaxLength(100)]
         public string ParentNumber { get; set; } = default!;
-        public List<Lesson> Lessons { get; set; } = new();
-        public Class Class { get; set; } = default!;
-        public long ClassId { get; set; }
-        public List<Grade> Grades { get; set; } = new();
+        public List<Lesson>? Lessons { get; set; } = default!;
+        public Class? Class { get; set; } = default!;
+        public long? ClassId { get; set; }
+        public List<Grade>? Grades { get; set; } = default!;
         public School School { get; set; } = default!;
         public long SchoolId { get; set; }
     }

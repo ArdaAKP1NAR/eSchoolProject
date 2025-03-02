@@ -1,9 +1,36 @@
-﻿@page "/SchoolOverView/{SchoolId:long}"
-<h3>SchoolOverView</h3>
-<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenManagerPopup">
-</MudButton>
+﻿@page "/SchoolOverview"
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@using eSchoolDatabase.ViewModels
+@using eSchoolProject.Authorization
 
-<ManagerManagementPopup IsManagerPopupVisible="IsManagerPopupVisible"
-						SchoolId="SchoolId" 
-						PopupClosed = "() => {IsManagerPopupVisible = false;}"
-						SaveClicked="OnManagerSaved" />
+@attribute [Authorize]
+<MudCard Elevation="2">
+	<div class="m-3">
+	<MudDataGrid @ref=MudDataGrid T="SchoolViewModel" ServerData="LoadDataAsync" SortMode="SortMode.Multiple" Filterable="true">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">School List</MudText>
+			<MudSpacer />
+			<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddSchoolPopup">
+			</MudButton>
+		</ToolBarContent>
+		<Columns>
+			<PropertyColumn Property="x => x.Name" />
+			<PropertyColumn Property="x => x.Address.City" />
+			<PropertyColumn Property="x => x.Address.District" />
+			<PropertyColumn Property="x => x.Address.Street" />
+			<TemplateColumn Title="School Overview">
+				<CellTemplate>
+					<MudButton Variant="Variant.Outlined" Color="Color.Dark" StartIcon="@Icons.Material.Filled.Info"
+							   OnClick="() => NavigateToSchool(context.Item.Id)">
+						School Info
+					</MudButton>
+				</CellTemplate>
+			</TemplateColumn>
+		</Columns>
+	</MudDataGrid>
+	</div>
+</MudCard>
+<AddSchoolPopup IsSchoolPopupVisible="IsSchoolPopupVisible"
+				PopupClosed="() => {IsSchoolPopupVisible = false;}"
+				SaveClicked="NewSchoolAdded" />

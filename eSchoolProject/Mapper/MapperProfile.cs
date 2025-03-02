@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using eSchoolDatabase.Models;
 using eSchoolDatabase.RequestModel;
+using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
 
 namespace eSchoolProject.Mapper
@@ -9,8 +10,7 @@ namespace eSchoolProject.Mapper
     {
         public MapperProfile()
         {
-            CreateMap<School, SchoolRequestModel>()
-                .ReverseMap();
+            CreateMap<School, SchoolRequestModel>().ReverseMap();
             CreateMap<School, SchoolViewModel>().ReverseMap();
             CreateMap<SchoolRequestModel, SchoolViewModel>().ReverseMap();
 
@@ -20,6 +20,19 @@ namespace eSchoolProject.Mapper
 
             CreateMap<Manager, ManagerRequestModel>().ReverseMap();
             CreateMap<Manager, ManagerViewModel>().ReverseMap();
+
+            CreateMap<Teacher, TeacherRequestModel>().ReverseMap();
+            CreateMap<Teacher, TeacherViewModel>().ReverseMap();
+
+            CreateMap<Student, StudentRequestModel>().ReverseMap();
+            CreateMap<Student, StudentViewModel>().ReverseMap();
+
+            CreateMap<Class, ClassViewModel>().ReverseMap();
+            CreateMap<Class, ClassRequestModel>().ReverseMap();
+
+            CreateMap<Lesson, LessonViewModel>().ReverseMap();
+
+            CreateMap<Grade, GradeViewModel>().ReverseMap();
         }
     }
 }

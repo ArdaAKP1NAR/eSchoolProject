@@ -21,8 +21,7 @@ namespace eSchoolProject.Services
             {
                 throw new InvalidIdentityNumberException("This manager already exist");
             }
-            manager.School = school;
-            manager.SchoolId = schoolId;
+            manager.Password = BCrypt.Net.BCrypt.HashPassword(manager.Password);
             await managerRepository.AddAsync(manager, cancellationToken);
             await schoolRepository.UpdateAsync(school, cancellationToken);
         }

@@ -1,0 +1,76 @@
+﻿.header-contain {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-button {
+    border-radius: 5px;
+    border-color: transparent;
+    background-color: var(--bs-success);
+    float: right;
+    color: white;
+}
+.add-button-management {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+}
+.button-icon-alignment {
+    padding: 10px;
+}
+.tab-button-design {
+    margin: 10px;
+}
+.tab-button {
+    cursor: pointer;
+    position: relative;
+    top: 1px;
+    background-color: var(--bs-gray-200);
+    color: var(--bs-gray-600);
+}
+
+.tab-button-active {
+    border-top-color: var(--bs-blue);
+    border-top-width: 5px;
+    background-color: var(--bs-white);
+    color: black;
+    position: relative;
+    top: 1px;
+    border: 1px solid var(--bs-gray-400);
+    border-bottom: 0px;
+}
+
+.ard-tabcontainer {
+    display: flex;
+}
+
+.tab-container {
+    padding: 10px;
+    background-color: var(--bs-white);
+    border: 1px solid var(--bs-gray-400);
+}
+
+.tab-content {
+    width: 1600px;
+}
+/* Tablo */
+table {
+    width: 100%; /* Tabloyu tam genişlikte yapar */
+    border-collapse: collapse; /* Tablo hücreleri arasındaki boşlukları kaldırır */
+    margin-top: 20px; /* Tabloyu üstten 20px boşlukla ayırır */
+}
+
+th, td {
+    padding: 12px; /* Hücrelerin içindeki boşluğu ayarlar */
+    text-align: left; /* Metni sola hizalar */
+    border-bottom: 1px solid #ddd; /* Hücrelerin altına gri bir kenarlık ekler */
+}
+
+th {
+    background-color: #f2f2f2; /* Başlık hücrelerinin arka plan rengini açar */
+    font-weight: bold; /* Başlık hücrelerinin yazısını kalın yapar */
+}
+
+tr:hover {
+    background-color: #f9f9f9; /* Satır üzerine gelindiğinde arka plan rengini değiştirir */
+}

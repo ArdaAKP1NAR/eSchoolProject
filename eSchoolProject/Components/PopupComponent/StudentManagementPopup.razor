@@ -1,0 +1,30 @@
+﻿@using Blazored.FluentValidation
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<Popup IsVisible="IsStudentPopupVisible" PopupClosed="ClosePopupAsync">
+	<Body>
+		@if (StudentRequestModel != null && SchoolId != 0)
+		{
+			<h3>Add student</h3>
+			<EditForm OnValidSubmit="AddStudentAsync" Model="StudentRequestModel">
+				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
+				<MudTextField @bind-Value=StudentRequestModel.Name For="@(() => StudentRequestModel.Name)" Label="Name" />
+				<MudTextField @bind-Value=StudentRequestModel.IdentityNumber For="@(() => StudentRequestModel.IdentityNumber)" Label="Identity number" />
+				<MudTextField @bind-Value=StudentRequestModel.StudentNumber For="@(() => StudentRequestModel.StudentNumber)" Label="Student number" />
+				<MudTextField @bind-Value=StudentRequestModel.ParentNumber For="@(() => StudentRequestModel.ParentNumber)" Label="Parent number" />
+				<MudDatePicker @bind-Date="StudentRequestModel.BirthdayDate" Label="Birthday date" />
+				<MudTextField @bind-Value="StudentRequestModel.Address.City" For="@(() => StudentRequestModel.Address.City)" Label="City" />
+				<MudTextField @bind-Value="StudentRequestModel.Address.District" For="@(() => StudentRequestModel.Address.District)" Label="District" />
+				<MudTextField @bind-Value="StudentRequestModel.Address.Street" For="@(() => StudentRequestModel.Address.Street)" Label="Street" />
+				<MudTextField @bind-Value="StudentRequestModel.Password" For="@(() => StudentRequestModel.Password)" Label="Password"
+							  InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
+							  OnAdornmentClick="PasswordVisibility" AdornmentAriaLabel="Show Password" />
+				<div class="popup-actions">
+					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="ClosePopupAsync">Cancel</MudButton>
+					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Add</MudButton>
+				</div>
+			</EditForm>
+		}
+	</Body>
+</Popup>

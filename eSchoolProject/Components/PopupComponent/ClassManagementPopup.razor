@@ -1,0 +1,20 @@
+﻿@using Blazored.FluentValidation
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+<Popup IsVisible="IsClassPopupVisible" PopupClosed="ClosePopupAsync">
+	<Body>
+		@if (ClassRequestModel != null && SchoolId != 0)
+		{
+			<h3>Add class</h3>
+			<EditForm OnValidSubmit="AddClassAsync" Model="ClassRequestModel">
+				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
+				<MudTextField @bind-Value=ClassRequestModel.ClassName For="@(() => ClassRequestModel.ClassName)" Label="Name" />
+				<div class="popup-actions">
+					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="ClosePopupAsync">Cancel</MudButton>
+					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Add</MudButton>
+				</div>
+			</EditForm>
+		}
+	</Body>
+</Popup>
+

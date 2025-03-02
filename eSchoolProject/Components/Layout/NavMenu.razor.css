@@ -103,3 +103,8 @@
         overflow-y: auto;
     }
 }
+.navbar-class {
+    background-color: darkgray;
+    color: cornsilk;
+    width: 250px;
+}

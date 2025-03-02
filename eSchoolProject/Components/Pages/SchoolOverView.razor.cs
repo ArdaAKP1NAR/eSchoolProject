@@ -1,30 +1,47 @@
+using eSchoolDatabase.RequestModel;
 using eSchoolDatabase.ViewModels;
-using eSchoolProject.Authorization.Interface;
 using eSchoolProject.Services.IServices;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace eSchoolProject.Components.Pages
 {
-    public partial class SchoolOverView
+    public partial class SchoolOverview : IDisposable
     {
         [Inject] private IServiceScopeFactory ServiceScopeFactory { get; init; } = default!;
-        [Parameter] public long SchoolId { get; set; }
-        [Inject] IAuthorizationService AuthorizationService { get; set; } = default!;
-        [Inject] NavigationManager NavigationManager { get; set; } = default!;
-        private CancellationTokenSource CancellationTokenSource { get; set; } = new();
-        private List<ManagerViewModel> Managers = new();
-        private bool IsManagerPopupVisible = false;
-        private void OpenManagerPopup()
-        {
-            IsManagerPopupVisible = true;
-        }
-        private async Task OnManagerSaved()
+        [Inject] private NavigationManager NavigationManager { get; init; } = default!;
+        private CancellationTokenSource cancellationTokenSource = new();
+        private bool IsSchoolPopupVisible = false;
+        private MudDataGrid<SchoolViewModel> MudDataGrid { get; set; } = default!;
+
+        private async Task<GridData<SchoolViewModel>> LoadDataAsync(GridState<SchoolViewModel> state)
         {
             using var scope = ServiceScopeFactory.CreateScope();
-            var service = scope.ServiceProvider.GetRequiredService<IManagerService>();
+            var service = scope.ServiceProvider.GetRequiredService<ISchoolService>();
 
-            Managers = await service.GetManagersBySchoolAsync(SchoolId, CancellationTokenSource.Token);
+            var schools = await service.GetAllSchoolsAsync(cancellationTokenSource.Token);
+            return new GridData<SchoolViewModel>()
+            {
+                Items = schools,
+                TotalItems = schools.Count
+            };
+        }
+        private void NavigateToSchool(long Id)
+        {
+            NavigationManager.NavigateTo($"/SchoolManagement/{Id}");
+        }
+        private void OpenAddSchoolPopup()
+        {
+            IsSchoolPopupVisible = true;
+        }
+        private void NewSchoolAdded()
+        {
+            MudDataGrid.ReloadServerData();
+        }
+        public void Dispose()
+        {
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
         }
     }
 }

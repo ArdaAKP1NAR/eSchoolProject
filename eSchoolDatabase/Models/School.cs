@@ -13,9 +13,9 @@ namespace eSchoolDatabase.Models
         public string Name { get; set; } = default!;
         public Address Address { get; set; } = default!;
         public long AddressId { get; set; }
-        public List<Manager> Managers { get; set; } = new();
-        public List<Teacher> Teachers { get; set; } = new();
-        public List<Student> Students { get; set; } = new();
-        public List<Class> Classes { get; set; } = new();
+        public List<Manager>? Managers { get; set; } = default!;
+        public List<Teacher>? Teachers { get; set; } = default!;
+        public List<Student>? Students { get; set; } = default!;
+        public List<Class>? Classes { get; set; } = default!;
     }
 }

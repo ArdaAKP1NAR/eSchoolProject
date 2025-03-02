@@ -1,0 +1,24 @@
+﻿@using Blazored.FluentValidation
+@using MudBlazor
+<Popup IsVisible="IsTeacherPopupVisible" PopupClosed="ClosePopupAsync">
+	<Body>
+		@if (TeacherRequestModel != null && SchoolId != 0)
+		{
+			<h3>Add teacher</h3>
+			<EditForm OnValidSubmit="AddTeacherAsync" Model="TeacherRequestModel">
+				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
+				<MudTextField @bind-Value=TeacherRequestModel.Name For="@(() => TeacherRequestModel.Name)" Label="Name" />
+				<MudTextField @bind-Value="TeacherRequestModel.PhoneNumber" For="@(() => TeacherRequestModel.PhoneNumber)" Label="Phone number" />
+				<MudTextField @bind-Value="TeacherRequestModel.IdentityNumber" For="@(() => TeacherRequestModel.IdentityNumber)" Label="Identity number" />
+				<MudTextField @bind-Value="TeacherRequestModel.Password" For="@(() => TeacherRequestModel.Password)" Label="Password"
+							  InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
+							  OnAdornmentClick="PasswordVisibility" AdornmentAriaLabel="Show Password" />
+
+				<div class="popup-actions">
+					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="ClosePopupAsync">Cancel</MudButton>
+					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Add</MudButton>
+				</div>
+			</EditForm>
+		}
+	</Body>
+</Popup>

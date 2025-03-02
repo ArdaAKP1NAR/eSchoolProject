@@ -41,11 +41,6 @@ namespace eSchoolDatabase
                 .HasForeignKey(t => t.SchoolId)
                 .OnDelete(DeleteBehavior.Restrict); // Okul silindiğinde öğretmenler silinmez
 
-            modelBuilder.Entity<Manager>()
-                .HasOne(m => m.School)
-                .WithMany(s => s.Managers)
-                .HasForeignKey(m => m.SchoolId)
-                .OnDelete(DeleteBehavior.Restrict); // Okul silindiğinde yöneticiler silinmez
         }
 
 

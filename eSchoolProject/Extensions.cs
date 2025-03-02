@@ -23,6 +23,10 @@ namespace eSchoolProject
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddScoped<ISchoolService, SchoolService>();
+            services.AddScoped<IManagerService, ManagerService>();
+            services.AddScoped<ITeacherService, TeacherService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IClassService, ClassService>();
         }
     }
 }

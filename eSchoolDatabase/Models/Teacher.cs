@@ -17,8 +17,8 @@ namespace eSchoolDatabase.Models
         public string Name { get; set; } = default!;
         [MaxLength(100)]
         public string PhoneNumber { get; set; } = default!;
-        public List<Class> Classes { get; set; } = new();
-        public List<Lesson> Lessons { get; set; } = new();
+        public List<Class>? Classes { get; set; } = default!;
+        public List<Lesson>? Lessons { get; set; } = default!;
         public School School { get; set; } = default!;
         public long SchoolId { get; set; }
     }

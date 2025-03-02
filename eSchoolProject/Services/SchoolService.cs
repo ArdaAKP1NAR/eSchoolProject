@@ -17,15 +17,22 @@ namespace eSchoolProject.Services
         {
             var school = mapper.Map<School>(schoolRequestModel);
 
-            if (await schoolRepository.GetAll().AnyAsync(x => x.Name == schoolRequestModel.Name))
+            if (await schoolRepository.GetAll().AnyAsync(x => x.Name == schoolRequestModel.Name,cancellationToken ))
             {
                 throw new InvalidSchoolNameException("This school name exists. ");
             }
             await schoolRepository.AddAsync(school, cancellationToken);
         }
-        public async Task<List<SchoolViewModel>> GetAllSchoolsAsync()
+        public async Task<List<SchoolViewModel>> GetAllSchoolsAsync(CancellationToken cancellationToken)
         {
-            return await schoolRepository.GetAll().ProjectTo<SchoolViewModel>(mapper.ConfigurationProvider).ToListAsync();
+            return await schoolRepository.GetAll().ProjectTo<SchoolViewModel>(mapper.ConfigurationProvider).ToListAsync(cancellationToken);
+        }
+        public async Task<SchoolViewModel> GetSchoolByIdAsync(long schoolId, CancellationToken cancellationToken)
+        {
+            return await schoolRepository.GetAll()
+                .Include(a=> a.Address)
+                .ProjectTo<SchoolViewModel>(mapper.ConfigurationProvider)
+                .SingleAsync(a => a.Id == schoolId, cancellationToken);
         }
     }
 }

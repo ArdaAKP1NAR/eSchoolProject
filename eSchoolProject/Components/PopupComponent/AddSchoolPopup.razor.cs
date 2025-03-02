@@ -36,13 +36,13 @@ namespace eSchoolProject.Components.PopupComponent
             var service = scope.ServiceProvider.GetRequiredService<ISchoolService>();
 
             await service.AddSchoolAsync(SchoolRequestModel, cancellationTokenSource.Token);
-            var schools = await service.GetAllSchoolsAsync();
+            var schools = await service.GetAllSchoolsAsync(cancellationTokenSource.Token);
 
             Snackbar.Add("School saved successfully!", Severity.Success);
             await SaveClicked.InvokeAsync();
             IsSchoolPopupVisible = false;
         }
-        private async Task Close()
+        private async Task ClosePopupAsync()
         {
             IsSchoolPopupVisible = false;
             SchoolRequestModel = new();

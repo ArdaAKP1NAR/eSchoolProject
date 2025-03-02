@@ -37,6 +37,21 @@ namespace eSchoolDatabase.Migrations
                     b.ToTable("ClassTeacher");
                 });
 
+            modelBuilder.Entity("LessonStudent", b =>
+                {
+                    b.Property<long>("LessonsId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("StudentsId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("LessonsId", "StudentsId");
+
+                    b.HasIndex("StudentsId");
+
+                    b.ToTable("LessonStudent");
+                });
+
             modelBuilder.Entity("eSchoolDatabase.Models.Address", b =>
                 {
                     b.Property<long>("Id")
@@ -164,17 +179,12 @@ namespace eSchoolDatabase.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<long?>("StudentId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("TeacherId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClassId");
-
-                    b.HasIndex("StudentId");
 
                     b.HasIndex("TeacherId");
 
@@ -251,7 +261,7 @@ namespace eSchoolDatabase.Migrations
                     b.Property<DateTime>("BirthdayDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("ClassId")
+                    b.Property<long?>("ClassId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("IdentityNumber")
@@ -371,6 +381,21 @@ namespace eSchoolDatabase.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LessonStudent", b =>
+                {
+                    b.HasOne("eSchoolDatabase.Models.Lesson", null)
+                        .WithMany()
+                        .HasForeignKey("LessonsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eSchoolDatabase.Models.Student", null)
+                        .WithMany()
+                        .HasForeignKey("StudentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("eSchoolDatabase.Models.Attendance", b =>
                 {
                     b.HasOne("eSchoolDatabase.Models.Lesson", "Lesson")
@@ -431,10 +456,6 @@ namespace eSchoolDatabase.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eSchoolDatabase.Models.Student", null)
-                        .WithMany("Lessons")
-                        .HasForeignKey("StudentId");
-
                     b.HasOne("eSchoolDatabase.Models.Teacher", "Teacher")
                         .WithMany("Lessons")
                         .HasForeignKey("TeacherId")
@@ -451,7 +472,7 @@ namespace eSchoolDatabase.Migrations
                     b.HasOne("eSchoolDatabase.Models.School", "School")
                         .WithMany("Managers")
                         .HasForeignKey("SchoolId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("School");
@@ -478,9 +499,7 @@ namespace eSchoolDatabase.Migrations
 
                     b.HasOne("eSchoolDatabase.Models.Class", "Class")
                         .WithMany("Students")
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClassId");
 
                     b.HasOne("eSchoolDatabase.Models.School", "School")
                         .WithMany("Students")
@@ -525,8 +544,6 @@ namespace eSchoolDatabase.Migrations
             modelBuilder.Entity("eSchoolDatabase.Models.Student", b =>
                 {
                     b.Navigation("Grades");
-
-                    b.Navigation("Lessons");
                 });
 
             modelBuilder.Entity("eSchoolDatabase.Models.Teacher", b =>

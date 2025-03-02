@@ -2,20 +2,20 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using MudBlazor
 
-<Popup IsVisible="IsSchoolPopupVisible" PopupClosed="Close">
+<Popup IsVisible="IsSchoolPopupVisible" PopupClosed="ClosePopupAsync">
 	<Body>
 		@if (SchoolRequestModel != null)
 		{
 			<EditForm OnValidSubmit="AddSchoolAsync" Model="SchoolRequestModel">
 				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
-				<h3>Add School</h3>
-				<MudTextField @bind-Value=SchoolRequestModel.Name For="@(() => SchoolRequestModel.Name)" Label="School name:" Variant="Variant.Text" />
-				<MudTextField @bind-Value="SchoolRequestModel.Address.City" For="@(() => SchoolRequestModel.Address.City)" Label="City" Variant="Variant.Text" />
-				<MudTextField @bind-Value="SchoolRequestModel.Address.District" For="@(() => SchoolRequestModel.Address.District)" Label="City" Variant="Variant.Text" />
-				<MudTextField @bind-Value="SchoolRequestModel.Address.Street" For="@(() => SchoolRequestModel.Address.Street)" Label="City" Variant="Variant.Text" />
+				<h3>Add school</h3>
+				<MudTextField @bind-Value=SchoolRequestModel.Name For="@(() => SchoolRequestModel.Name)" Label="School name" />
+				<MudTextField @bind-Value="SchoolRequestModel.Address.City" For="@(() => SchoolRequestModel.Address.City)" Label="City"  />
+				<MudTextField @bind-Value="SchoolRequestModel.Address.District" For="@(() => SchoolRequestModel.Address.District)" Label="District" />
+				<MudTextField @bind-Value="SchoolRequestModel.Address.Street" For="@(() => SchoolRequestModel.Address.Street)" Label="Street" />
 
 				<div class="popup-actions">
-					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="Close">Cancel</MudButton>
+					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="ClosePopupAsync">Cancel</MudButton>
 					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Add</MudButton>
 				</div>
 			</EditForm>

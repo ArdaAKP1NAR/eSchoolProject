@@ -6,6 +6,7 @@ namespace eSchoolProject.Services.IServices
     public interface ISchoolService
     {
         Task AddSchoolAsync(SchoolRequestModel schoolRequestModel, CancellationToken cancellationToken);
-        Task<List<SchoolViewModel>> GetAllSchoolsAsync();
+        Task<List<SchoolViewModel>> GetAllSchoolsAsync(CancellationToken cancellationToken);
+        Task<SchoolViewModel> GetSchoolByIdAsync(long schoolId, CancellationToken cancellationToken);
     }
 }

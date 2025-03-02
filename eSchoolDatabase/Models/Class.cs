@@ -12,8 +12,8 @@ namespace eSchoolDatabase.Models
     {
         [MaxLength(100)]
         public string ClassName { get; set; } = default!;
-        public List<Teacher> Teachers { get; set; } = new();
-        public List<Student> Students { get; set; } = new();
+        public List<Teacher>? Teachers { get; set; } = default!;
+        public List<Student>? Students { get; set; } = default!;
         public School School { get; set; } = default!;
         public long SchoolId { get; set; }
     }
