@@ -1,4 +1,5 @@
 ﻿using eSchoolDatabase.Models;
+using eSchoolDatabase.Repositories.Base;
 using eSchoolDatabase.Repositories.Interface;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace eSchoolDatabase.Repositories
 {
-    public class StudentRepository(eSchoolContext context) : BaseRepository<Student>(context), IStudentRepository
+    public class StudentRepository(eSchoolContext context) : UserBaseRepository<Student>(context), IStudentRepository
     {
     }
 }

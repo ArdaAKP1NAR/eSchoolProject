@@ -1,4 +1,5 @@
-﻿using System;
+﻿using eSchoolDatabase.Models.Base;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,12 +8,8 @@ using System.Threading.Tasks;
 
 namespace eSchoolDatabase.Models
 {
-    public class Student : BaseEntity
+    public class Student : BaseUserEntity
     {
-        [MaxLength(100)]
-        public string IdentityNumber { get; set; } = default!;
-        [MaxLength(100)]
-        public string Password { get; set; } = default!;
         [MaxLength(100)]
         public string Name { get; set; } = default!;
         public int StudentNumber { get; set; }
@@ -21,10 +18,9 @@ namespace eSchoolDatabase.Models
         public long AddressId { get; set; }
         [MaxLength(100)]
         public string ParentNumber { get; set; } = default!;
-        public List<Lesson>? Lessons { get; set; } = default!;
         public Class? Class { get; set; } = default!;
         public long? ClassId { get; set; }
-        public List<Grade>? Grades { get; set; } = default!;
+        public List<Grade> Grades { get; set; } = new();
         public School School { get; set; } = default!;
         public long SchoolId { get; set; }
     }

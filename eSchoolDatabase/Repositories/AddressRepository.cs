@@ -1,4 +1,5 @@
 ﻿using eSchoolDatabase.Models;
+using eSchoolDatabase.Repositories.Base;
 using eSchoolDatabase.Repositories.Interface;
 using System;
 using System.Collections.Generic;

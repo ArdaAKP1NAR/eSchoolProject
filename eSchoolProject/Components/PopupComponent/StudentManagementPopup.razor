@@ -17,9 +17,6 @@
 				<MudTextField @bind-Value="StudentRequestModel.Address.City" For="@(() => StudentRequestModel.Address.City)" Label="City" />
 				<MudTextField @bind-Value="StudentRequestModel.Address.District" For="@(() => StudentRequestModel.Address.District)" Label="District" />
 				<MudTextField @bind-Value="StudentRequestModel.Address.Street" For="@(() => StudentRequestModel.Address.Street)" Label="Street" />
-				<MudTextField @bind-Value="StudentRequestModel.Password" For="@(() => StudentRequestModel.Password)" Label="Password"
-							  InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
-							  OnAdornmentClick="PasswordVisibility" AdornmentAriaLabel="Show Password" />
 				<div class="popup-actions">
 					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="ClosePopupAsync">Cancel</MudButton>
 					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Add</MudButton>

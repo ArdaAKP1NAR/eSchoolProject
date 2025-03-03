@@ -5,7 +5,7 @@ namespace eSchoolProject.Services.IServices
 {
     public interface ITeacherService
     {
-        Task AddTeacherAsync(TeacherRequestModel teacherRequestModel, long schoolId, CancellationToken cancellationToken);
+        Task AddTeacherAsync(TeacherRequestModel teacherRequestModel, CancellationToken cancellationToken);
         Task<List<TeacherViewModel>> GetTeacherBySchoolAsync(long schoolId, CancellationToken cancellationToken);
     }
 }

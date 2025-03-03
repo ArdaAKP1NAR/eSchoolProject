@@ -1,10 +1,11 @@
 ﻿@using eSchoolProject.Components
+@using eSchoolProject.Components.Pages.Login
 
 <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
 	<Authorized>
 		<Routes/>
 	</Authorized>
 	<NotAuthorized>
-		<eSchoolProject.Components.Pages.Login/>
+		<Login/>
 	</NotAuthorized>
 </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>

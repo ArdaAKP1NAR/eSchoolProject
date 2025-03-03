@@ -1,6 +1,6 @@
-﻿using eSchoolDatabase.Models;
+﻿using eSchoolDatabase.Models.Base;
 
-namespace eSchoolDatabase.Repositories.Interface
+namespace eSchoolDatabase.Repositories.Interface.Base
 {
     public interface IBaseRepository<T> where T : BaseEntity
     {

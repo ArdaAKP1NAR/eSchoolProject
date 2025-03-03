@@ -37,21 +37,6 @@ namespace eSchoolDatabase.Migrations
                     b.ToTable("ClassTeacher");
                 });
 
-            modelBuilder.Entity("LessonStudent", b =>
-                {
-                    b.Property<long>("LessonsId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("StudentsId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("LessonsId", "StudentsId");
-
-                    b.HasIndex("StudentsId");
-
-                    b.ToTable("LessonStudent");
-                });
-
             modelBuilder.Entity("eSchoolDatabase.Models.Address", b =>
                 {
                     b.Property<long>("Id")
@@ -146,10 +131,7 @@ namespace eSchoolDatabase.Migrations
                     b.Property<long>("LessonId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("StudentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("StudentId1")
+                    b.Property<long?>("StudentId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -157,8 +139,6 @@ namespace eSchoolDatabase.Migrations
                     b.HasIndex("LessonId");
 
                     b.HasIndex("StudentId");
-
-                    b.HasIndex("StudentId1");
 
                     b.ToTable("Grades");
                 });
@@ -201,15 +181,9 @@ namespace eSchoolDatabase.Migrations
 
                     b.Property<string>("IdentityNumber")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -266,8 +240,10 @@ namespace eSchoolDatabase.Migrations
 
                     b.Property<string>("IdentityNumber")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("LessonId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -275,11 +251,6 @@ namespace eSchoolDatabase.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ParentNumber")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -296,6 +267,8 @@ namespace eSchoolDatabase.Migrations
 
                     b.HasIndex("ClassId");
 
+                    b.HasIndex("LessonId");
+
                     b.HasIndex("SchoolId");
 
                     b.ToTable("Students");
@@ -311,15 +284,9 @@ namespace eSchoolDatabase.Migrations
 
                     b.Property<string>("IdentityNumber")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -381,21 +348,6 @@ namespace eSchoolDatabase.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LessonStudent", b =>
-                {
-                    b.HasOne("eSchoolDatabase.Models.Lesson", null)
-                        .WithMany()
-                        .HasForeignKey("LessonsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("eSchoolDatabase.Models.Student", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("eSchoolDatabase.Models.Attendance", b =>
                 {
                     b.HasOne("eSchoolDatabase.Models.Lesson", "Lesson")
@@ -433,19 +385,11 @@ namespace eSchoolDatabase.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eSchoolDatabase.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("eSchoolDatabase.Models.Student", null)
                         .WithMany("Grades")
-                        .HasForeignKey("StudentId1");
+                        .HasForeignKey("StudentId");
 
                     b.Navigation("Lesson");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("eSchoolDatabase.Models.Lesson", b =>
@@ -501,6 +445,10 @@ namespace eSchoolDatabase.Migrations
                         .WithMany("Students")
                         .HasForeignKey("ClassId");
 
+                    b.HasOne("eSchoolDatabase.Models.Lesson", null)
+                        .WithMany("Students")
+                        .HasForeignKey("LessonId");
+
                     b.HasOne("eSchoolDatabase.Models.School", "School")
                         .WithMany("Students")
                         .HasForeignKey("SchoolId")
@@ -526,6 +474,11 @@ namespace eSchoolDatabase.Migrations
                 });
 
             modelBuilder.Entity("eSchoolDatabase.Models.Class", b =>
+                {
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("eSchoolDatabase.Models.Lesson", b =>
                 {
                     b.Navigation("Students");
                 });

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace eSchoolDatabase.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedeSchoolDatabaseTables : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,6 +24,21 @@ namespace eSchoolDatabase.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Address", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdentityNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Roles = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,7 +68,7 @@ namespace eSchoolDatabase.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClassName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    SchoolId = table.Column<long>(type: "bigint", nullable: true)
+                    SchoolId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,7 +77,8 @@ namespace eSchoolDatabase.Migrations
                         name: "FK_Classes_Schools_SchoolId",
                         column: x => x.SchoolId,
                         principalTable: "Schools",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,7 +88,8 @@ namespace eSchoolDatabase.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    SchoolId = table.Column<long>(type: "bigint", nullable: true)
+                    SchoolId = table.Column<long>(type: "bigint", nullable: false),
+                    IdentityNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -81,7 +98,8 @@ namespace eSchoolDatabase.Migrations
                         name: "FK_Managers_Schools_SchoolId",
                         column: x => x.SchoolId,
                         principalTable: "Schools",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -92,7 +110,8 @@ namespace eSchoolDatabase.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    SchoolId = table.Column<long>(type: "bigint", nullable: true)
+                    SchoolId = table.Column<long>(type: "bigint", nullable: false),
+                    IdentityNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,43 +120,8 @@ namespace eSchoolDatabase.Migrations
                         name: "FK_Teachers_Schools_SchoolId",
                         column: x => x.SchoolId,
                         principalTable: "Schools",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Students",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    StudentNumber = table.Column<int>(type: "int", nullable: false),
-                    BirthdayDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AddressId = table.Column<long>(type: "bigint", nullable: false),
-                    ParentNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ClassId = table.Column<long>(type: "bigint", nullable: false),
-                    SchoolId = table.Column<long>(type: "bigint", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Students", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Students_Address_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Address",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Students_Classes_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Students_Schools_SchoolId",
-                        column: x => x.SchoolId,
-                        principalTable: "Schools",
-                        principalColumn: "Id");
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -172,8 +156,7 @@ namespace eSchoolDatabase.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ClassId = table.Column<long>(type: "bigint", nullable: false),
-                    TeacherId = table.Column<long>(type: "bigint", nullable: false),
-                    StudentId = table.Column<long>(type: "bigint", nullable: true)
+                    TeacherId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -185,16 +168,54 @@ namespace eSchoolDatabase.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Lessons_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Lessons_Teachers_TeacherId",
                         column: x => x.TeacherId,
                         principalTable: "Teachers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    StudentNumber = table.Column<int>(type: "int", nullable: false),
+                    BirthdayDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AddressId = table.Column<long>(type: "bigint", nullable: false),
+                    ParentNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ClassId = table.Column<long>(type: "bigint", nullable: true),
+                    SchoolId = table.Column<long>(type: "bigint", nullable: false),
+                    LessonId = table.Column<long>(type: "bigint", nullable: true),
+                    IdentityNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Students_Address_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Address",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Students_Classes_ClassId",
+                        column: x => x.ClassId,
+                        principalTable: "Classes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Students_Lessons_LessonId",
+                        column: x => x.LessonId,
+                        principalTable: "Lessons",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Students_Schools_SchoolId",
+                        column: x => x.SchoolId,
+                        principalTable: "Schools",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -233,8 +254,7 @@ namespace eSchoolDatabase.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GradeValue = table.Column<double>(type: "float", nullable: false),
                     LessonId = table.Column<long>(type: "bigint", nullable: false),
-                    StudentId = table.Column<long>(type: "bigint", nullable: false),
-                    StudentId1 = table.Column<long>(type: "bigint", nullable: true)
+                    StudentId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -248,12 +268,6 @@ namespace eSchoolDatabase.Migrations
                     table.ForeignKey(
                         name: "FK_Grades_Students_StudentId",
                         column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_Grades_Students_StudentId1",
-                        column: x => x.StudentId1,
                         principalTable: "Students",
                         principalColumn: "Id");
                 });
@@ -289,19 +303,9 @@ namespace eSchoolDatabase.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Grades_StudentId1",
-                table: "Grades",
-                column: "StudentId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Lessons_ClassId",
                 table: "Lessons",
                 column: "ClassId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Lessons_StudentId",
-                table: "Lessons",
-                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lessons_TeacherId",
@@ -329,6 +333,11 @@ namespace eSchoolDatabase.Migrations
                 column: "ClassId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Students_LessonId",
+                table: "Students",
+                column: "LessonId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Students_SchoolId",
                 table: "Students",
                 column: "SchoolId");
@@ -337,6 +346,8 @@ namespace eSchoolDatabase.Migrations
                 name: "IX_Teachers_SchoolId",
                 table: "Teachers",
                 column: "SchoolId");
+
+            migrationBuilder.Sql("INSERT INTO Users (IdentityNumber,Password,Roles)VALUES('1','$2a$11$McOL9BvouVR9QPRIsljFL.NVjWQW3nKTosPiwlEufuyhuUqVVL48i','[1]')");
         }
 
         /// <inheritdoc />
@@ -355,16 +366,19 @@ namespace eSchoolDatabase.Migrations
                 name: "Managers");
 
             migrationBuilder.DropTable(
-                name: "Lessons");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Students");
 
             migrationBuilder.DropTable(
-                name: "Teachers");
+                name: "Lessons");
 
             migrationBuilder.DropTable(
                 name: "Classes");
+
+            migrationBuilder.DropTable(
+                name: "Teachers");
 
             migrationBuilder.DropTable(
                 name: "Schools");

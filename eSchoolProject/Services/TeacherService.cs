@@ -1,27 +1,32 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using eSchool.Utils;
+using eSchoolDatabase;
 using eSchoolDatabase.Models;
+using eSchoolDatabase.Repositories;
 using eSchoolDatabase.Repositories.Interface;
 using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
+using eSchoolProject.Components.Pages.Login;
 using eSchoolProject.Exceptions;
 using eSchoolProject.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace eSchoolProject.Services
 {
-    public class TeacherService(IMapper mapper, ITeacherRepository teacherRepository, ISchoolRepository schoolRepository) : ITeacherService
+    public class TeacherService(IMapper mapper, ILoginService loginService, ITeacherRepository teacherRepository, ISchoolRepository schoolRepository) : ITeacherService
     {
-        public async Task AddTeacherAsync(TeacherRequestModel teacherRequestModel, long schoolId, CancellationToken cancellationToken)
+        public async Task AddTeacherAsync(TeacherRequestModel teacherRequestModel, CancellationToken cancellationToken)
         {
             var teacher = mapper.Map<Teacher>(teacherRequestModel);
-            var school = await schoolRepository.GetByIdAsync(schoolId) ?? throw new SchoolNotFoundException("School not found. ");
-            if (await teacherRepository.GetAll().AnyAsync(a => a.IdentityNumber == teacher.IdentityNumber))
+            await teacherRepository.AddAsync(teacher, cancellationToken);
+            await loginService.AddUserAsync(new()
             {
-                throw new InvalidIdentityNumberException("This teacher already exist");
-            }
-            teacher.Password = BCrypt.Net.BCrypt.HashPassword(teacher.Password);
-            await teacherRepository.AddAsync(teacher);
+                IdentityNumber = teacher.IdentityNumber,
+                Roles = [Roles.Teacher],
+                Password = PasswordGenerator.GenerateRandomPassword(8),
+            }, cancellationToken);
+            //buraya transaction gelecek. transaction icin transactionservice yazilacak. Transaction birden fazla database guncellemesi / eklemesi oldugunda kullanilir
         }
         public async Task<List<TeacherViewModel>> GetTeacherBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {

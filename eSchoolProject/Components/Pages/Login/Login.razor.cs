@@ -1,8 +1,6 @@
 using eSchoolDatabase;
-using eSchoolDatabase.Models;
 using eSchoolDatabase.Repositories.Interface;
 using eSchoolProject.Authorization.Interface;
-using eSchoolProject.Exceptions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components;
@@ -10,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
-namespace eSchoolProject.Components.Pages
+namespace eSchoolProject.Components.Pages.Login
 {
     public partial class Login
     {

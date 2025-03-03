@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.SqlServer.Design.Internal;
+﻿using eSchoolDatabase.Models.Base;
+using Microsoft.EntityFrameworkCore.SqlServer.Design.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,8 +13,8 @@ namespace eSchoolDatabase.Models
     {
         [MaxLength(100)]
         public string ClassName { get; set; } = default!;
-        public List<Teacher>? Teachers { get; set; } = default!;
-        public List<Student>? Students { get; set; } = default!;
+        public List<Teacher> Teachers { get; set; } = new();
+        public List<Student> Students { get; set; } = new();
         public School School { get; set; } = default!;
         public long SchoolId { get; set; }
     }

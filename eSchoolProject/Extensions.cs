@@ -1,7 +1,9 @@
 ﻿using eSchoolDatabase.Repositories;
 using eSchoolDatabase.Repositories.Interface;
+using eSchoolProject.Components.Pages.Login;
 using eSchoolProject.Services;
 using eSchoolProject.Services.IServices;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
 namespace eSchoolProject
@@ -20,6 +22,7 @@ namespace eSchoolProject
             services.AddScoped<IAttendanceRepository, AttendanceRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.TryAddScoped<ILoginService, LoginService>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddScoped<ISchoolService, SchoolService>();

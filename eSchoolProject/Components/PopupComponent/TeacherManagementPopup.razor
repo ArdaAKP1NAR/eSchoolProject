@@ -10,9 +10,6 @@
 				<MudTextField @bind-Value=TeacherRequestModel.Name For="@(() => TeacherRequestModel.Name)" Label="Name" />
 				<MudTextField @bind-Value="TeacherRequestModel.PhoneNumber" For="@(() => TeacherRequestModel.PhoneNumber)" Label="Phone number" />
 				<MudTextField @bind-Value="TeacherRequestModel.IdentityNumber" For="@(() => TeacherRequestModel.IdentityNumber)" Label="Identity number" />
-				<MudTextField @bind-Value="TeacherRequestModel.Password" For="@(() => TeacherRequestModel.Password)" Label="Password"
-							  InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
-							  OnAdornmentClick="PasswordVisibility" AdornmentAriaLabel="Show Password" />
 
 				<div class="popup-actions">
 					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="ClosePopupAsync">Cancel</MudButton>

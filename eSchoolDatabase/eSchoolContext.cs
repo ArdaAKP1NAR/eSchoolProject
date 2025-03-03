@@ -23,11 +23,6 @@ namespace eSchoolDatabase
                 .HasForeignKey(a => a.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);  // Ogrenci vbir attendance a bagliysa silinemez.
 
-            modelBuilder.Entity<Grade>()
-                .HasOne(g => g.Student)
-                .WithMany()
-                .HasForeignKey(g => g.StudentId)
-                .OnDelete(DeleteBehavior.Cascade);  // Öğrenci silindiğinde tüm notları da silinir
 
             modelBuilder.Entity<Student>()
                 .HasOne(s => s.School)

@@ -53,6 +53,10 @@ namespace eSchoolProject.Components.Pages
         }
         private async Task OnSavedAsync()
         {
+            IsManagerPopupVisible = false;
+            IsTeacherPopupVisible = false;
+            IsStudentPopupVisible = false;
+            IsClassPopupVisible = false;
             await GetSchoolByIdAsync();
         }
     }

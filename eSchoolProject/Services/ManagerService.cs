@@ -1,29 +1,33 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using eSchool.Utils;
+using eSchoolDatabase;
 using eSchoolDatabase.Models;
+using eSchoolDatabase.Repositories;
 using eSchoolDatabase.Repositories.Interface;
 using eSchoolDatabase.RequestModel;
+using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
+using eSchoolProject.Components.Pages.Login;
 using eSchoolProject.Exceptions;
 using eSchoolProject.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace eSchoolProject.Services
 {
-    public class ManagerService(IMapper mapper, IManagerRepository managerRepository, ISchoolRepository schoolRepository) : IManagerService
+    public class ManagerService(IMapper mapper, ILoginService loginService, IManagerRepository managerRepository, ISchoolRepository schoolRepository) : IManagerService
     {
-        public async Task AddManagerAsync(ManagerRequestModel managerRequestModel, long schoolId, CancellationToken cancellationToken)
+        public async Task AddManagerAsync(ManagerRequestModel managerRequestModel, CancellationToken cancellationToken)
         {
             var manager = mapper.Map<Manager>(managerRequestModel);
-            var school = await schoolRepository.GetByIdAsync(schoolId) ?? throw new SchoolNotFoundException("School not found. ");
-
-            if (await managerRepository.GetAll().AnyAsync(a => a.IdentityNumber == manager.IdentityNumber))
-            {
-                throw new InvalidIdentityNumberException("This manager already exist");
-            }
-            manager.Password = BCrypt.Net.BCrypt.HashPassword(manager.Password);
             await managerRepository.AddAsync(manager, cancellationToken);
-            await schoolRepository.UpdateAsync(school, cancellationToken);
+            await loginService.AddUserAsync(new()
+            {
+                IdentityNumber = manager.IdentityNumber,
+                Roles = [Roles.Manager],
+                Password = PasswordGenerator.GenerateRandomPassword(8),
+            }, cancellationToken);
+            //buraya transaction gelecek. transaction icin transactionservice yazilacak. Transaction birden fazla database guncellemesi / eklemesi oldugunda kullanilir
         }
         public async Task<List<ManagerViewModel>> GetManagersBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {

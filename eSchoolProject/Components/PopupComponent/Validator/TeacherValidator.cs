@@ -19,15 +19,6 @@ namespace eSchoolProject.Components.PopupComponent.Validator
                 .Matches("^[0-9]+$").WithMessage("IdentityNumber must contain only numbers.")
                 .Length(11).WithMessage("IdentityNumber must be exactly 11 digits.");
 
-            RuleFor(a => a.Password)
-                .NotNull().WithMessage("Password is required.")
-                .NotEmpty().WithMessage("Password cannot be empty.")
-                .MinimumLength(8).WithMessage("Password must be at least 8 characters.")
-                .Matches(@"[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
-                .Matches(@"[a-z]").WithMessage("Password must contain at least one lowercase letter.")
-                .Matches(@"[0-9]").WithMessage("Password must contain at least one number.")
-                .Matches(@"[\W]").WithMessage("Password must contain at least one special character (!@#$%^&* etc.).");
-
             RuleFor(a => a.PhoneNumber)
                 .NotNull().WithMessage("Phone number is required")
                 .NotEmpty().WithMessage("Phone number cannot be empty")

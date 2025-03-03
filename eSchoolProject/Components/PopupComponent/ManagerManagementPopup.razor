@@ -11,9 +11,6 @@
 				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
 				<MudTextField @bind-Value=ManagerRequestModel.Name For="@(() => ManagerRequestModel.Name)" Label="Name" />
 				<MudTextField @bind-Value="ManagerRequestModel.IdentityNumber" For="@(() => ManagerRequestModel.IdentityNumber)" Label="Identity number" />
-				<MudTextField @bind-Value="ManagerRequestModel.Password" For="@(() => ManagerRequestModel.Password)" Label="Password"
-							  InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
-							  OnAdornmentClick="PasswordVisibility" AdornmentAriaLabel="Show Password" />
 
 				<div class="popup-actions">
 					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="Close">Cancel</MudButton>

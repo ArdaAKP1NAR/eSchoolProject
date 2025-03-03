@@ -1,5 +1,5 @@
-﻿using eSchoolDatabase.Models;
-using eSchoolDatabase.Repositories.Interface;
+﻿using eSchoolDatabase.Models.Base;
+using eSchoolDatabase.Repositories.Interface.Base;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eSchoolDatabase.Repositories
+namespace eSchoolDatabase.Repositories.Base
 {
     public class BaseRepository<T>(eSchoolContext context) : IBaseRepository<T> where T : BaseEntity
     {

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eSchoolProject", "eSchoolPr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eSchoolDatabase", "eSchoolDatabase\eSchoolDatabase.csproj", "{92AE888A-5DB1-4A05-9E66-EB18C2FBE754}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eSchool.Utils", "eSchool.Utils\eSchool.Utils.csproj", "{159B68C3-E3FE-4AF0-8859-F2A15FADB5C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{92AE888A-5DB1-4A05-9E66-EB18C2FBE754}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92AE888A-5DB1-4A05-9E66-EB18C2FBE754}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92AE888A-5DB1-4A05-9E66-EB18C2FBE754}.Release|Any CPU.Build.0 = Release|Any CPU
+		{159B68C3-E3FE-4AF0-8859-F2A15FADB5C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{159B68C3-E3FE-4AF0-8859-F2A15FADB5C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{159B68C3-E3FE-4AF0-8859-F2A15FADB5C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{159B68C3-E3FE-4AF0-8859-F2A15FADB5C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

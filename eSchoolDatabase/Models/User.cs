@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using eSchoolDatabase.Models.Base;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eSchoolDatabase.Models
 {

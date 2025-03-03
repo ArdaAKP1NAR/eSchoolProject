@@ -12,7 +12,6 @@ namespace eSchoolDatabase.RequestModels
     public class StudentRequestModel
     {
         public string IdentityNumber { get; set; } = default!;
-        public string Password { get; set; } = default!;
         public string Name { get; set; } = default!;
         public int StudentNumber { get; set; }
         public DateTime? BirthdayDate { get; set; }

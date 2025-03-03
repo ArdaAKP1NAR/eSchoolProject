@@ -36,6 +36,7 @@ namespace eSchoolProject.Components.Pages
         }
         private void NewSchoolAdded()
         {
+            IsSchoolPopupVisible = false;
             MudDataGrid.ReloadServerData();
         }
         public void Dispose()
