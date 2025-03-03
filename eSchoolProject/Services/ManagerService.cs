@@ -15,19 +15,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eSchoolProject.Services
 {
-    public class ManagerService(IMapper mapper, ILoginService loginService, IManagerRepository managerRepository, ISchoolRepository schoolRepository) : IManagerService
+    public class ManagerService(IMapper mapper, ITransactionService transactionService, ILoginService loginService, IManagerRepository managerRepository) : IManagerService
     {
         public async Task AddManagerAsync(ManagerRequestModel managerRequestModel, CancellationToken cancellationToken)
         {
-            var manager = mapper.Map<Manager>(managerRequestModel);
-            await managerRepository.AddAsync(manager, cancellationToken);
-            await loginService.AddUserAsync(new()
+            await transactionService.ExecuteAsync(async () =>
             {
-                IdentityNumber = manager.IdentityNumber,
-                Roles = [Roles.Manager],
-                Password = PasswordGenerator.GenerateRandomPassword(8),
-            }, cancellationToken);
-            //buraya transaction gelecek. transaction icin transactionservice yazilacak. Transaction birden fazla database guncellemesi / eklemesi oldugunda kullanilir
+                var manager = mapper.Map<Manager>(managerRequestModel);
+                await managerRepository.AddAsync(manager, cancellationToken);
+                await loginService.AddUserAsync(new()
+                {
+                    IdentityNumber = manager.IdentityNumber,
+                    Roles = [Roles.Manager],
+                    Password = PasswordGenerator.GenerateRandomPassword(8),
+                }, cancellationToken);
+            });
         }
         public async Task<List<ManagerViewModel>> GetManagersBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {

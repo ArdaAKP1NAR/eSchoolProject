@@ -22,9 +22,10 @@ namespace eSchoolProject
             services.AddScoped<IAttendanceRepository, AttendanceRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.TryAddScoped<ILoginService, LoginService>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.TryAddScoped<ILoginService, LoginService>();
             services.AddScoped<ISchoolService, SchoolService>();
             services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<ITeacherService, TeacherService>();

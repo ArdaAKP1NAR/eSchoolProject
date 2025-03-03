@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eSchoolProject.Services
 {
-    public class SchoolService(IMapper mapper, ISchoolRepository schoolRepository, IAddressRepository addressRepository) : ISchoolService
+    public class SchoolService(IMapper mapper, ISchoolRepository schoolRepository) : ISchoolService
     {
         public async Task AddSchoolAsync(SchoolRequestModel schoolRequestModel, CancellationToken cancellationToken)
         {

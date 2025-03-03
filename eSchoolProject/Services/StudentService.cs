@@ -14,20 +14,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eSchoolProject.Services
 {
-    public class StudentService(IMapper mapper, ILoginService loginService, IStudentRepository studentRepository, ISchoolRepository schoolRepository) : IStudentService
+    public class StudentService(IMapper mapper, ITransactionService transactionService, ILoginService loginService, IStudentRepository studentRepository) : IStudentService
     {
         public async Task AddStudentAsync(StudentRequestModel studentRequestModel, CancellationToken cancellationToken)
         {
-            var student = mapper.Map<Student>(studentRequestModel);
-            await studentRepository.AddAsync(student, cancellationToken);
-            await loginService.AddUserAsync(new()
+            await transactionService.ExecuteAsync(async () =>
             {
-                IdentityNumber = student.IdentityNumber,
-                Roles = [Roles.Student],
-                Password = PasswordGenerator.GenerateRandomPassword(8),
-            }, cancellationToken);
-            //buraya transaction gelecek. transaction icin transactionservice yazilacak. Transaction birden fazla database guncellemesi / eklemesi oldugunda kullanilir
+                var student = mapper.Map<Student>(studentRequestModel);
+                await studentRepository.AddAsync(student, cancellationToken);
+                await loginService.AddUserAsync(new()
+                {
+                    IdentityNumber = student.IdentityNumber,
+                    Roles = [Roles.Student],
+                    Password = PasswordGenerator.GenerateRandomPassword(8),
+                }, cancellationToken);
+            });
         }
-
     }
 }
