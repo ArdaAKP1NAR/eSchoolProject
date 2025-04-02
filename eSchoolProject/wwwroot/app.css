@@ -98,3 +98,12 @@ h1:focus {
     padding: 14px;
     justify-content: right;
 }
+.mud-paper.mud-elevation-2.mud-card.mud-card-registration {
+    background-color: var(--bs-gray-100) !important;
+}
+.page main[b-ew51cq44xo]:has(.mud-paper.mud-elevation-2.mud-card.mud-card-registration) {
+    background-color: var(--bs-gray-300) !important;
+}
+.mud-card-registration .mud-table{
+    background-color: var(--bs-gray-300) !important;
+}

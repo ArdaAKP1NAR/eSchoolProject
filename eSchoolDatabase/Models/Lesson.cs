@@ -7,8 +7,7 @@ namespace eSchoolDatabase.Models
     {
         [MaxLength(100)]
         public string Name { get; set; } = default!;
-        public long ClassId { get; set; } // düşün burayı student olması lazım sanki
-        public Class Class { get; set; } = default!;
+        public List<Class> ClassList { get; set; } = new();
         public List<Student> Students { get; set; } = new();
         public long TeacherId { get; set; }
         public Teacher Teacher { get; set; } = default!;

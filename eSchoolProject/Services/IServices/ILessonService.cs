@@ -5,7 +5,7 @@ namespace eSchoolProject.Services.IServices
 {
     public interface ILessonService
     {
-        Task AddLessonAsync(LessonRequestModel lessonRequestModel);
-        Task<List<LessonViewModel>> GetAllLessons();
+        Task AddLessonAsync(LessonRequestModel lessonRequestModel, List<ClassViewModel> classList, CancellationToken cancellationToken);
+        Task<List<LessonViewModel>> GetLessonBySchoolAsync(long classId, CancellationToken cancellationToken);
     }
 }

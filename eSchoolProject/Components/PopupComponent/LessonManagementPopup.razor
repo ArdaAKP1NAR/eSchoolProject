@@ -1,0 +1,28 @@
+﻿@using Blazored.FluentValidation
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+<Popup IsVisible="IsLessonPopupVisible" PopupClosed="Close">
+	<Body>
+		@if (LessonRequestModel != null && SchoolId != 0)
+		{
+			<h3>Add lesson</h3>
+			<EditForm OnValidSubmit="AddLessonAsync" Model="LessonRequestModel">
+				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
+				<MudSelect T="long" Label="Classes" HelperText="Choose students to register to class" MultiSelection="true" @bind-SelectedValues="selectedClassIds">
+					@foreach (var classView in classList)
+					{
+						<MudSelectItem T="long" Value="@classView.Id">@classView.ClassName</MudSelectItem>
+					}
+				</MudSelect>
+				<MudTextField @bind-Value=LessonRequestModel.Name For="@(() => LessonRequestModel.Name)" Label="Name" />
+
+				<div class="popup-actions">
+					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="Close">Cancel</MudButton>
+					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Add</MudButton>
+				</div>
+			</EditForm>
+		}
+	</Body>
+</Popup>
+

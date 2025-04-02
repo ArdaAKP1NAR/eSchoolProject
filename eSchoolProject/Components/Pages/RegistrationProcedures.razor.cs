@@ -6,7 +6,7 @@ using MudBlazor;
 
 namespace eSchoolProject.Components.Pages
 {
-    public partial class ClassRegistration 
+    public partial class RegistrationProcedures 
     {
         [Inject] private IServiceScopeFactory ServiceScopeFactory { get; init; } = default!;
         [Parameter] public long SchoolId { get; set; }
@@ -18,6 +18,24 @@ namespace eSchoolProject.Components.Pages
         private IEnumerable<long> selectedStudentIds = new List<long>();
         private ClassViewModel? selectedClass;
         private List<StudentViewModel> studentList = new();
+        private List<LessonViewModel> lessonList = new();
+        private string ActiveTab = "ClassProcedures";
+        private bool IsLessonPopupVisible = false;
+        private void SetActiveTab(string tab)
+        {
+            ActiveTab = tab;
+        }
+        private void OpenLessonPopup()
+        {
+            IsLessonPopupVisible = true;
+        }
+        private async Task GetLessonBySchoolAsync()
+        {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var lessonService = scope.ServiceProvider.GetRequiredService<ILessonService>();
+            var entityClass = classList.First().Id;
+            lessonList = await lessonService.GetLessonBySchoolAsync(entityClass, cancellationTokenSource.Token);
+        }
         private async Task GetClassBySchoolAsync()
         {
             using var scope = ServiceScopeFactory.CreateScope();
@@ -34,9 +52,9 @@ namespace eSchoolProject.Components.Pages
         {
             await GetClassBySchoolAsync();
             await GetStudentsBySchoolAsync();
+            await GetLessonBySchoolAsync();
             await base.OnInitializedAsync();
         }
-
         private async Task AddStudentToClassAsync(long classId)
         {
             using var scope = ServiceScopeFactory.CreateScope();
@@ -77,6 +95,10 @@ namespace eSchoolProject.Components.Pages
         {
             selectedClass = null;
             selectedStudentIds.ToList().Clear();  // bu çalýþmýyor
+        }
+        private void OnSavedAsync()
+        {
+            IsLessonPopupVisible = false;
         }
     }
 }

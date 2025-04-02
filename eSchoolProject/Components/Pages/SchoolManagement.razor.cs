@@ -50,7 +50,7 @@ namespace eSchoolProject.Components.Pages
         }
         private void NavigateToSchool(long Id)
         {
-            NavigationManager.NavigateTo($"/ClassRegistration/{Id}");
+            NavigationManager.NavigateTo($"/RegistrationProcedures/{Id}");
         }
         protected override async Task OnInitializedAsync()
         {
