@@ -76,7 +76,7 @@ h1:focus {
     justify-content: end !important;
     border-radius: 5px !important;
     background-color: var(--bs-success) !important;
-    float: right !important;
+    float: left !important;
     color: white !important;
     margin: 1px 4px !important;
     padding: 14px;
@@ -91,4 +91,10 @@ h1:focus {
 }
 .mud-typography-h6 {
     white-space: nowrap !important;
+}
+.register-button.mud-button-filled.mud-button-filled-success {
+    --mud-ripple-color: var(--mud-palette-success-text);
+    background-color: var(--mud-palette-success);
+    padding: 14px;
+    justify-content: right;
 }

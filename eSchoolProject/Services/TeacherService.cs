@@ -29,7 +29,6 @@ namespace eSchoolProject.Services
                     Password = PasswordGenerator.GenerateRandomPassword(8),
                 }, cancellationToken);
             });
-            //buraya transaction gelecek. transaction icin transactionservice yazilacak. Transaction birden fazla database guncellemesi / eklemesi oldugunda kullanilir
         }
         public async Task<List<TeacherViewModel>> GetTeacherBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {

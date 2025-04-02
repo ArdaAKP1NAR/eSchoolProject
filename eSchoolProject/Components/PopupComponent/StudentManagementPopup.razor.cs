@@ -1,4 +1,5 @@
 using eSchoolDatabase.RequestModels;
+using eSchoolDatabase.ViewModels;
 using eSchoolProject.Services.IServices;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -13,43 +14,42 @@ namespace eSchoolProject.Components.PopupComponent
         private bool _visible;
         [Parameter] public bool IsStudentPopupVisible { get => _visible; set { OpenedPopup(value); } }
         [Parameter] public long SchoolId { get; set; }
-        private StudentRequestModel StudentRequestModel { get; set; } = new();
+        [Parameter] public StudentViewModel StudentViewModel { get; set; } = default!;
         [Parameter] public EventCallback PopupClosed { get; set; }
         [Parameter] public EventCallback SaveClicked { get; set; }
         private void OpenedPopup(bool value)
         {
             if (value)
             {
-                StudentRequestModel = StudentRequestModel.New();
-                StudentRequestModel.SchoolId = SchoolId;
+                if (StudentViewModel == null)
+                {
+                    StudentViewModel = new();
+                    StudentViewModel.SchoolId = SchoolId;
+                }
             }
             _visible = value;
         }
-        bool isShow;
-        InputType PasswordInput = InputType.Password;
-        string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-        void PasswordVisibility()
+        public void OpenPopup(StudentViewModel model)
         {
-            if (isShow)
-            {
-                isShow = false;
-                PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-                PasswordInput = InputType.Password;
-            }
-            else
-            {
-                isShow = true;
-                PasswordInputIcon = Icons.Material.Filled.Visibility;
-                PasswordInput = InputType.Text;
-            }
+            StudentViewModel = model;
+            IsStudentPopupVisible = true;
         }
         private async Task AddStudentAsync()
         {
             using var scope = ServiceScopeFactory.CreateScope();
             var service = scope.ServiceProvider.GetRequiredService<IStudentService>();
 
-            await service.AddStudentAsync(StudentRequestModel, cancellationTokenSource.Token);
+            await service.AddStudentAsync(StudentViewModel, cancellationTokenSource.Token);
             Snackbar.Add("Student added succesfuly.", Severity.Success);
+            await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
+            IsStudentPopupVisible = false;
+        }
+        private async Task UpdateStudentAsync()
+        {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<IStudentService>();
+            await service.UpdateStudentAsync(StudentViewModel, cancellationTokenSource.Token);
+            Snackbar.Add("Student updated succesfuly.", Severity.Success);
             await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
             IsStudentPopupVisible = false;
         }

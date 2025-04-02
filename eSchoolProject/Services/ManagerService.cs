@@ -33,7 +33,10 @@ namespace eSchoolProject.Services
         }
         public async Task<List<ManagerViewModel>> GetManagersBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {
-            return await managerRepository.GetAll(cancellationToken).Where(a => a.SchoolId == schoolId).ProjectTo<ManagerViewModel>(mapper.ConfigurationProvider).ToListAsync();
+            return await managerRepository.GetAll(cancellationToken)
+                .Where(a => a.SchoolId == schoolId)
+                .ProjectTo<ManagerViewModel>(mapper.ConfigurationProvider).
+                ToListAsync();
         }
     }
 }

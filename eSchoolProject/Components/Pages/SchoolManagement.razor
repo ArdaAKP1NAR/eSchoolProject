@@ -57,7 +57,7 @@
 					</div>
 				</div>
 			}
-			@if (ActiveTab == "Teachers") // gerekli eklemeler yapılacak
+			@if (ActiveTab == "Teachers")
 			{
 				<div class="tab-container">
 					<div class="tab-content">
@@ -78,7 +78,7 @@
 					</div>
 				</div>
 			}
-			@if (ActiveTab == "Students") // gerekli eklemeler yapılacak
+			@if (ActiveTab == "Students")
 			{
 				<div class="tab-container">
 					<div class="tab-content">
@@ -87,7 +87,7 @@
 								<MudText Typo="Typo.h6">Student List</MudText>
 								<MudSpacer />
 								<div class="add-button-management">
-									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenStudentPopup" />
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateNewStudent" />
 								</div>
 							</ToolBarContent>
 							<Columns>
@@ -98,6 +98,13 @@
 								<PropertyColumn Property="x => x.BirthdayDate" Title="Birthday date" />
 								<PropertyColumn Property="x => x.Address.District" Title="District" />
 								<PropertyColumn Property="x => x.Address.Street" Title="Street" />
+								<TemplateColumn Title="Update Student">
+									<CellTemplate>
+										<MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick=" () => OpenStudentPopup(context.Item)">
+											Update
+										</MudButton>
+									</CellTemplate>
+								</TemplateColumn>
 							</Columns>
 						</MudDataGrid>
 					</div>
@@ -117,7 +124,16 @@
 							</ToolBarContent>
 							<Columns>
 								<PropertyColumn Property="x => x.ClassName" Title="Name" />
+								<TemplateColumn Title="School Overview">
+									<CellTemplate>
+										<MudButton Variant="Variant.Outlined" Color="Color.Dark" StartIcon="@Icons.Material.Filled.ChevronRight"
+												   OnClick="() => NavigateToSchool(context.Item.Id)">
+											Registration Procedures
+										</MudButton>
+									</CellTemplate>
+								</TemplateColumn>
 							</Columns>
+
 						</MudDataGrid>
 					</div>
 				</div>
@@ -133,9 +149,8 @@
 							SchoolId="SchoolId"
 							PopupClosed="() => {IsTeacherPopupVisible = false;}"
 							SaveClicked="OnSavedAsync" />
-	<StudentManagementPopup IsStudentPopupVisible="IsStudentPopupVisible"
+	<StudentManagementPopup @ref=StudentManagementPopup
 							SchoolId="SchoolId"
-							PopupClosed="() => {IsStudentPopupVisible = false;}"
 							SaveClicked="OnSavedAsync" />
 	<ClassManagementPopup IsClassPopupVisible="IsClassPopupVisible"
 						  SchoolId="SchoolId"

@@ -25,4 +25,8 @@
     <ProjectReference Include="..\eSchoolDatabase\eSchoolDatabase.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\LabelComponent\" />
+  </ItemGroup>
+
 </Project>

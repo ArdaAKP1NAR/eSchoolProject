@@ -46,5 +46,10 @@ namespace eSchoolDatabase.Repositories.Base
             await DeleteAsync(entry);
             await context.SaveChangesAsync(cancellationToken);
         }
+        public async Task UpdateRangeAsync(ICollection<T> entities, CancellationToken cancellationToken = default)
+        {
+            context.UpdateRange(entities);
+            await context.SaveChangesAsync();
+        }
     }
 }

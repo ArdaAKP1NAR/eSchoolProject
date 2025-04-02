@@ -31,6 +31,7 @@ namespace eSchoolProject.Mapper
             CreateMap<Class, ClassRequestModel>().ReverseMap();
 
             CreateMap<Lesson, LessonViewModel>().ReverseMap();
+            CreateMap<Lesson, LessonRequestModel>().ReverseMap();
 
             CreateMap<Grade, GradeViewModel>().ReverseMap();
         }

@@ -13,5 +13,4 @@ namespace eSchoolDatabase.Models
         public long TeacherId { get; set; }
         public Teacher Teacher { get; set; } = default!;
     }
-
 }

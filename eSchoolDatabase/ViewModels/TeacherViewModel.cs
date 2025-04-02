@@ -12,7 +12,6 @@ namespace eSchoolDatabase.ViewModels
     {
         public long Id { get; set; }
         public string IdentityNumber { get; set; } = default!;
-        public string Password { get; set; } = default!;
         public string Name { get; set; } = default!;
         [MaxLength(100)]
         public string PhoneNumber { get; set; } = default!;

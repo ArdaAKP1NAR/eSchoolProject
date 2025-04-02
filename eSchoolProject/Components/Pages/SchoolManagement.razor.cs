@@ -1,5 +1,6 @@
 using eSchoolDatabase.ViewModels;
 using eSchoolProject.Authorization.Interface;
+using eSchoolProject.Components.PopupComponent;
 using eSchoolProject.Services.IServices;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -12,12 +13,13 @@ namespace eSchoolProject.Components.Pages
         [Parameter] public long SchoolId { get; set; }
         [Inject] IAuthorizationService AuthorizationService { get; set; } = default!;
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
+        [Inject] ISnackbar Snackbar { get; init; } = default!;
         private CancellationTokenSource cancellationTokenSource = new();
         private SchoolViewModel schoolViewModel = default!;
         private bool IsManagerPopupVisible = false;
         private bool IsTeacherPopupVisible = false;
-        private bool IsStudentPopupVisible = false;
         private bool IsClassPopupVisible = false;
+        private StudentManagementPopup StudentManagementPopup = default!;
         private string ActiveTab = "Managers";
         private void SetActiveTab(string tab)
         {
@@ -31,13 +33,24 @@ namespace eSchoolProject.Components.Pages
         {
             IsTeacherPopupVisible = true;
         }
-        private void OpenStudentPopup()
+        private void CreateNewStudent()
         {
-            IsStudentPopupVisible = true;
+            StudentManagementPopup.OpenPopup(new());
+        }
+        private void OpenStudentPopup(StudentViewModel studentViewModel)
+        {
+            if (studentViewModel != null)
+            {
+                StudentManagementPopup.OpenPopup(studentViewModel);
+            }
         }
         private void OpenClassPopup()
         {
             IsClassPopupVisible = true;
+        }
+        private void NavigateToSchool(long Id)
+        {
+            NavigationManager.NavigateTo($"/ClassRegistration/{Id}");
         }
         protected override async Task OnInitializedAsync()
         {
@@ -55,7 +68,6 @@ namespace eSchoolProject.Components.Pages
         {
             IsManagerPopupVisible = false;
             IsTeacherPopupVisible = false;
-            IsStudentPopupVisible = false;
             IsClassPopupVisible = false;
             await GetSchoolByIdAsync();
         }

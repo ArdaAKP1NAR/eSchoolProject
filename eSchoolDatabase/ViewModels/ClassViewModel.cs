@@ -9,6 +9,7 @@ namespace eSchoolDatabase.ViewModels
 {
     public class ClassViewModel
     {
+        public long Id { get; set; }
         public string ClassName { get; set; } = default!;
         public List<TeacherViewModel>? Teachers { get; set; }
         public List<StudentViewModel>? Students { get; set; }

@@ -11,7 +11,6 @@ namespace eSchoolDatabase.ViewModels
     {
         public long Id { get; set; }
         public string IdentityNumber { get; set; } = default!;
-        public string Password { get; set; } = default!;
         public string Name { get; set; } = default!;
         public long SchoolId { get; set; }
     }

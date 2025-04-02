@@ -1,9 +1,10 @@
 ﻿using eSchoolDatabase.RequestModels;
+using eSchoolDatabase.ViewModels;
 using FluentValidation;
 
 namespace eSchoolProject.Components.PopupComponent.Validator
 {
-    public class StudentValidator : AbstractValidator<StudentRequestModel>
+    public class StudentValidator : AbstractValidator<StudentViewModel>
     {
         public StudentValidator()
         {

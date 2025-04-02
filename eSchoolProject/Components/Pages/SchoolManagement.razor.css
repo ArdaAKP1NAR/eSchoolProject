@@ -51,26 +51,4 @@
 }
 
 .tab-content {
-    width: 1600px;
-}
-/* Tablo */
-table {
-    width: 100%; /* Tabloyu tam genişlikte yapar */
-    border-collapse: collapse; /* Tablo hücreleri arasındaki boşlukları kaldırır */
-    margin-top: 20px; /* Tabloyu üstten 20px boşlukla ayırır */
-}
-
-th, td {
-    padding: 12px; /* Hücrelerin içindeki boşluğu ayarlar */
-    text-align: left; /* Metni sola hizalar */
-    border-bottom: 1px solid #ddd; /* Hücrelerin altına gri bir kenarlık ekler */
-}
-
-th {
-    background-color: #f2f2f2; /* Başlık hücrelerinin arka plan rengini açar */
-    font-weight: bold; /* Başlık hücrelerinin yazısını kalın yapar */
-}
-
-tr:hover {
-    background-color: #f9f9f9; /* Satır üzerine gelindiğinde arka plan rengini değiştirir */
 }
