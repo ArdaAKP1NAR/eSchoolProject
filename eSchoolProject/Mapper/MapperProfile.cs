@@ -28,6 +28,7 @@ namespace eSchoolProject.Mapper
 
             CreateMap<Student, StudentRequestModel>().ReverseMap();
             CreateMap<Student, StudentViewModel>().ReverseMap();
+            CreateMap<StudentRequestModel, StudentViewModel>().ReverseMap();
 
             CreateMap<Class, ClassViewModel>().ReverseMap();
             CreateMap<Class, ClassRequestModel>().ReverseMap();

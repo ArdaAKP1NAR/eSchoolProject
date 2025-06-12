@@ -58,7 +58,7 @@ namespace eSchoolProject.Components.Pages
         private async Task AddStudentToClassAsync(long classId)
         {
             using var scope = ServiceScopeFactory.CreateScope();
-            var studentService = scope.ServiceProvider.GetRequiredService<IStudentService>();
+            var studentService = scope.ServiceProvider.GetRequiredService<IClassService>();
 
             var studentsToRemoveClass = studentList
                 .Where(s => !selectedStudentIds.Contains(s.Id))

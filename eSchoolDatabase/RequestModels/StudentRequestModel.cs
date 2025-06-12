@@ -11,18 +11,16 @@ namespace eSchoolDatabase.RequestModels
 {
     public class StudentRequestModel
     {
+        public StudentRequestModel()
+        {
+            Address = new();
+        }
+        public long Id { get; set; }
         public string IdentityNumber { get; set; } = default!;
         public string Name { get; set; } = default!;
         public int StudentNumber { get; set; }
         public DateTime? BirthdayDate { get; set; }
         public AddressRequestModel Address { get; set; } = default!;
-        public static StudentRequestModel New()
-        {
-            return new()
-            {
-                Address = new()
-            };
-        }
         public string ParentNumber { get; set; } = default!;
         public long SchoolId { get; set; }
     }

@@ -1,3 +1,5 @@
+using AutoMapper;
+using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
 using eSchoolProject.Authorization.Interface;
 using eSchoolProject.Components.PopupComponent;
@@ -14,6 +16,7 @@ namespace eSchoolProject.Components.Pages
         [Inject] IAuthorizationService AuthorizationService { get; set; } = default!;
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
         [Inject] ISnackbar Snackbar { get; init; } = default!;
+        [Inject] IMapper Mapper { get; init; } = default!;
         private CancellationTokenSource cancellationTokenSource = new();
         private SchoolViewModel schoolViewModel = default!;
         private bool IsManagerPopupVisible = false;
@@ -36,21 +39,29 @@ namespace eSchoolProject.Components.Pages
         private void CreateNewStudent()
         {
             StudentManagementPopup.OpenPopup(new());
-        }
-        private void OpenStudentPopup(StudentViewModel studentViewModel)
+        }   
+        private void OpenStudentPopupFromViewModel(StudentViewModel studentViewModel)
         {
             if (studentViewModel != null)
             {
-                StudentManagementPopup.OpenPopup(studentViewModel);
+                var studentRequestModel = Mapper.Map<StudentRequestModel>(studentViewModel);
+                OpenStudentPopup(studentRequestModel);
+            }
+        }
+        private void OpenStudentPopup(StudentRequestModel studentRequestModel)
+        {
+            if (studentRequestModel != null)
+            {
+                StudentManagementPopup.OpenPopup(studentRequestModel);
             }
         }
         private void OpenClassPopup()
         {
             IsClassPopupVisible = true;
         }
-        private void NavigateToSchool(long Id)
+        private void NavigateToClassDetail(long Id)
         {
-            NavigationManager.NavigateTo($"/RegistrationProcedures/{Id}");
+            NavigationManager.NavigateTo($"/class/{Id}");
         }
         protected override async Task OnInitializedAsync()
         {

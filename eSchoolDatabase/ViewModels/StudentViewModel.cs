@@ -23,7 +23,7 @@ namespace eSchoolDatabase.ViewModels
         public AddressViewModel Address { get; set; } = default!;
         public string ParentNumber { get; set; } = default!;
         public long ClassId { get; set; }
-        public List<GradeViewModel>? Grades { get; set; } = default!;
+        public List<GradeViewModel> Grades { get; set; } = default!;
         public long SchoolId { get; set; }
     }
 }

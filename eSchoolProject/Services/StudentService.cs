@@ -16,12 +16,12 @@ namespace eSchoolProject.Services
 {
     public class StudentService(IMapper mapper, ITransactionService transactionService, ILoginService loginService, IStudentRepository studentRepository, IClassRepository classRepository) : IStudentService
     {
-        public async Task AddStudentAsync(StudentViewModel studentViewModel, CancellationToken cancellationToken)
+        public async Task AddStudentAsync(StudentRequestModel studentRequestModel, CancellationToken cancellationToken)
         {
 
             using var transaction = transactionService.BeginTransaction();
            
-            var student = mapper.Map<Student>(studentViewModel);
+            var student = mapper.Map<Student>(studentRequestModel);
                 await studentRepository.AddAsync(student, cancellationToken);
                 await loginService.AddUserAsync(new()
                 {
@@ -39,46 +39,11 @@ namespace eSchoolProject.Services
                 .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
-        public async Task AddStudentToClass(long classId, List<long> StudentIds, CancellationToken cancellationToken)
+        public async Task UpdateStudentAsync(StudentRequestModel studentRequestModel, CancellationToken cancellationToken)
         {
-            var students = await studentRepository.GetAll()
-                .Where(s => StudentIds.Contains(s.Id))
-                .ToListAsync(cancellationToken);
-            foreach (var student in students)
-            {
-                student.ClassId = classId;
-            }
-            await studentRepository.UpdateRangeAsync(students, cancellationToken);
-        }
-        public async Task RemoveStudentFromClass(long classId, List<StudentViewModel> studentList, CancellationToken cancellationToken)
-        {
-            var studentsToRemoveClass = studentList
-                .Where(s => s.ClassId == classId)
-                .ToList();
-
-            var studentsToRemoveClassEntities = mapper.Map<List<Student>>(studentsToRemoveClass);
-
-            foreach (var student in studentsToRemoveClassEntities)
-            {
-                student.ClassId = null;
-            }
-
-            if (studentsToRemoveClassEntities.Any())
-            {
-                await studentRepository.UpdateRangeAsync(studentsToRemoveClassEntities, cancellationToken);
-            }
-        }
-        public async Task UpdateStudentAsync(StudentViewModel studentViewModel, CancellationToken cancellationToken)
-        {
-            var student = mapper.Map<Student>(studentViewModel);
+            var student = mapper.Map<Student>(studentRequestModel);
             await studentRepository.UpdateAsync(student, cancellationToken);
         }
-        public async Task<List<StudentViewModel>> GetStudentsByClassAsync(long classId, CancellationToken cancellationToken)
-        {
-            return await studentRepository.GetAll(cancellationToken)
-                .Where(a => a.ClassId == classId)
-                .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
-                .ToListAsync();
-        }
+       
     }
 }

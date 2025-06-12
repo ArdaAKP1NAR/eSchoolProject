@@ -14,24 +14,25 @@ namespace eSchoolProject.Components.PopupComponent
         private bool _visible;
         [Parameter] public bool IsStudentPopupVisible { get => _visible; set { OpenedPopup(value); } }
         [Parameter] public long SchoolId { get; set; }
-        [Parameter] public StudentViewModel StudentViewModel { get; set; } = default!;
+        [Parameter] public StudentRequestModel StudentRequestModel { get; set; } = default!;
         [Parameter] public EventCallback PopupClosed { get; set; }
         [Parameter] public EventCallback SaveClicked { get; set; }
         private void OpenedPopup(bool value)
         {
             if (value)
             {
-                if (StudentViewModel == null)
+                if (StudentRequestModel == null)
                 {
-                    StudentViewModel = new();
-                    StudentViewModel.SchoolId = SchoolId;
+                    StudentRequestModel = new();
+                    StudentRequestModel.SchoolId = SchoolId;
                 }
             }
+            StudentRequestModel.SchoolId = SchoolId;
             _visible = value;
         }
-        public void OpenPopup(StudentViewModel model)
+        public void OpenPopup(StudentRequestModel model)
         {
-            StudentViewModel = model;
+            StudentRequestModel = model;
             IsStudentPopupVisible = true;
         }
         private async Task AddStudentAsync()
@@ -39,7 +40,7 @@ namespace eSchoolProject.Components.PopupComponent
             using var scope = ServiceScopeFactory.CreateScope();
             var service = scope.ServiceProvider.GetRequiredService<IStudentService>();
 
-            await service.AddStudentAsync(StudentViewModel, cancellationTokenSource.Token);
+            await service.AddStudentAsync(StudentRequestModel, cancellationTokenSource.Token);
             Snackbar.Add("Student added succesfuly.", Severity.Success);
             await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
             IsStudentPopupVisible = false;
@@ -48,7 +49,7 @@ namespace eSchoolProject.Components.PopupComponent
         {
             using var scope = ServiceScopeFactory.CreateScope();
             var service = scope.ServiceProvider.GetRequiredService<IStudentService>();
-            await service.UpdateStudentAsync(StudentViewModel, cancellationTokenSource.Token);
+            await service.UpdateStudentAsync(StudentRequestModel, cancellationTokenSource.Token);
             Snackbar.Add("Student updated succesfuly.", Severity.Success);
             await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
             IsStudentPopupVisible = false;

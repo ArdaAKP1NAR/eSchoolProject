@@ -1,0 +1,38 @@
+﻿@page "/class/{ClassId:long}"
+@using eSchoolDatabase.ViewModels
+
+<h3>@SelectedClass?.ClassLevel @SelectedClass?.Section</h3>
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h6">Sınıf Öğrencileri</MudText>
+
+    <MudDataGrid Items="@ClassStudents">
+        <Columns>
+            <PropertyColumn Property="x => x.Name" Title="Ad" />
+            <PropertyColumn Property="x => x.StudentNumber" Title="Öğrenci No" />
+        </Columns>
+    </MudDataGrid>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddStudentDialog">
+        Öğrenci Ekle
+    </MudButton>
+</MudPaper>
+
+<MudDialog @bind-IsVisible="@IsAddStudentDialogOpen">
+    <DialogContent>
+        <MudSelect T="long"
+                   @bind-SelectedValues="@SelectedStudentIds"
+                   MultiSelection="true"
+                   Label="Öğrenci Seçin">
+            @foreach (var student in UnassignedStudents)
+            {
+                <MudSelectItem Value="@student.Id">@student.Name (@student.StudentNumber)</MudSelectItem>
+            }
+        </MudSelect>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="AddStudentToClassAsync">Ekle</MudButton>
+        <MudButton OnClick="() => IsAddStudentDialogOpen = false">İptal</MudButton>
+    </DialogActions>
+</MudDialog>

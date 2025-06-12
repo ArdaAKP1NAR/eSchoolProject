@@ -100,7 +100,7 @@
 								<PropertyColumn Property="x => x.Address.Street" Title="Street" />
 								<TemplateColumn Title="Update Student">
 									<CellTemplate>
-										<MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick=" () => OpenStudentPopup(context.Item)">
+										<MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick=" () => OpenStudentPopupFromViewModel(context.Item)">
 											Update
 										</MudButton>
 									</CellTemplate>
@@ -127,7 +127,7 @@
 								<TemplateColumn Title="School Overview">
 									<CellTemplate>
 										<MudButton Variant="Variant.Outlined" Color="Color.Dark" StartIcon="@Icons.Material.Filled.ChevronRight"
-												   OnClick="() => NavigateToSchool(context.Item.Id)">
+												   OnClick="() => NavigateToClassDetail(context.Item.Id)">
 											Registration Procedures
 										</MudButton>
 									</CellTemplate>
