@@ -1,16 +1,10 @@
-﻿using eSchoolDatabase.Models;
-using eSchoolDatabase.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using eSchoolDatabase.ViewModels;
 
 namespace eSchoolDatabase.RequestModels
 {
     public class LessonRequestModel
     {
         public string Name { get; set; } = default!;
+        public List<ClassViewModel> ClassList { get; set; } = new();
     }
 }

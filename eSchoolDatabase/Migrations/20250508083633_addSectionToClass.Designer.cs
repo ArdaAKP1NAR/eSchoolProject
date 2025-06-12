@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eSchoolDatabase;
 
@@ -11,9 +12,11 @@ using eSchoolDatabase;
 namespace eSchoolDatabase.Migrations
 {
     [DbContext(typeof(eSchoolContext))]
-    partial class eSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20250508083633_addSectionToClass")]
+    partial class addSectionToClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

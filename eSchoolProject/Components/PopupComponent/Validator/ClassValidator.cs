@@ -7,7 +7,7 @@ namespace eSchoolProject.Components.PopupComponent.Validator
     {
         public ClassValidator()
         {
-            RuleFor(a => a.ClassName)
+            RuleFor(a => a.ClassLevel)
                 .NotNull().WithMessage("Class name is required")
                 .NotEmpty().WithMessage("Class name cannot be empty");
         }

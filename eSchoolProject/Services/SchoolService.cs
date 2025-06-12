@@ -5,6 +5,7 @@ using eSchoolDatabase.Repositories;
 using eSchoolDatabase.Repositories.Interface;
 using eSchoolDatabase.RequestModel;
 using eSchoolDatabase.ViewModels;
+using eSchoolDatabase.ViewModels.GridViewModels;
 using eSchoolProject.Exceptions;
 using eSchoolProject.Services.IServices;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +24,9 @@ namespace eSchoolProject.Services
             }
             await schoolRepository.AddAsync(school, cancellationToken);
         }
-        public async Task<List<SchoolViewModel>> GetAllSchoolsAsync(CancellationToken cancellationToken)
+        public async Task<List<SchoolGridView>> GetAllSchoolsAsync(CancellationToken cancellationToken)
         {
-            return await schoolRepository.GetAll().ProjectTo<SchoolViewModel>(mapper.ConfigurationProvider).ToListAsync(cancellationToken);
+            return await schoolRepository.GetAll().ProjectTo<SchoolGridView>(mapper.ConfigurationProvider).ToListAsync(cancellationToken);
         }
         public async Task<SchoolViewModel> GetSchoolByIdAsync(long schoolId, CancellationToken cancellationToken)
         {

@@ -18,17 +18,19 @@ namespace eSchoolProject.Services
     {
         public async Task AddTeacherAsync(TeacherRequestModel teacherRequestModel, CancellationToken cancellationToken)
         {
-            await transactionService.ExecuteAsync(async () =>
+
+            using var transaction = transactionService.BeginTransaction();
+
+            var teacher = mapper.Map<Teacher>(teacherRequestModel);
+            await teacherRepository.AddAsync(teacher, cancellationToken);
+            await loginService.AddUserAsync(new()
             {
-                var teacher = mapper.Map<Teacher>(teacherRequestModel);
-                await teacherRepository.AddAsync(teacher, cancellationToken);
-                await loginService.AddUserAsync(new()
-                {
-                    IdentityNumber = teacher.IdentityNumber,
-                    Roles = [Roles.Teacher],
-                    Password = PasswordGenerator.GenerateRandomPassword(8),
-                }, cancellationToken);
-            });
+                IdentityNumber = teacher.IdentityNumber,
+                Roles = [Roles.Teacher],
+                Password = PasswordGenerator.GenerateRandomPassword(8),
+            }, cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
         }
         public async Task<List<TeacherViewModel>> GetTeacherBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {

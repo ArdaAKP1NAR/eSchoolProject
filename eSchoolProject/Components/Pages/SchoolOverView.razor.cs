@@ -1,5 +1,6 @@
 using eSchoolDatabase.RequestModel;
 using eSchoolDatabase.ViewModels;
+using eSchoolDatabase.ViewModels.GridViewModels;
 using eSchoolProject.Services.IServices;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -12,15 +13,15 @@ namespace eSchoolProject.Components.Pages
         [Inject] private NavigationManager NavigationManager { get; init; } = default!;
         private CancellationTokenSource cancellationTokenSource = new();
         private bool IsSchoolPopupVisible = false;
-        private MudDataGrid<SchoolViewModel> MudDataGrid { get; set; } = default!;
+        private MudDataGrid<SchoolGridView> MudDataGrid { get; set; } = default!;
 
-        private async Task<GridData<SchoolViewModel>> LoadDataAsync(GridState<SchoolViewModel> state)
+        private async Task<GridData<SchoolGridView>> LoadDataAsync(GridState<SchoolGridView> state)
         {
             using var scope = ServiceScopeFactory.CreateScope();
             var service = scope.ServiceProvider.GetRequiredService<ISchoolService>();
 
             var schools = await service.GetAllSchoolsAsync(cancellationTokenSource.Token);
-            return new GridData<SchoolViewModel>()
+            return new GridData<SchoolGridView>()
             {
                 Items = schools,
                 TotalItems = schools.Count

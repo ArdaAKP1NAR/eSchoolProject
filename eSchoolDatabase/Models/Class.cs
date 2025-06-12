@@ -12,7 +12,9 @@ namespace eSchoolDatabase.Models
     public class Class : BaseEntity
     {
         [MaxLength(100)]
-        public string ClassName { get; set; } = default!;
+        public string ClassLevel { get; set; } = default!;
+        [MaxLength(100)]
+        public string Section { get; set; } = default!;
         public List<Teacher> Teachers { get; set; } = new();
         public List<Student> Students { get; set; } = new();
         public School School { get; set; } = default!;

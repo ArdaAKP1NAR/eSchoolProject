@@ -1,7 +1,9 @@
-﻿namespace eSchoolProject.Services.IServices
+﻿using Microsoft.EntityFrameworkCore.Storage;
+
+namespace eSchoolProject.Services.IServices
 {
     public interface ITransactionService
     {
-        Task ExecuteAsync(Func<Task> operation);
+        IDbContextTransaction BeginTransaction();
     }
 }

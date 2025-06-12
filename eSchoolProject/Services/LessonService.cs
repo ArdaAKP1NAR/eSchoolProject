@@ -14,17 +14,22 @@ namespace eSchoolProject.Services
         public async Task AddLessonAsync(LessonRequestModel lessonRequestModel,List<ClassViewModel> classList, CancellationToken cancellationToken)
         {
             var lesson = mapper.Map<Lesson>(lessonRequestModel);
-            var lessonToAddClassEntities = mapper.Map<List<Class>>(classList);
 
-            lesson.ClassList.AddRange(lessonToAddClassEntities);
-            await lessonRepository.AddAsync(lesson, cancellationToken);
+            try
+            {
+                await lessonRepository.AddAsync(lesson, cancellationToken);
+            }
+            catch (Exception e ) 
+            {
+                throw;
+            }
         }
         public async Task<List<LessonViewModel>> GetLessonBySchoolAsync(long classId, CancellationToken cancellationToken)
         {
             var classEntity = await classRepository.GetAll()
                 .Where(a => a.Id == classId)
                 .Select(a=> a.SchoolId)
-                .FirstAsync();
+                .FirstAsync(cancellationToken);
 
             return await lessonRepository.GetAll()
                 .Where(a => a.ClassList.Any(b => b.SchoolId == classEntity))

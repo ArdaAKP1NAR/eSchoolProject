@@ -19,17 +19,19 @@ namespace eSchoolProject.Services
     {
         public async Task AddManagerAsync(ManagerRequestModel managerRequestModel, CancellationToken cancellationToken)
         {
-            await transactionService.ExecuteAsync(async () =>
-            {
+            using var transaction = transactionService.BeginTransaction();
+            
                 var manager = mapper.Map<Manager>(managerRequestModel);
+                var passwd = PasswordGenerator.GenerateRandomPassword(8);
                 await managerRepository.AddAsync(manager, cancellationToken);
                 await loginService.AddUserAsync(new()
                 {
                     IdentityNumber = manager.IdentityNumber,
                     Roles = [Roles.Manager],
-                    Password = PasswordGenerator.GenerateRandomPassword(8),
+                    Password = passwd,
                 }, cancellationToken);
-            });
+           
+            await transaction.CommitAsync();
         }
         public async Task<List<ManagerViewModel>> GetManagersBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {

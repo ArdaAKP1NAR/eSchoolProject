@@ -27,7 +27,7 @@
 						<MudSelect T="ClassViewModel" Value="selectedClass" Label="Choose class" ValueChanged="OnClassChanged">
 							@foreach (var classView in classList)
 							{
-								<MudSelectItem T="ClassViewModel" Value="@classView">@classView.ClassName</MudSelectItem>
+								<MudSelectItem T="ClassViewModel" Value="@classView">@classView.ClassLevel</MudSelectItem>
 							}
 						</MudSelect>
 						<MudSelect T="long" Label="Students" HelperText="Choose students to register to class" MultiSelection="true" @bind-SelectedValues="selectedStudentIds">

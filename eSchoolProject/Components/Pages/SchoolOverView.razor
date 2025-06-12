@@ -2,12 +2,13 @@
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 @using eSchoolDatabase.ViewModels
+@using eSchoolDatabase.ViewModels.GridViewModels
 @using eSchoolProject.Authorization
 
 @attribute [Authorize]
 <MudCard Elevation="2">
 	<div class="m-3">
-	<MudDataGrid @ref=MudDataGrid T="SchoolViewModel" ServerData="LoadDataAsync" SortMode="SortMode.Multiple" Filterable="true">
+	<MudDataGrid @ref=MudDataGrid T="SchoolGridView" ServerData="LoadDataAsync" SortMode="SortMode.Multiple" Filterable="true">
 		<ToolBarContent>
 			<MudText Typo="Typo.h6">School List</MudText>
 			<MudSpacer />

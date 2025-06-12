@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eSchoolDatabase;
 
@@ -11,9 +12,11 @@ using eSchoolDatabase;
 namespace eSchoolDatabase.Migrations
 {
     [DbContext(typeof(eSchoolContext))]
-    partial class eSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20250508083148_ClassModelChanged")]
+    partial class ClassModelChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,7 +105,7 @@ namespace eSchoolDatabase.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("ClassLevel")
+                    b.Property<string>("ClassName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -112,11 +115,6 @@ namespace eSchoolDatabase.Migrations
 
                     b.Property<long>("SchoolId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Section")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 

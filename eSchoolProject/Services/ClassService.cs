@@ -17,7 +17,7 @@ namespace eSchoolProject.Services
         {
             var classToAdd = mapper.Map<Class>(classRequestModel);
             var school = await schoolRepository.GetByIdAsync(schoolId) ?? throw new SchoolNotFoundException("School not found. ");
-            if (await classRepository.GetAll().AnyAsync(a => a.ClassName == classToAdd.ClassName))
+            if (await classRepository.GetAll().AnyAsync(a => a.ClassLevel == classToAdd.ClassLevel))
             {
                 throw new InvalidNameException("This class already exist");
             }

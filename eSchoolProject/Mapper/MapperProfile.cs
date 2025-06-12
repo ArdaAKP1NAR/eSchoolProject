@@ -3,6 +3,7 @@ using eSchoolDatabase.Models;
 using eSchoolDatabase.RequestModel;
 using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
+using eSchoolDatabase.ViewModels.GridViewModels;
 
 namespace eSchoolProject.Mapper
 {
@@ -13,6 +14,7 @@ namespace eSchoolProject.Mapper
             CreateMap<School, SchoolRequestModel>().ReverseMap();
             CreateMap<School, SchoolViewModel>().ReverseMap();
             CreateMap<SchoolRequestModel, SchoolViewModel>().ReverseMap();
+            CreateMap<School, SchoolGridView>().ReverseMap();
 
             CreateMap<Address, AddressRequestModel>().ReverseMap();
             CreateMap<Address, AddressViewModel>().ReverseMap();

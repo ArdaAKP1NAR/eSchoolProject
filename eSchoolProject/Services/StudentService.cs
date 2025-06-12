@@ -18,9 +18,10 @@ namespace eSchoolProject.Services
     {
         public async Task AddStudentAsync(StudentViewModel studentViewModel, CancellationToken cancellationToken)
         {
-            await transactionService.ExecuteAsync(async () =>
-            {
-                var student = mapper.Map<Student>(studentViewModel);
+
+            using var transaction = transactionService.BeginTransaction();
+           
+            var student = mapper.Map<Student>(studentViewModel);
                 await studentRepository.AddAsync(student, cancellationToken);
                 await loginService.AddUserAsync(new()
                 {
@@ -28,7 +29,8 @@ namespace eSchoolProject.Services
                     Roles = [Roles.Student],
                     Password = PasswordGenerator.GenerateRandomPassword(8),
                 }, cancellationToken);
-            });
+            
+            await transaction.CommitAsync();
         }
         public async Task<List<StudentViewModel>> GetStudentsBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {
