@@ -43,51 +43,44 @@ namespace eSchoolProject.Services
                 .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync();
         }
-        public async Task AddStudentToClass(long classId, List<long> StudentIds, CancellationToken cancellationToken)
+        public async Task RemoveStudentFromClassAsync(List<StudentViewModel> studentViews, long classId, CancellationToken cancellationToken)
         {
-            var students = await studentRepository.GetAll()
-                .Where(s => StudentIds.Contains(s.Id))
+            var selectedStudentIds = studentViews.Select(s => s.Id).ToList();
+
+            var studentsToRemoveClass = await studentRepository.GetAll(cancellationToken)
+                .Where(s => s.ClassId == classId && selectedStudentIds.Contains(s.Id))
                 .ToListAsync(cancellationToken);
-            foreach (var student in students)
+
+            if (!studentsToRemoveClass.Any())
             {
-                student.ClassId = classId;
+                throw new ItemNotFoundException("No matching students found in this class.");
             }
-            await studentRepository.UpdateRangeAsync(students, cancellationToken);
-        }
-        public async Task RemoveStudentFromClass(long classId, List<StudentViewModel> studentList, CancellationToken cancellationToken)
-        {
-            var studentsToRemoveClass = studentList
-                .Where(s => s.ClassId == classId)
-                .ToList();
 
-            var studentsToRemoveClassEntities = mapper.Map<List<Student>>(studentsToRemoveClass);
-
-            foreach (var student in studentsToRemoveClassEntities)
+            foreach (var student in studentsToRemoveClass)
             {
                 student.ClassId = null;
             }
 
-            if (studentsToRemoveClassEntities.Any())
-            {
-                await studentRepository.UpdateRangeAsync(studentsToRemoveClassEntities, cancellationToken);
-            }
+            await studentRepository.UpdateRangeAsync(studentsToRemoveClass, cancellationToken);
         }
-        public async Task AssignStudentsToClassAsync(List<long> studentIds, long classId)
+        public async Task AssignStudentsToClassAsync(List<StudentViewModel> students, long classId)
         {
-            foreach (var id in studentIds)
+            foreach (var studentVm in students)
             {
-                var student = await studentRepository.GetByIdAsync(id) ?? throw new StudentNotFoundException("Student not found. ");
+                var student = await studentRepository.GetByIdAsync(studentVm.Id)
+                              ?? throw new StudentNotFoundException("Student not found.");
+
                 student.ClassId = classId;
                 await studentRepository.UpdateAsync(student);
             }
         }
+
         public async Task<List<StudentViewModel>> GetStudentsWithoutClassBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {
             return await studentRepository.GetAll(cancellationToken)
-                .Where(a => a.SchoolId == schoolId && a.ClassId == 0)
+                .Where(a => a.SchoolId == schoolId && a.ClassId == null)
                 .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-
         }
     }
 }

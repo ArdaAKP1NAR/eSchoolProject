@@ -1,0 +1,11 @@
+﻿.tab-container {
+    min-height: 97vh;
+    padding: 10px;
+    background-color: var(--bs-white);
+    border: 1px solid var(--bs-gray-400);
+}
+.add-button-management {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+}

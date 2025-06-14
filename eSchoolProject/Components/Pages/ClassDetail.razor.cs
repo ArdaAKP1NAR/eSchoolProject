@@ -18,8 +18,8 @@ namespace eSchoolProject.Components.Pages
         private ClassViewModel? SelectedClass;
         private List<StudentViewModel> ClassStudents = new();
         private List<StudentViewModel> UnassignedStudents = new();
-        private IEnumerable<long> SelectedStudentIds = new List<long>();
-        private bool IsAddStudentDialogOpen = false;
+        private List<StudentViewModel> SelectedStudents = new();
+        private bool IsAddStudentPopupOpen = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -29,11 +29,21 @@ namespace eSchoolProject.Components.Pages
             ClassStudents = await classService.GetStudentsByClassAsync(ClassId, cancellationTokenSource.Token);
             UnassignedStudents = await classService.GetStudentsWithoutClassBySchoolAsync(SelectedClass.SchoolId, cancellationTokenSource.Token); // Assuming 0 means unassigned
         }
-        private void OpenAddStudentDialog()
+        private void OpenPopup()
         {
-            IsAddStudentDialogOpen = true;
+            IsAddStudentPopupOpen = true;
         }
-        private async Task AddStudentToClassAsync()
+        private void ClosePopup()
+        {
+            IsAddStudentPopupOpen = false;
+        }
+        private Task OnSelectedStudentsChanged(IEnumerable<StudentViewModel> students)
+        {
+            SelectedStudents = students.ToList();
+            return Task.CompletedTask;
+        }
+        private HashSet<long> SelectedStudentIds = new();
+        private async Task RemoveSelectedStudentsFromClassAsync()
         {
             if (!SelectedStudentIds.Any())
             {
@@ -41,12 +51,34 @@ namespace eSchoolProject.Components.Pages
                 return;
             }
 
+            // Seçilen studentId'lerden StudentViewModel listesi oluþtur
+            var studentsToRemove = ClassStudents.Where(s => SelectedStudentIds.Contains(s.Id)).ToList();
+
             using var scope = ServiceScopeFactory.CreateScope();
             var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
-            var selectedStudentsList = SelectedStudentIds.ToList();
-            await classService.AssignStudentsToClassAsync(selectedStudentsList, ClassId);
 
-            IsAddStudentDialogOpen = false;
+            await classService.RemoveStudentFromClassAsync(studentsToRemove, SelectedClass.Id, cancellationTokenSource.Token);
+
+            // Listeyi güncelle
+            ClassStudents = await classService.GetStudentsByClassAsync(SelectedClass.Id, cancellationTokenSource.Token);
+
+            SelectedStudentIds.Clear();
+            StateHasChanged();
+        }
+
+        private async Task AddStudentToClassAsync()
+        {
+            if (!SelectedStudents.Any())
+            {
+                Snackbar.Add("Lütfen en az bir öðrenci seçin.", Severity.Warning);
+                return;
+            }
+
+            using var scope = ServiceScopeFactory.CreateScope();
+            var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
+            await classService.AssignStudentsToClassAsync(SelectedStudents, ClassId);
+
+            IsAddStudentPopupOpen = false;
 
             ClassStudents = await classService.GetStudentsByClassAsync(ClassId, cancellationTokenSource.Token);
             UnassignedStudents = await classService.GetStudentsWithoutClassBySchoolAsync(SelectedClass!.SchoolId, cancellationTokenSource.Token);

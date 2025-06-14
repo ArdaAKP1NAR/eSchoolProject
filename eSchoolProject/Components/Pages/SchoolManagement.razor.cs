@@ -23,6 +23,7 @@ namespace eSchoolProject.Components.Pages
         private bool IsTeacherPopupVisible = false;
         private bool IsClassPopupVisible = false;
         private StudentManagementPopup StudentManagementPopup = default!;
+
         private string ActiveTab = "Managers";
         private void SetActiveTab(string tab)
         {

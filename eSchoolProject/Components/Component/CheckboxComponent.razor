@@ -1,0 +1,9 @@
+﻿@typeparam TValueType
+
+<input type="checkbox" id="@id"
+	   name="@Name"
+	   @bind="@internalChecked"
+	   @bind:after=onValueChanged />
+<label for="@id">@Label</label>
+
+

@@ -1,38 +1,49 @@
 ﻿@page "/class/{ClassId:long}"
 @using eSchoolDatabase.ViewModels
+@using eSchoolProject.Components.Component
 
-<h3>@SelectedClass?.ClassLevel @SelectedClass?.Section</h3>
 
 <MudPaper Class="pa-4">
-    <MudText Typo="Typo.h6">Sınıf Öğrencileri</MudText>
+	<div class="tab-container">
+		<div class="tab-content">
 
-    <MudDataGrid Items="@ClassStudents">
-        <Columns>
-            <PropertyColumn Property="x => x.Name" Title="Ad" />
-            <PropertyColumn Property="x => x.StudentNumber" Title="Öğrenci No" />
-        </Columns>
-    </MudDataGrid>
-
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddStudentDialog">
-        Öğrenci Ekle
-    </MudButton>
+			<MudDataGrid Items="@ClassStudents">
+				<ToolBarContent>
+					<MudText Typo="Typo.h6">@SelectedClass?.ClassLevel @SelectedClass?.Section Sınıf Öğrencileri</MudText>
+					<MudSpacer />
+					<div class="add-button-management">
+						<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenPopup">
+							Öğrenci Ekle
+						</MudButton>
+					</div>
+				</ToolBarContent>
+				<Columns>
+					<PropertyColumn Property="x => x.Name" Title="Name" />
+					<PropertyColumn Property="x => x.StudentNumber" Title="Student number" />
+					<PropertyColumn Property="x => x.IdentityNumber" Title="Identity number" />
+					<PropertyColumn Property="x => x.ParentNumber" Title="Parent number" />
+				</Columns>
+			</MudDataGrid>
+		</div>
+	</div>
 </MudPaper>
+<Popup IsVisible="IsAddStudentPopupOpen" PopupClosed="ClosePopup">
+	<Body>
+		<MudSelect T="StudentViewModel"
+				   SelectedValues="SelectedStudents"
+				   SelectedValuesChanged="OnSelectedStudentsChanged"
+				   MultiSelection="true"
+				   Label="Öğrenci Seçin"
+				   ToStringFunc="@(s => s.Name + " (" + s.StudentNumber + ")")">
+			@foreach (var student in UnassignedStudents)
+			{
+				<MudSelectItem Value="student">@student.Name (@student.StudentNumber)</MudSelectItem>
+			}
+		</MudSelect>
+		<div class="popup-actions">
+			<MudButton Color="Color.Primary" OnClick="AddStudentToClassAsync">Ekle</MudButton>
+			<MudButton OnClick="() => IsAddStudentPopupOpen = false">İptal</MudButton>
+		</div>
 
-<MudDialog @bind-IsVisible="@IsAddStudentDialogOpen">
-    <DialogContent>
-        <MudSelect T="long"
-                   @bind-SelectedValues="@SelectedStudentIds"
-                   MultiSelection="true"
-                   Label="Öğrenci Seçin">
-            @foreach (var student in UnassignedStudents)
-            {
-                <MudSelectItem Value="@student.Id">@student.Name (@student.StudentNumber)</MudSelectItem>
-            }
-        </MudSelect>
-
-    </DialogContent>
-    <DialogActions>
-        <MudButton Color="Color.Primary" OnClick="AddStudentToClassAsync">Ekle</MudButton>
-        <MudButton OnClick="() => IsAddStudentDialogOpen = false">İptal</MudButton>
-    </DialogActions>
-</MudDialog>
+	</Body>
+</Popup>
