@@ -42,29 +42,6 @@ namespace eSchoolProject.Components.Pages
             SelectedStudents = students.ToList();
             return Task.CompletedTask;
         }
-        private HashSet<long> SelectedStudentIds = new();
-        private async Task RemoveSelectedStudentsFromClassAsync()
-        {
-            if (!SelectedStudentIds.Any())
-            {
-                Snackbar.Add("Lütfen en az bir öðrenci seçin.", Severity.Warning);
-                return;
-            }
-
-            // Seçilen studentId'lerden StudentViewModel listesi oluþtur
-            var studentsToRemove = ClassStudents.Where(s => SelectedStudentIds.Contains(s.Id)).ToList();
-
-            using var scope = ServiceScopeFactory.CreateScope();
-            var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
-
-            await classService.RemoveStudentFromClassAsync(studentsToRemove, SelectedClass.Id, cancellationTokenSource.Token);
-
-            // Listeyi güncelle
-            ClassStudents = await classService.GetStudentsByClassAsync(SelectedClass.Id, cancellationTokenSource.Token);
-
-            SelectedStudentIds.Clear();
-            StateHasChanged();
-        }
 
         private async Task AddStudentToClassAsync()
         {
@@ -76,6 +53,7 @@ namespace eSchoolProject.Components.Pages
 
             using var scope = ServiceScopeFactory.CreateScope();
             var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
+
             await classService.AssignStudentsToClassAsync(SelectedStudents, ClassId);
 
             IsAddStudentPopupOpen = false;

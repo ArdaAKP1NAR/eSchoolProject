@@ -43,7 +43,7 @@ namespace eSchoolProject.Services
                 .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync();
         }
-        public async Task RemoveStudentFromClassAsync(List<StudentViewModel> studentViews, long classId, CancellationToken cancellationToken)
+        public async Task RemoveStudentFromClassAsync(List<StudentViewModel> studentViews, long classId, CancellationToken cancellationToken) // This method removes a list of students from a specific class
         {
             var selectedStudentIds = studentViews.Select(s => s.Id).ToList();
 
@@ -63,7 +63,7 @@ namespace eSchoolProject.Services
 
             await studentRepository.UpdateRangeAsync(studentsToRemoveClass, cancellationToken);
         }
-        public async Task AssignStudentsToClassAsync(List<StudentViewModel> students, long classId)
+        public async Task AssignStudentsToClassAsync(List<StudentViewModel> students, long classId) // This method assigns a list of students to a specific class
         {
             foreach (var studentVm in students)
             {
@@ -75,7 +75,7 @@ namespace eSchoolProject.Services
             }
         }
 
-        public async Task<List<StudentViewModel>> GetStudentsWithoutClassBySchoolAsync(long schoolId, CancellationToken cancellationToken)
+        public async Task<List<StudentViewModel>> GetStudentsWithoutClassBySchoolAsync(long schoolId, CancellationToken cancellationToken) // This method retrieves students without a class in a specific school
         {
             return await studentRepository.GetAll(cancellationToken)
                 .Where(a => a.SchoolId == schoolId && a.ClassId == null)

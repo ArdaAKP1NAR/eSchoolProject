@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace eSchoolProject.Components
+namespace eSchoolProject.Components.Component
 {
     public partial class LabelComponent
     {

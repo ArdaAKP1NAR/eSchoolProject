@@ -41,12 +41,13 @@
 			{
 				<div class="tab-container">
 					<div class="tab-content">
-						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="@schoolViewModel.Managers.ToList()">
+						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="@FilteredManagers.ToList()">
 							<ToolBarContent>
 								<MudText Typo="Typo.h6">Manager List</MudText>
 								<MudSpacer />
+								<MudTextField @bind-Value="searchTextManagers" Placeholder="Search manager..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mx-4" Immediate="true" />
 								<div class="add-button-management">
-									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenManagerPopup" />
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenManagerPopup">Add Manager</MudButton>
 								</div>
 							</ToolBarContent>
 							<Columns>
@@ -61,12 +62,13 @@
 			{
 				<div class="tab-container">
 					<div class="tab-content">
-						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="@schoolViewModel.Teachers.ToList()">
+						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="FilteredTeachers.ToList()">
 							<ToolBarContent>
 								<MudText Typo="Typo.h6">Teacher List</MudText>
 								<MudSpacer />
+								<MudTextField @bind-Value="searchTextTeachers" Placeholder="Search teacher..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mx-4" Immediate="true" />
 								<div class="add-button-management">
-									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenTeacherPopup" />
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenTeacherPopup">Add Teacher</MudButton>
 								</div>
 							</ToolBarContent>
 							<Columns>
@@ -82,12 +84,13 @@
 			{
 				<div class="tab-container">
 					<div class="tab-content">
-						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="@schoolViewModel.Students.ToList()">
+						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="@FilteredStudents.ToList()">
 							<ToolBarContent>
 								<MudText Typo="Typo.h6">Student List</MudText>
 								<MudSpacer />
+								<MudTextField @bind-Value="searchTextStudents" Placeholder="Search student..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mx-4" Immediate="true" />
 								<div class="add-button-management">
-									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateNewStudent" />
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateNewStudent">Add Student</MudButton>
 								</div>
 							</ToolBarContent>
 							<Columns>
@@ -119,7 +122,7 @@
 								<MudText Typo="Typo.h6">Class List</MudText>
 								<MudSpacer />
 								<div class="add-button-management">
-									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenClassPopup" />
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenClassPopup">Add Class</MudButton>
 								</div>
 							</ToolBarContent>
 							<Columns>

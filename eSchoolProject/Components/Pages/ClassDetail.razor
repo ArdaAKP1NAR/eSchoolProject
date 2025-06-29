@@ -9,11 +9,11 @@
 
 			<MudDataGrid Items="@ClassStudents">
 				<ToolBarContent>
-					<MudText Typo="Typo.h6">@SelectedClass?.ClassLevel @SelectedClass?.Section Sınıf Öğrencileri</MudText>
+					<MudText Typo="Typo.h6">Students of Class @SelectedClass?.ClassLevel @SelectedClass?.Section</MudText>
 					<MudSpacer />
 					<div class="add-button-management">
-						<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenPopup">
-							Öğrenci Ekle
+						<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="OpenPopup">
+							Add Student To Class
 						</MudButton>
 					</div>
 				</ToolBarContent>

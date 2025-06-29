@@ -1,4 +1,5 @@
 using AutoMapper;
+using eSchoolDatabase.Models;
 using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
 using eSchoolProject.Authorization.Interface;
@@ -17,12 +18,17 @@ namespace eSchoolProject.Components.Pages
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
         [Inject] ISnackbar Snackbar { get; init; } = default!;
         [Inject] IMapper Mapper { get; init; } = default!;
+        [Inject] ISearchService SearchService { get; init; } = default!;
+
         private CancellationTokenSource cancellationTokenSource = new();
         private SchoolViewModel schoolViewModel = default!;
         private bool IsManagerPopupVisible = false;
         private bool IsTeacherPopupVisible = false;
         private bool IsClassPopupVisible = false;
         private StudentManagementPopup StudentManagementPopup = default!;
+        private string searchTextManagers = string.Empty;
+        private string searchTextTeachers = string.Empty;
+        private string searchTextStudents = string.Empty;
 
         private string ActiveTab = "Managers";
         private void SetActiveTab(string tab)
@@ -40,7 +46,7 @@ namespace eSchoolProject.Components.Pages
         private void CreateNewStudent()
         {
             StudentManagementPopup.OpenPopup(new());
-        }   
+        }
         private void OpenStudentPopupFromViewModel(StudentViewModel studentViewModel)
         {
             if (studentViewModel != null)
@@ -64,6 +70,24 @@ namespace eSchoolProject.Components.Pages
         {
             NavigationManager.NavigateTo($"/class/{Id}");
         }
+        private IEnumerable<TeacherViewModel> FilteredTeachers =>
+            SearchService.FilterList(schoolViewModel.Teachers, searchTextTeachers, (teacher, search) =>
+                (!string.IsNullOrEmpty(teacher.Name) && teacher.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(teacher.IdentityNumber) && teacher.IdentityNumber.Contains(search, StringComparison.OrdinalIgnoreCase))
+        );
+        private IEnumerable<StudentViewModel> FilteredStudents =>
+             SearchService.FilterList(schoolViewModel.Students, searchTextStudents, (student, search) =>
+                 (!string.IsNullOrEmpty(student.Name) && student.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
+                 student.StudentNumber.ToString().Contains(search) ||
+                 (!string.IsNullOrEmpty(student.IdentityNumber) && student.IdentityNumber.Contains(search))
+        );
+        private IEnumerable<ManagerViewModel> FilteredManagers =>
+            SearchService.FilterList(schoolViewModel.Managers, searchTextManagers, (manager, search) =>
+                (!string.IsNullOrEmpty(manager.Name) && manager.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(manager.IdentityNumber) && manager.IdentityNumber.Contains(search, StringComparison.OrdinalIgnoreCase))
+        );
+
+
         protected override async Task OnInitializedAsync()
         {
             await GetSchoolByIdAsync();

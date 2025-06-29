@@ -59,32 +59,15 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
-/* MudBlazor Buton Özelleþtirme */
-.add-button.mud-button-filled.mud-button-filled-success {
-    justify-content: end;
-    border-radius: 5px;
-    background-color: var(--bs-success);
-    float: right;
-    color: white;
-    padding: 14px 14px !important;
+.add-button-management .mud-button-root .mud-button-label .mud-button-icon-start {
+    display: inherit;
+    margin-left: -4px;
+    margin-right: 8px;
+    margin-inline-start: -4px;
+    margin-inline-end: 8px;
+    margin-top: -4px;
 }
 
-    .add-button.mud-button-filled.mud-button-filled-success:hover {
-        background-color: #218838 !important; /* Hover efekti için daha koyu bir yeþil */
-    }
-.add-button-manager.mud-button-filled.mud-button-filled-success {
-    justify-content: end !important;
-    border-radius: 5px !important;
-    background-color: var(--bs-success) !important;
-    float: left !important;
-    color: white !important;
-    margin: 1px 4px !important;
-    padding: 14px;
-}
-
-    .add-button-manager.mud-button-filled.mud-button-filled-success:hover {
-        background-color: #218838 !important; /* Hover efekti için daha koyu bir yeþil */
-    }
 .mud-paper.navbar-class {
     background-color: darkgray !important;
     width: 100% !important;
