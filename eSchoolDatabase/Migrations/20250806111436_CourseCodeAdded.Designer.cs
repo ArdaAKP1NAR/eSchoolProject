@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eSchoolDatabase;
 
@@ -11,9 +12,11 @@ using eSchoolDatabase;
 namespace eSchoolDatabase.Migrations
 {
     [DbContext(typeof(eSchoolContext))]
-    partial class eSchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20250806111436_CourseCodeAdded")]
+    partial class CourseCodeAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace eSchoolDatabase.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ClassLesson", b =>
-                {
-                    b.Property<long>("ClassListId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("LessonsId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ClassListId", "LessonsId");
-
-                    b.HasIndex("LessonsId");
-
-                    b.ToTable("ClassLesson");
-                });
 
             modelBuilder.Entity("ClassTeacher", b =>
                 {
@@ -122,6 +110,9 @@ namespace eSchoolDatabase.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<long?>("LessonId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("SchoolId")
                         .HasColumnType("bigint");
 
@@ -131,6 +122,8 @@ namespace eSchoolDatabase.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
 
                     b.HasIndex("SchoolId");
 
@@ -151,7 +144,7 @@ namespace eSchoolDatabase.Migrations
                     b.Property<long>("LessonId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("StudentId")
+                    b.Property<long?>("StudentId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -262,6 +255,9 @@ namespace eSchoolDatabase.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("LessonId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -283,6 +279,8 @@ namespace eSchoolDatabase.Migrations
                     b.HasIndex("AddressId");
 
                     b.HasIndex("ClassId");
+
+                    b.HasIndex("LessonId");
 
                     b.HasIndex("SchoolId");
 
@@ -348,21 +346,6 @@ namespace eSchoolDatabase.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ClassLesson", b =>
-                {
-                    b.HasOne("eSchoolDatabase.Models.Class", null)
-                        .WithMany()
-                        .HasForeignKey("ClassListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("eSchoolDatabase.Models.Lesson", null)
-                        .WithMany()
-                        .HasForeignKey("LessonsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ClassTeacher", b =>
                 {
                     b.HasOne("eSchoolDatabase.Models.Class", null)
@@ -398,6 +381,10 @@ namespace eSchoolDatabase.Migrations
 
             modelBuilder.Entity("eSchoolDatabase.Models.Class", b =>
                 {
+                    b.HasOne("eSchoolDatabase.Models.Lesson", null)
+                        .WithMany("ClassList")
+                        .HasForeignKey("LessonId");
+
                     b.HasOne("eSchoolDatabase.Models.School", "School")
                         .WithMany("Classes")
                         .HasForeignKey("SchoolId")
@@ -415,15 +402,11 @@ namespace eSchoolDatabase.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("eSchoolDatabase.Models.Student", "Student")
+                    b.HasOne("eSchoolDatabase.Models.Student", null)
                         .WithMany("Grades")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StudentId");
 
                     b.Navigation("Lesson");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("eSchoolDatabase.Models.Lesson", b =>
@@ -471,6 +454,10 @@ namespace eSchoolDatabase.Migrations
                         .WithMany("Students")
                         .HasForeignKey("ClassId");
 
+                    b.HasOne("eSchoolDatabase.Models.Lesson", null)
+                        .WithMany("Students")
+                        .HasForeignKey("LessonId");
+
                     b.HasOne("eSchoolDatabase.Models.School", "School")
                         .WithMany("Students")
                         .HasForeignKey("SchoolId")
@@ -497,6 +484,13 @@ namespace eSchoolDatabase.Migrations
 
             modelBuilder.Entity("eSchoolDatabase.Models.Class", b =>
                 {
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("eSchoolDatabase.Models.Lesson", b =>
+                {
+                    b.Navigation("ClassList");
+
                     b.Navigation("Students");
                 });
 

@@ -25,6 +25,7 @@ namespace eSchoolProject.Components.Pages
         private bool IsManagerPopupVisible = false;
         private bool IsTeacherPopupVisible = false;
         private bool IsClassPopupVisible = false;
+        private bool IsLessonPopupVisible = false;
         private StudentManagementPopup StudentManagementPopup = default!;
         private string searchTextManagers = string.Empty;
         private string searchTextTeachers = string.Empty;
@@ -42,6 +43,10 @@ namespace eSchoolProject.Components.Pages
         private void OpenTeacherPopup()
         {
             IsTeacherPopupVisible = true;
+        }
+        private void OpenLessonPopup()
+        {
+            IsLessonPopupVisible = true;
         }
         private void CreateNewStudent()
         {

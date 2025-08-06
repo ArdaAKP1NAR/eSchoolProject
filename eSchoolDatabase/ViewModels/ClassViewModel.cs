@@ -14,6 +14,7 @@ namespace eSchoolDatabase.ViewModels
         public string Section { get; set; } = default!;
         public List<TeacherViewModel>? Teachers { get; set; }
         public List<StudentViewModel>? Students { get; set; }
+        public List<LessonViewModel>? Lessons { get; set; }
         public long SchoolId { get; set; }
         public string FullClassName => $"{ClassLevel}{Section}";
     }

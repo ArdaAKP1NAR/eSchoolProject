@@ -12,8 +12,8 @@ namespace eSchoolDatabase.ViewModels
     {
         public long Id { get; set; }
         public string Name { get; set; } = default!;
-        public long ClassId { get; set; }
-        public List<StudentViewModel> Students { get; set; } = new();
+        public string CourseCode { get; set; } = default!;
+        public List<ClassViewModel> ClassList { get; set; } = new();
         public long TeacherId { get; set; }
     }
 }

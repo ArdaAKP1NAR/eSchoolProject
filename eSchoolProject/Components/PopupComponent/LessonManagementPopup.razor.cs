@@ -16,8 +16,10 @@ namespace eSchoolProject.Components.PopupComponent
         [Parameter] public bool IsLessonPopupVisible { get; set; }
         [Parameter] public long SchoolId { get; set; }
         private LessonRequestModel LessonRequestModel { get; set; } = new();
+        private List<TeacherViewModel> teacherList = new();
+        private long selectedTeacherId;
         private List<ClassViewModel> classList = new();
-        private IEnumerable<long> selectedClassIds = new List<long>();
+        private List<ClassViewModel> selectedClassList = new();
         [Parameter] public EventCallback PopupClosed { get; set; }
         [Parameter] public EventCallback SaveClicked { get; set; }
 
@@ -30,19 +32,32 @@ namespace eSchoolProject.Components.PopupComponent
         {
             using var scope = ServiceScopeFactory.CreateScope();
             var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
+            var teacherService = scope.ServiceProvider.GetRequiredService<ITeacherService>();
+
+            teacherList = await teacherService.GetTeacherBySchoolAsync(SchoolId, cancellationTokenSource.Token);
             classList = await classService.GetClassesBySchoolAsync(SchoolId, cancellationTokenSource.Token);
+        }
+        private Task OnSelectedClassChanged(IEnumerable<ClassViewModel> selectedClasses)
+        {
+            selectedClassList = selectedClasses.ToList();
+            return Task.CompletedTask;
         }
         private async Task AddLessonAsync()
         {
-            var addLessonToClassEntitites = classList
-                .Where(c => selectedClassIds.Contains(c.Id))
-                .ToList();
+            if (selectedClassList == null)
+            {
+                Snackbar.Add("Please select at least one class.", Severity.Error);
+                return;
+            }
 
             using var scope = ServiceScopeFactory.CreateScope();
             var service = scope.ServiceProvider.GetRequiredService<ILessonService>();
-            await service.AddLessonAsync(LessonRequestModel, addLessonToClassEntitites, cancellationTokenSource.Token);
+            
+            await service.AddLessonAsync(LessonRequestModel, selectedClassList, selectedTeacherId, cancellationTokenSource.Token);
             Snackbar.Add("Lesson added successfully!", Severity.Success);
+           
             await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
+           
             IsLessonPopupVisible = false;
         }
         private async Task Close()

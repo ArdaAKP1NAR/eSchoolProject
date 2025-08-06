@@ -17,6 +17,7 @@ namespace eSchoolDatabase.Models
         public string Section { get; set; } = default!;
         public List<Teacher> Teachers { get; set; } = new();
         public List<Student> Students { get; set; } = new();
+        public List<Lesson> Lessons { get; set; } = new();
         public School School { get; set; } = default!;
         public long SchoolId { get; set; }
     }

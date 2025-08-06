@@ -90,3 +90,31 @@ h1:focus {
 .mud-card-registration .mud-table{
     background-color: var(--bs-gray-300) !important;
 }
+.button-container {
+    display: flex;
+    gap: 12px; /* Butonlar arasý boþluk */
+    align-items: center;
+    flex-wrap: nowrap;
+    text-wrap-mode: nowrap;
+}
+
+    .button-container > button {
+        min-width: 180px; /* Ýstersen buton geniþliði */
+        padding: 10px 16px;
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgb(0 0 0 / 0.15);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+    .reassign-select .mud-select{
+        min-width: 230px !important;
+    }
+.mud-button-label .mud-button-icon-start {
+    display: inherit;
+    margin-left: -4px;
+    margin-right: 8px;
+    margin-inline-start: -4px;
+    margin-inline-end: 8px;
+    margin-top: -2px;
+}

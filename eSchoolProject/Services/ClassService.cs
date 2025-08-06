@@ -63,24 +63,52 @@ namespace eSchoolProject.Services
 
             await studentRepository.UpdateRangeAsync(studentsToRemoveClass, cancellationToken);
         }
-        public async Task AssignStudentsToClassAsync(List<StudentViewModel> students, long classId) // This method assigns a list of students to a specific class
+        public async Task AssignStudentsToClassAsync(List<StudentViewModel> students, long classId, CancellationToken cancellationToken) // This method assigns a list of students to a specific class
         {
-            foreach (var studentVm in students)
+            var studentIds = students.Select(s => s.Id).ToList();
+
+            var studentsToUpdate = await studentRepository.GetAll(cancellationToken)
+                .Where(s => studentIds.Contains(s.Id) && s.ClassId == null)
+                .ToListAsync(cancellationToken);
+
+            if (studentsToUpdate.Count != studentIds.Count)
             {
-                var student = await studentRepository.GetByIdAsync(studentVm.Id)
-                              ?? throw new StudentNotFoundException("Student not found.");
-
-                student.ClassId = classId;
-                await studentRepository.UpdateAsync(student);
+                throw new StudentNotFoundException("Some students could not be found in the system.");
             }
-        }
 
+            foreach (var student in studentsToUpdate)
+            {
+                student.ClassId = classId;
+            }
+
+            await studentRepository.UpdateRangeAsync(studentsToUpdate, cancellationToken);
+        }
         public async Task<List<StudentViewModel>> GetStudentsWithoutClassBySchoolAsync(long schoolId, CancellationToken cancellationToken) // This method retrieves students without a class in a specific school
         {
             return await studentRepository.GetAll(cancellationToken)
                 .Where(a => a.SchoolId == schoolId && a.ClassId == null)
                 .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+        }
+        public async Task ReassignStudentsToClassAsync(List<StudentViewModel> students, long classId, CancellationToken cancellationToken)
+        {
+            var studentIds = students.Select(s => s.Id).ToList();
+            
+            var studentsToUpdate = await studentRepository.GetAll(cancellationToken)
+                .Where(s => studentIds.Contains(s.Id))
+                .ToListAsync(cancellationToken);
+         
+            if (!studentsToUpdate.Any())
+            {
+                throw new ItemNotFoundException("No matching students found.");
+            }
+            
+            foreach (var student in studentsToUpdate)
+            {
+                student.ClassId = classId;
+            }
+            
+            await studentRepository.UpdateRangeAsync(studentsToUpdate, cancellationToken);
         }
     }
 }

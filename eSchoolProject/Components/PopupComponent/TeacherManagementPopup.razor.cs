@@ -24,24 +24,6 @@ namespace eSchoolProject.Components.PopupComponent
             }
             _visible = value;
         }
-        bool isShow;
-        InputType PasswordInput = InputType.Password;
-        string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-        void PasswordVisibility()
-        {
-            if (isShow)
-            {
-                isShow = false;
-                PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-                PasswordInput = InputType.Password;
-            }
-            else
-            {
-                isShow = true;
-                PasswordInputIcon = Icons.Material.Filled.Visibility;
-                PasswordInput = InputType.Text;
-            }
-        }
         private async Task AddTeacherAsync()
         {
             using var scope = ServiceScopeFactory.CreateScope();

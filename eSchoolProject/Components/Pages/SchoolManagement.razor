@@ -119,10 +119,15 @@
 					<div class="tab-content">
 						<MudDataGrid SortMode="SortMode.Multiple" Filterable="true" Hideable="true" Items="@schoolViewModel.Classes.ToList()">
 							<ToolBarContent>
-								<MudText Typo="Typo.h6">Class List</MudText>
-								<MudSpacer />
-								<div class="add-button-management">
-									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenClassPopup">Add Class</MudButton>
+								<div class="grid-header">
+									<MudText Typo="Typo.h6">Class List</MudText>
+									<MudSpacer />
+									<div class="add-button-management">
+										<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenLessonPopup">Add Lesson</MudButton>
+									</div>
+									<div class="add-button-management">
+										<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenClassPopup">Add Class</MudButton>
+									</div>
 								</div>
 							</ToolBarContent>
 							<Columns>
@@ -159,5 +164,9 @@
 						  SchoolId="SchoolId"
 						  PopupClosed="() => {IsClassPopupVisible = false;}"
 						  SaveClicked="OnSavedAsync" />
+	<LessonManagementPopup IsLessonPopupVisible="IsLessonPopupVisible"
+						   SchoolId="SchoolId"
+						   PopupClosed="() => { IsLessonPopupVisible = false; }"
+						   SaveClicked="OnSavedAsync" />
 
 }

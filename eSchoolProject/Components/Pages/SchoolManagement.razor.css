@@ -49,6 +49,10 @@
     background-color: var(--bs-white);
     border: 1px solid var(--bs-gray-400);
 }
-
+.grid-header{
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
 .tab-content {
 }

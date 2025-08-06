@@ -2,38 +2,80 @@
 @using eSchoolDatabase.ViewModels
 @using eSchoolProject.Components.Component
 
-
 <MudPaper Class="pa-4">
 	<div class="tab-container">
 		<div class="tab-content">
-
-			<MudDataGrid Items="@ClassStudents">
+			<MudDataGrid Items="@ClassStudents" T="StudentWithCheckbox" Hover="true" Bordered="true">
 				<ToolBarContent>
-					<MudText Typo="Typo.h6">Students of Class @SelectedClass?.ClassLevel @SelectedClass?.Section</MudText>
+					<MudText Typo="Typo.h6">
+						Students of Class @SelectedClass?.ClassLevel @SelectedClass?.Section
+					</MudText>
 					<MudSpacer />
-					<div class="add-button-management">
+					<div class="button-container ms-2">
+						<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Clear" Color="Color.Error" OnClick="DeselectAllStudents">
+							Deselect All Students
+						</MudButton>
+
+						<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SelectAll" Color="Color.Success" OnClick="SelectAllStudents">
+							Select All Students
+						</MudButton>
+
 						<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="OpenPopup">
 							Add Student To Class
 						</MudButton>
 					</div>
 				</ToolBarContent>
+
 				<Columns>
-					<PropertyColumn Property="x => x.Name" Title="Name" />
-					<PropertyColumn Property="x => x.StudentNumber" Title="Student number" />
-					<PropertyColumn Property="x => x.IdentityNumber" Title="Identity number" />
-					<PropertyColumn Property="x => x.ParentNumber" Title="Parent number" />
+					<TemplateColumn>
+						<CellTemplate>
+							<div class="clickable-cell" @onclick="@(() => context.Item.IsSelected = !context.Item.IsSelected)">
+								<CheckboxComponent TValueType="bool"
+												   Name="@context.Item.Student.IdentityNumber"
+												   id="@context.Item.Student.IdentityNumber"
+												   Checked="context.Item.IsSelected" />
+							</div>
+						</CellTemplate>
+					</TemplateColumn>
+
+					<PropertyColumn Property="x => x.Student.Name" Title="Name" />
+					<PropertyColumn Property="x => x.Student.StudentNumber" Title="Student Number" />
+					<PropertyColumn Property="x => x.Student.IdentityNumber" Title="Identity Number" />
+					<PropertyColumn Property="x => x.Student.ParentNumber" Title="Parent Number" />
 				</Columns>
 			</MudDataGrid>
 		</div>
 	</div>
+
+	<div class="d-flex mt-1 justify-content-between">
+		<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Disabled="@(!SelectedClassStudents.Any())"
+				   OnClick='() => OnActionWithConfirmationClicked("Are you sure?", RemoveSelectedStudentsAsync)'>
+			Remove Selected Students
+		</MudButton>
+		<div class="d-flex">
+			<div class="me-1 reassign-select">
+				<MudSelect @bind-Value="SelectedTargetClassId" Label="Select a target class" Disabled="@(!SelectedClassStudents.Any())">
+					@foreach (var cls in AvailableClasses)
+					{
+						<MudSelectItem Value="@cls.Id">@cls.FullClassName</MudSelectItem>
+					}
+				</MudSelect>
+			</div>
+			<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Disabled="@(!SelectedClassStudents.Any() || SelectedTargetClassId == 0)"
+					   OnClick='() => OnActionWithConfirmationClicked("Are you sure?", ReassignStudentsToClassAsync)'>
+				Reassign Students to Class
+			</MudButton>
+		</div>
+	</div>
 </MudPaper>
+
 <Popup IsVisible="IsAddStudentPopupOpen" PopupClosed="ClosePopup">
 	<Body>
 		<MudSelect T="StudentViewModel"
 				   SelectedValues="SelectedStudents"
 				   SelectedValuesChanged="OnSelectedStudentsChanged"
 				   MultiSelection="true"
-				   Label="Öğrenci Seçin"
+				   Label="Select student"
 				   ToStringFunc="@(s => s.Name + " (" + s.StudentNumber + ")")">
 			@foreach (var student in UnassignedStudents)
 			{

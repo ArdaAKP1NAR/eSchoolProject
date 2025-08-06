@@ -1,6 +1,7 @@
 ﻿@using Blazored.FluentValidation
 @using Microsoft.AspNetCore.Components.Forms
 @using MudBlazor
+@using eSchoolDatabase.ViewModels
 
 <Popup IsVisible="IsLessonPopupVisible" PopupClosed="Close">
 	<Body>
@@ -9,13 +10,26 @@
 			<h3>Add lesson</h3>
 			<EditForm OnValidSubmit="AddLessonAsync" Model="LessonRequestModel">
 				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
-				<MudSelect T="long" Label="Classes" HelperText="Choose students to register to class" MultiSelection="true" @bind-SelectedValues="selectedClassIds">
+				<MudSelect T="ClassViewModel"
+						   SelectedValues="selectedClassList"
+						   SelectedValuesChanged="OnSelectedClassChanged"
+						   MultiSelection="true"
+						   Label="Select class"
+						   ToStringFunc="@(s => s.FullClassName)">
 					@foreach (var classView in classList)
 					{
-						<MudSelectItem T="long" Value="@classView.Id">@classView.ClassLevel</MudSelectItem>
+						<MudSelectItem Value="classView">@classView.FullClassName</MudSelectItem>
 					}
 				</MudSelect>
+				<MudSelect T="long" @bind-Value="selectedTeacherId" Label="Select teacher">
+					@foreach (var teacher in teacherList)
+					{
+						<MudSelectItem Value="@teacher.Id">@teacher.Name</MudSelectItem>
+					}
+				</MudSelect>
+
 				<MudTextField @bind-Value=LessonRequestModel.Name For="@(() => LessonRequestModel.Name)" Label="Name" />
+				<MudTextField @bind-Value=LessonRequestModel.CourseCode For="@(() => LessonRequestModel.CourseCode)" Label="Course code" />
 
 				<div class="popup-actions">
 					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="Close">Cancel</MudButton>
