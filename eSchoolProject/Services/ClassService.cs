@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eSchoolProject.Services
 {
-    public class ClassService(IMapper mapper, IStudentRepository studentRepository, IClassRepository classRepository, ISchoolRepository schoolRepository) : IClassService
+    public class ClassService(IMapper mapper, ILessonRepository lessonRepository, IStudentRepository studentRepository, IClassRepository classRepository, ISchoolRepository schoolRepository) : IClassService
     {
         public async Task<ClassViewModel> GetClassByIdAsync(long classId, CancellationToken cancellationToken)
         {
@@ -29,13 +29,7 @@ namespace eSchoolProject.Services
             }
             await classRepository.AddAsync(classToAdd, cancellationToken);
         }
-        public async Task<List<ClassViewModel>> GetClassesBySchoolAsync(long schoolId, CancellationToken cancellationToken)
-        {
-            return await classRepository.GetAll(cancellationToken)
-                .Where(a => a.SchoolId == schoolId)
-                .ProjectTo<ClassViewModel>(mapper.ConfigurationProvider)
-                .ToListAsync();
-        }
+
         public async Task<List<StudentViewModel>> GetStudentsByClassAsync(long classId, CancellationToken cancellationToken)
         {
             return await studentRepository.GetAll(cancellationToken)
@@ -109,6 +103,13 @@ namespace eSchoolProject.Services
             }
             
             await studentRepository.UpdateRangeAsync(studentsToUpdate, cancellationToken);
+        }
+        public async Task<List<LessonViewModel>> GetLessonByClassAsync(long classId, CancellationToken cancellationToken)
+        {
+            return await lessonRepository.GetAll(cancellationToken)
+                .Where(a => a.ClassList.Any(b => b.Id == classId))
+                .ProjectTo<LessonViewModel>(mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
         }
     }
 }

@@ -34,17 +34,6 @@ namespace eSchoolProject.Services
 
             await lessonRepository.AddAsync(lesson, cancellationToken);
         }
-        public async Task<List<LessonViewModel>> GetLessonBySchoolAsync(long classId, CancellationToken cancellationToken)
-        {
-            var classEntity = await classRepository.GetAll()
-                .Where(a => a.Id == classId)
-                .Select(a=> a.SchoolId)
-                .FirstAsync(cancellationToken);
 
-            return await lessonRepository.GetAll()
-                .Where(a => a.ClassList.Any(b => b.SchoolId == classEntity))
-                .ProjectTo<LessonViewModel>(mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
-        }
     }
 }

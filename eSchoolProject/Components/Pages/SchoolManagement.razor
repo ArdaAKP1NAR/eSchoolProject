@@ -75,6 +75,14 @@
 								<PropertyColumn Property="x => x.Name" Title="Name" />
 								<PropertyColumn Property="x => x.IdentityNumber" Title="Identity number" />
 								<PropertyColumn Property="x => x.PhoneNumber" Title="Phone number" />
+								<TemplateColumn Title="School Overview">
+									<CellTemplate>
+										<MudButton Variant="Variant.Outlined" Color="Color.Dark" StartIcon="@Icons.Material.Filled.ChevronRight"
+												   OnClick="() => NavigateToGradePanel(context.Item.Id)">
+											Grade Panel
+										</MudButton>
+									</CellTemplate>
+								</TemplateColumn>
 							</Columns>
 						</MudDataGrid>
 					</div>

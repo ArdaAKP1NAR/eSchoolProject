@@ -75,6 +75,10 @@ namespace eSchoolProject.Components.Pages
         {
             NavigationManager.NavigateTo($"/class/{Id}");
         }
+        private void NavigateToGradePanel(long teacherId)
+        {
+            NavigationManager.NavigateTo($"/gradepanel/{teacherId}");
+        }
         private IEnumerable<TeacherViewModel> FilteredTeachers =>
             SearchService.FilterList(schoolViewModel.Teachers, searchTextTeachers, (teacher, search) =>
                 (!string.IsNullOrEmpty(teacher.Name) && teacher.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) ||

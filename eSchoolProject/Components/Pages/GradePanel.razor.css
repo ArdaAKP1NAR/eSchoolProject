@@ -1,0 +1,6 @@
+﻿.tab-container {
+    min-height: 92.1vh;
+    padding: 10px;
+    background-color: var(--bs-white);
+    border: 1px solid var(--bs-gray-400);
+}

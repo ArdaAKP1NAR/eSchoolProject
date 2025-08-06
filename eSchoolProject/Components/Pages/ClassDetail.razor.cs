@@ -1,6 +1,5 @@
 using eSchoolDatabase.ViewModels;
 using eSchoolProject.Authorization.Interface;
-using eSchoolProject.Services;
 using eSchoolProject.Services.IServices;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -32,11 +31,12 @@ namespace eSchoolProject.Components.Pages
         {
             using var scope = ServiceScopeFactory.CreateScope();
             var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
+            var schoolService = scope.ServiceProvider.GetRequiredService<ISchoolService>();
             SelectedClass = await classService.GetClassByIdAsync(ClassId, cancellationTokenSource.Token);
             
             var studentList = await classService.GetStudentsByClassAsync(ClassId, cancellationTokenSource.Token);
 
-            AvailableClasses = await classService.GetClassesBySchoolAsync(SelectedClass.SchoolId, cancellationTokenSource.Token);
+            AvailableClasses = await schoolService.GetClassesBySchoolAsync(SelectedClass.SchoolId, cancellationTokenSource.Token);
             AvailableClasses = AvailableClasses.Where(c => c.Id != SelectedClass.Id).ToList();
 
             ClassStudents = studentList.Select(s => new StudentWithCheckbox { Student = s, IsSelected = false }).ToList();

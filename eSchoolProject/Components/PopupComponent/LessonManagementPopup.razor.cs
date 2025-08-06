@@ -31,11 +31,10 @@ namespace eSchoolProject.Components.PopupComponent
         private async Task GetClassBySchoolAsync()
         {
             using var scope = ServiceScopeFactory.CreateScope();
-            var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
-            var teacherService = scope.ServiceProvider.GetRequiredService<ITeacherService>();
+            var schoolService = scope.ServiceProvider.GetRequiredService<ISchoolService>();
 
-            teacherList = await teacherService.GetTeacherBySchoolAsync(SchoolId, cancellationTokenSource.Token);
-            classList = await classService.GetClassesBySchoolAsync(SchoolId, cancellationTokenSource.Token);
+            teacherList = await schoolService.GetTeacherBySchoolAsync(SchoolId, cancellationTokenSource.Token);
+            classList = await schoolService.GetClassesBySchoolAsync(SchoolId, cancellationTokenSource.Token);
         }
         private Task OnSelectedClassChanged(IEnumerable<ClassViewModel> selectedClasses)
         {

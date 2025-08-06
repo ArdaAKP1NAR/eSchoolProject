@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eSchoolProject.Services
 {
-    public class TeacherService(IMapper mapper, ITransactionService transactionService, ILoginService loginService, ITeacherRepository teacherRepository) : ITeacherService
+    public class TeacherService(IMapper mapper, ILessonRepository lessonRepository, IStudentRepository studentRepository, IClassRepository classRepository, ITransactionService transactionService, ILoginService loginService, ITeacherRepository teacherRepository) : ITeacherService
     {
         public async Task AddTeacherAsync(TeacherRequestModel teacherRequestModel, CancellationToken cancellationToken)
         {
@@ -32,12 +32,43 @@ namespace eSchoolProject.Services
 
             await transaction.CommitAsync(cancellationToken);
         }
-        public async Task<List<TeacherViewModel>> GetTeacherBySchoolAsync(long schoolId, CancellationToken cancellationToken)
+        public async Task<List<LessonViewModel>> GetLessonByTeacherAsync(long teacherId, CancellationToken cancellationToken)
         {
-            return await teacherRepository.GetAll(cancellationToken)
-                .Where(a => a.SchoolId == schoolId)
-                .ProjectTo<TeacherViewModel>(mapper.ConfigurationProvider)
-                .ToListAsync();
+            return await lessonRepository.GetAll(cancellationToken)
+                .Where(a => a.TeacherId == teacherId)
+                .ProjectTo<LessonViewModel>(mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
         }
+        public async Task<TeacherViewModel> GetTeacherByIdAsync(long teacherId, CancellationToken cancellationToken)
+        {
+            return await teacherRepository.GetAll()
+             .ProjectTo<TeacherViewModel>(mapper.ConfigurationProvider)
+             .SingleAsync(a => a.Id == teacherId, cancellationToken);
+        }
+        public async Task<List<ClassViewModel>> GetClassesByTeacherIdAsync(long teacherId, CancellationToken cancellationToken)
+        {
+            return await lessonRepository.GetAll(cancellationToken)
+                .Where(l => l.TeacherId == teacherId)
+                .SelectMany(l => l.ClassList)
+                .Distinct() // Aynı sınıf birden fazla derste olabilir, tekrarları engelle
+                .ProjectTo<ClassViewModel>(mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+        }
+        public async Task<List<StudentViewModel>> GetStudentsByTeacherIdAsync(long teacherId, CancellationToken cancellationToken)
+        {
+            var classList = await lessonRepository.GetAll(cancellationToken)
+                .Where(l => l.TeacherId == teacherId)
+                .SelectMany(l => l.ClassList)
+                .Distinct()
+                .ToListAsync(cancellationToken);
+
+            var classIds = classList.Select(c => c.Id).ToList();
+
+            return await studentRepository.GetAll(cancellationToken)
+                .Where(s => s.ClassId != null && classIds.Contains(s.ClassId.Value))
+                .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+        }
+
     }
 }

@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eSchoolProject.Services
 {
-    public class StudentService(IMapper mapper, ITransactionService transactionService, ILoginService loginService, IStudentRepository studentRepository, IClassRepository classRepository) : IStudentService
+    public class StudentService(IMapper mapper, ITransactionService transactionService, ILoginService loginService, IStudentRepository studentRepository) : IStudentService
     {
         public async Task AddStudentAsync(StudentRequestModel studentRequestModel, CancellationToken cancellationToken)
         {
@@ -31,14 +31,7 @@ namespace eSchoolProject.Services
                 }, cancellationToken);
             
             await transaction.CommitAsync();
-        }
-        public async Task<List<StudentViewModel>> GetStudentsBySchoolAsync(long schoolId, CancellationToken cancellationToken)
-        {
-            return await studentRepository.GetAll()
-                .Where(s => s.SchoolId == schoolId)
-                .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
-        }
+        }      
         public async Task UpdateStudentAsync(StudentRequestModel studentRequestModel, CancellationToken cancellationToken)
         {
             var student = mapper.Map<Student>(studentRequestModel);
