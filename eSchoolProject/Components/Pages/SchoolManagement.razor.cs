@@ -83,18 +83,18 @@ namespace eSchoolProject.Components.Pages
             SearchService.FilterList(schoolViewModel.Teachers, searchTextTeachers, (teacher, search) =>
                 (!string.IsNullOrEmpty(teacher.Name) && teacher.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
                 (!string.IsNullOrEmpty(teacher.IdentityNumber) && teacher.IdentityNumber.Contains(search, StringComparison.OrdinalIgnoreCase))
-        );
+            );
         private IEnumerable<StudentViewModel> FilteredStudents =>
              SearchService.FilterList(schoolViewModel.Students, searchTextStudents, (student, search) =>
                  (!string.IsNullOrEmpty(student.Name) && student.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
                  student.StudentNumber.ToString().Contains(search) ||
                  (!string.IsNullOrEmpty(student.IdentityNumber) && student.IdentityNumber.Contains(search))
-        );
+            );
         private IEnumerable<ManagerViewModel> FilteredManagers =>
             SearchService.FilterList(schoolViewModel.Managers, searchTextManagers, (manager, search) =>
                 (!string.IsNullOrEmpty(manager.Name) && manager.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
                 (!string.IsNullOrEmpty(manager.IdentityNumber) && manager.IdentityNumber.Contains(search, StringComparison.OrdinalIgnoreCase))
-        );
+            );
 
 
         protected override async Task OnInitializedAsync()

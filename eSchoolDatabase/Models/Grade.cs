@@ -9,7 +9,6 @@ namespace eSchoolDatabase.Models
         public long LessonId { get; set; }
         public Student Student { get; set; } = default!;
         public long StudentId { get; set; }
-
-
+        public GradeType GradeType { get; set; } // enum
     }
 }

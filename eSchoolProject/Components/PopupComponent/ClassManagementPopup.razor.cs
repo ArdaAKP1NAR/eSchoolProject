@@ -29,9 +29,12 @@ namespace eSchoolProject.Components.PopupComponent
         {
             using var scope = ServiceScopeFactory.CreateScope();
             var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
+          
             await classService.AddClassAsync(ClassRequestModel, SchoolId, cancellationTokenSource.Token);
             Snackbar.Add("Class added successfully", Severity.Success);
+          
             await SaveClicked.InvokeAsync();
+           
             IsClassPopupVisible = false;
         }
         private async Task ClosePopupAsync()

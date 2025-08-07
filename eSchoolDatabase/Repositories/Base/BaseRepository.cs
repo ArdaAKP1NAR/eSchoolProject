@@ -51,5 +51,9 @@ namespace eSchoolDatabase.Repositories.Base
             context.UpdateRange(entities);
             await context.SaveChangesAsync();
         }
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

@@ -33,6 +33,7 @@ namespace eSchoolProject
             services.AddScoped<IClassService, ClassService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IGradeService, GradeService>();
             services.AddScoped<IConfirmationService, ConfirmationService>();
         }
     }

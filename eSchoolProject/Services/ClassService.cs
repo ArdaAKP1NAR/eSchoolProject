@@ -17,16 +17,19 @@ namespace eSchoolProject.Services
         {
             var classEntity = await classRepository.GetByIdAsync(classId, cancellationToken) ?? throw new ItemNotFoundException("Class not found. ");
             var classView = mapper.Map<ClassViewModel>(classEntity);
+            
             return classView;
         }
         public async Task AddClassAsync(ClassRequestModel classRequestModel, long schoolId, CancellationToken cancellationToken)
         {
             var classToAdd = mapper.Map<Class>(classRequestModel);
             var school = await schoolRepository.GetByIdAsync(schoolId) ?? throw new SchoolNotFoundException("School not found. ");
+           
             if (await classRepository.GetAll().AnyAsync(a => a.ClassLevel == classToAdd.ClassLevel))
             {
                 throw new InvalidNameException("This class already exist");
             }
+            
             await classRepository.AddAsync(classToAdd, cancellationToken);
         }
 

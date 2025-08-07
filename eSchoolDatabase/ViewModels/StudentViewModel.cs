@@ -25,5 +25,19 @@ namespace eSchoolDatabase.ViewModels
         public long ClassId { get; set; }
         public List<GradeViewModel> Grades { get; set; } = default!;
         public long SchoolId { get; set; }
+        public double? Midterm { get; set; }
+        public double? Final { get; set; }
+        public double? Oral { get; set; }
+        public double? Homework { get; set; }
+        public double? Average
+        {
+            get
+            {
+                var validGrades = new List<double?> { Midterm, Final, Oral, Homework }.Where(g => g.HasValue).Select(g => g.Value);
+                if (!validGrades.Any())
+                    return null;
+                return Math.Round(validGrades.Average(), 2); // 2 ondalık basamakla yuvarlar
+            }
+        }
     }
 }

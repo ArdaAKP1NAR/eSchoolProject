@@ -14,29 +14,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eSchoolProject.Services
 {
-    public class StudentService(IMapper mapper, ITransactionService transactionService, ILoginService loginService, IStudentRepository studentRepository) : IStudentService
+    public class StudentService(IMapper mapper, IGradeRepository gradeRepository, ITransactionService transactionService, ILoginService loginService, IStudentRepository studentRepository) : IStudentService
     {
         public async Task AddStudentAsync(StudentRequestModel studentRequestModel, CancellationToken cancellationToken)
         {
 
             using var transaction = transactionService.BeginTransaction();
-           
+
             var student = mapper.Map<Student>(studentRequestModel);
-                await studentRepository.AddAsync(student, cancellationToken);
-                await loginService.AddUserAsync(new()
-                {
-                    IdentityNumber = student.IdentityNumber,
-                    Roles = [Roles.Student],
-                    Password = PasswordGenerator.GenerateRandomPassword(8),
-                }, cancellationToken);
-            
+            await studentRepository.AddAsync(student, cancellationToken);
+            await loginService.AddUserAsync(new()
+            {
+                IdentityNumber = student.IdentityNumber,
+                Roles = [Roles.Student],
+                Password = PasswordGenerator.GenerateRandomPassword(8),
+            }, cancellationToken);
+
             await transaction.CommitAsync();
-        }      
+        }
         public async Task UpdateStudentAsync(StudentRequestModel studentRequestModel, CancellationToken cancellationToken)
         {
             var student = mapper.Map<Student>(studentRequestModel);
             await studentRepository.UpdateAsync(student, cancellationToken);
         }
-       
+        public async Task<List<GradeViewModel>> GetGradesByLessonAndStudentAsync(long lessonId, List<long> studentIds, CancellationToken cancellationToken)
+        {
+            return await gradeRepository.GetAll(cancellationToken)
+                .Where(g => g.LessonId == lessonId && studentIds.Contains(g.StudentId))
+                .ProjectTo<GradeViewModel>(mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+
+        }
     }
 }

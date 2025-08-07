@@ -10,6 +10,7 @@
 				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
 				<MudTextField @bind-Value=ClassRequestModel.ClassLevel For="@(() => ClassRequestModel.ClassLevel)" Label="Grade" />
 				<MudTextField @bind-Value=ClassRequestModel.Section For="@(() => ClassRequestModel.Section)" Label="Section" />
+				
 				<div class="popup-actions">
 					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="ClosePopupAsync">Cancel</MudButton>
 					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Add</MudButton>

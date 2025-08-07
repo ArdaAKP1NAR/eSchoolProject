@@ -42,16 +42,21 @@ namespace eSchoolProject.Components.PopupComponent
 
             await service.AddStudentAsync(StudentRequestModel, cancellationTokenSource.Token);
             Snackbar.Add("Student added succesfuly.", Severity.Success);
+           
             await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
+           
             IsStudentPopupVisible = false;
         }
         private async Task UpdateStudentAsync()
         {
             using var scope = ServiceScopeFactory.CreateScope();
             var service = scope.ServiceProvider.GetRequiredService<IStudentService>();
+            
             await service.UpdateStudentAsync(StudentRequestModel, cancellationTokenSource.Token);
             Snackbar.Add("Student updated succesfuly.", Severity.Success);
+            
             await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
+            
             IsStudentPopupVisible = false;
         }
         private async Task ClosePopupAsync()

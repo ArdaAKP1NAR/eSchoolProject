@@ -40,6 +40,7 @@ namespace eSchoolProject.Components.PopupComponent
 
             Snackbar.Add("School saved successfully!", Severity.Success);
             await SaveClicked.InvokeAsync();
+           
             IsSchoolPopupVisible = false;
         }
         private async Task ClosePopupAsync()

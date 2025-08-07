@@ -10,6 +10,7 @@ namespace eSchoolDatabase.Repositories.Interface.Base
         IQueryable<T> GetAll(CancellationToken cancellationToken = default);
         Task<T?> GetByIdAsync(long Id, CancellationToken cancellationToken = default);
         Task<T?> GetByIdAsync(long? Id, CancellationToken cancellationToken = default);
+        Task SaveChangesAsync(CancellationToken cancellationToken);
         Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
         Task UpdateRangeAsync(ICollection<T> entities, CancellationToken cancellationToken = default);
     }

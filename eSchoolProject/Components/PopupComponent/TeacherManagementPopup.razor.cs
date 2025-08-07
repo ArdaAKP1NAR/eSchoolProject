@@ -28,9 +28,12 @@ namespace eSchoolProject.Components.PopupComponent
         {
             using var scope = ServiceScopeFactory.CreateScope();
             var service = scope.ServiceProvider.GetRequiredService<ITeacherService>();
+           
             await service.AddTeacherAsync(TeacherRequestModel, cancellationTokenSource.Token);
             Snackbar.Add("Teacher has been saved succesfuly.", Severity.Success);
+           
             await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
+            
             IsTeacherPopupVisible = false;
         }
         private async Task ClosePopupAsync()
