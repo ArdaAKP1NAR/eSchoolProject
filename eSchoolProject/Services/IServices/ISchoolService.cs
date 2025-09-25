@@ -9,10 +9,15 @@ namespace eSchoolProject.Services.IServices
         Task AddSchoolAsync(SchoolRequestModel schoolRequestModel, CancellationToken cancellationToken);
         Task<List<SchoolGridView>> GetAllSchoolsAsync(CancellationToken cancellationToken);
         Task<List<ClassViewModel>> GetClassesBySchoolAsync(long schoolId, CancellationToken cancellationToken);
+        Task<List<ClassGridView>> GetClassesForGridViewBySchoolAsync(long schoolId, CancellationToken cancellationToken);
         Task<List<LessonViewModel>> GetLessonBySchoolAsync(long classId, CancellationToken cancellationToken);
         Task<List<ManagerViewModel>> GetManagersBySchoolAsync(long schoolId, CancellationToken cancellationToken);
+        Task<List<ManagerGridView>> GetManagersForGridBySchoolAsync(long schoolId, CancellationToken cancellationToken);
         Task<SchoolViewModel> GetSchoolByIdAsync(long schoolId, CancellationToken cancellationToken);
+        Task<SchoolGridView> GetSchoolForGridViewByIdAsync(long schoolId, CancellationToken cancellationToken);
         Task<List<StudentViewModel>> GetStudentsBySchoolAsync(long schoolId, CancellationToken cancellationToken);
+        Task<List<StudentGridView>> GetStudentsForGridBySchoolAsync(long schoolId, CancellationToken cancellationToken);
         Task<List<TeacherViewModel>> GetTeacherBySchoolAsync(long schoolId, CancellationToken cancellationToken);
+        Task<List<TeacherGridView>> GetTeacherForGridBySchoolAsync(long schoolId, CancellationToken cancellationToken);
     }
 }

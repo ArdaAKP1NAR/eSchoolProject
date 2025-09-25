@@ -1,0 +1,76 @@
+﻿@page "/lessonschedulemanagement/{SchoolId:long}"
+@using eSchoolDatabase.ViewModels
+
+<MudGrid>
+	<MudItem xs="12">
+
+		<div class="select-container">
+			<MudText Typo="Typo.h6">
+				Students of Class @ClassList.Where(c => c.Id == selectedClassId).Select(c => $"{c.ClassLevel} {c.Section}").FirstOrDefault()
+			</MudText>
+			<MudSelect Variant="Variant.Outlined" Class="ms-2" Style="max-width: 350px;" T="long?" Label="Sınıf Seç" @bind-Value="selectedClassId" @bind-Value:after="OnFilterChanged">
+				@foreach (var sinif in ClassList)
+				{
+					<MudSelectItem T="long?" Value="@sinif.Id">@($"{sinif.ClassLevel} {sinif.Section}")</MudSelectItem>
+				}
+			</MudSelect>
+		</div>
+	</MudItem>
+
+	<MudItem xs="12">
+		<div class="schedule-grid">
+
+			<MudTable Bordered="true" T="TimeSpan" Items="TimeSlots">
+				<HeaderContent>
+					<MudTh>Saat</MudTh>
+					@foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+					{
+						@if (day != DayOfWeek.Saturday && day != DayOfWeek.Sunday)
+						{
+							<MudTh>@day</MudTh>
+						}
+					}
+				</HeaderContent>
+				<RowTemplate Context="slot">
+					<MudTd>@slot.ToString(@"hh\:mm")</MudTd>
+					@foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+					{
+						@if (day != DayOfWeek.Saturday && day != DayOfWeek.Sunday)
+						{
+							// sadece seçili sınıf ve öğretmenle eşleşen dersleri göster
+							var schedule = FilteredSchedules.FirstOrDefault(s =>
+							s.Day == day &&
+							s.StartTime == slot &&
+							(selectedClassId == null || s.ClassId == selectedClassId) &&
+							(selectedTeacherId == null || s.TeacherId == selectedTeacherId)
+							);
+
+							if (schedule != null)
+							{
+								<MudTd Class="bg-blue-200 cursor-pointer"
+									   @onclick="() => OpenSchedulePopupFromViewModel(schedule)">
+									<div>@Lessons.FirstOrDefault(l => l.Id == schedule.LessonId)?.Name</div>
+									<div>@Teachers.FirstOrDefault(t => t.Id == schedule.TeacherId)?.Name</div>
+								</MudTd>
+							}
+							else
+							{
+								<MudTd Class="bg-gray-100 cursor-pointer"
+									   @onclick="() => OpenSchedulePopupForNew(day, slot)">
+									+
+								</MudTd>
+							}
+						}
+					}
+				</RowTemplate>
+
+			</MudTable>
+		</div>
+	</MudItem>
+</MudGrid>
+
+<LessonSchedulePopup @ref="schedulePopup"
+					 ClassList="ClassList"
+					 Teachers="Teachers"
+					 Lessons="Lessons"
+					 SaveClicked="OnScheduleSaved" />

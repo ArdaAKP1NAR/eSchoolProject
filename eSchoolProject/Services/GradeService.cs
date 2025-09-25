@@ -12,7 +12,7 @@ namespace eSchoolProject.Services
     {
         public async Task AddOrUpdateGradeAsync(GradeInputModel gradeInputModel, CancellationToken cancellationToken)
         {
-            var existingGrade = await gradeRepository.GetAll(cancellationToken)
+            var existingGrade = await gradeRepository.GetAll()
                 .FirstOrDefaultAsync(g =>
                     g.StudentId == gradeInputModel.StudentId &&
                     g.LessonId == gradeInputModel.LessonId &&

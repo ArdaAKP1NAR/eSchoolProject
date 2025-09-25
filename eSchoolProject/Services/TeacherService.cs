@@ -34,7 +34,7 @@ namespace eSchoolProject.Services
         }
         public async Task<List<LessonViewModel>> GetLessonByTeacherAsync(long teacherId, CancellationToken cancellationToken)
         {
-            return await lessonRepository.GetAll(cancellationToken)
+            return await lessonRepository.GetAll()
                 .Where(a => a.TeacherId == teacherId)
                 .ProjectTo<LessonViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
@@ -47,7 +47,7 @@ namespace eSchoolProject.Services
         }
         public async Task<List<ClassViewModel>> GetClassesByTeacherIdAsync(long teacherId, CancellationToken cancellationToken)
         {
-            return await lessonRepository.GetAll(cancellationToken)
+            return await lessonRepository.GetAll()
                 .Where(l => l.TeacherId == teacherId)
                 .SelectMany(l => l.ClassList)
                 .Distinct() // Aynı sınıf birden fazla derste olabilir, tekrarları engelle
@@ -56,7 +56,7 @@ namespace eSchoolProject.Services
         }
         public async Task<List<StudentViewModel>> GetStudentsByTeacherIdAsync(long teacherId, CancellationToken cancellationToken)
         {
-            var classList = await lessonRepository.GetAll(cancellationToken)
+            var classList = await lessonRepository.GetAll()
                 .Where(l => l.TeacherId == teacherId)
                 .SelectMany(l => l.ClassList)
                 .Distinct()
@@ -64,7 +64,7 @@ namespace eSchoolProject.Services
 
             var classIds = classList.Select(c => c.Id).ToList();
 
-            return await studentRepository.GetAll(cancellationToken)
+            return await studentRepository.GetAll()
                 .Where(s => s.ClassId != null && classIds.Contains(s.ClassId.Value))
                 .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);

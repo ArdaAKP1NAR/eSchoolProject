@@ -35,6 +35,12 @@ namespace eSchoolProject.Services
                 .ProjectTo<SchoolViewModel>(mapper.ConfigurationProvider)
                 .SingleAsync(a => a.Id == schoolId, cancellationToken);
         }
+        public async Task<SchoolGridView> GetSchoolForGridViewByIdAsync(long schoolId, CancellationToken cancellationToken)
+        {
+            return await schoolRepository.GetAll()
+                .ProjectTo<SchoolGridView>(mapper.ConfigurationProvider)
+                .SingleAsync(a => a.Id == schoolId, cancellationToken);
+        }
         public async Task<List<StudentViewModel>> GetStudentsBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {
             return await studentRepository.GetAll()
@@ -42,20 +48,42 @@ namespace eSchoolProject.Services
                 .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
+        public async Task<List<StudentGridView>> GetStudentsForGridBySchoolAsync(long schoolId, CancellationToken cancellationToken)
+        {
+            return await studentRepository.GetAll()
+                .Where(a => a.SchoolId == schoolId)
+                .ProjectTo<StudentGridView>(mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
         public async Task<List<TeacherViewModel>> GetTeacherBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {
-            return await teacherRepository.GetAll(cancellationToken)
+            return await teacherRepository.GetAll()
                 .Where(a => a.SchoolId == schoolId)
                 .ProjectTo<TeacherViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync();
         }
+        public async Task<List<TeacherGridView>> GetTeacherForGridBySchoolAsync(long schoolId, CancellationToken cancellationToken)
+        {
+            return await teacherRepository.GetAll()
+                .Where(a => a.SchoolId == schoolId)
+                .ProjectTo<TeacherGridView>(mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
         public async Task<List<ManagerViewModel>> GetManagersBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {
-            return await managerRepository.GetAll(cancellationToken)
+            return await managerRepository.GetAll()
                 .Where(a => a.SchoolId == schoolId)
                 .ProjectTo<ManagerViewModel>(mapper.ConfigurationProvider).
                 ToListAsync();
         }
+        public async Task<List<ManagerGridView>> GetManagersForGridBySchoolAsync(long schoolId, CancellationToken cancellationToken)
+        {
+            return await managerRepository.GetAll()
+                .Where(a => a.SchoolId == schoolId)
+                .ProjectTo<ManagerGridView>(mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
+
         public async Task<List<LessonViewModel>> GetLessonBySchoolAsync(long classId, CancellationToken cancellationToken)
         {
             var classEntity = await classRepository.GetAll()
@@ -70,9 +98,16 @@ namespace eSchoolProject.Services
         }
         public async Task<List<ClassViewModel>> GetClassesBySchoolAsync(long schoolId, CancellationToken cancellationToken)
         {
-            return await classRepository.GetAll(cancellationToken)
+            return await classRepository.GetAll()
                 .Where(a => a.SchoolId == schoolId)
                 .ProjectTo<ClassViewModel>(mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
+        public async Task<List<ClassGridView>> GetClassesForGridViewBySchoolAsync(long schoolId, CancellationToken cancellationToken)
+        {
+            return await classRepository.GetAll()
+                .Where(a => a.SchoolId == schoolId)
+                .ProjectTo<ClassGridView>(mapper.ConfigurationProvider)
                 .ToListAsync();
         }
     }

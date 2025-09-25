@@ -22,22 +22,31 @@ namespace eSchoolProject.Mapper
 
             CreateMap<Manager, ManagerRequestModel>().ReverseMap();
             CreateMap<Manager, ManagerViewModel>().ReverseMap();
+            CreateMap<Manager, ManagerGridView>().ReverseMap();
 
             CreateMap<Teacher, TeacherRequestModel>().ReverseMap();
             CreateMap<Teacher, TeacherViewModel>().ReverseMap();
+            CreateMap<Teacher, TeacherGridView>().ReverseMap();
 
             CreateMap<Student, StudentRequestModel>().ReverseMap();
             CreateMap<Student, StudentViewModel>().ReverseMap();
             CreateMap<StudentRequestModel, StudentViewModel>().ReverseMap();
+            CreateMap<Student, StudentGridView>().ReverseMap();
 
             CreateMap<Class, ClassViewModel>().ReverseMap();
             CreateMap<Class, ClassRequestModel>().ReverseMap();
+            CreateMap<ClassViewModel, ClassRequestModel>().ReverseMap();
+            CreateMap<Class, ClassGridView>().ReverseMap();
 
             CreateMap<Lesson, LessonViewModel>().ReverseMap();
             CreateMap<Lesson, LessonRequestModel>().ReverseMap();
 
             CreateMap<Grade, GradeViewModel>().ReverseMap();
             CreateMap<Grade, GradeInputModel>().ReverseMap();
+
+            CreateMap<LessonSchedule, LessonScheduleViewModel>().ReverseMap();
+            CreateMap<LessonSchedule, LessonScheduleRequestModel>().ReverseMap();
+            CreateMap<LessonScheduleViewModel, LessonScheduleRequestModel>().ReverseMap();
         }
     }
 }

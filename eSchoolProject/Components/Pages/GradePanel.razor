@@ -3,60 +3,66 @@
 <MudPaper Class="pa-4">
 	<div class="tab-container">
 		<div class="tab-content">
-			<MudDataGrid Items="@SelectedClassStudents" T="StudentViewModel" Hover="true" Bordered="true">
-				<ToolBarContent>
-					<MudText Typo="Typo.h6">
-						Students of Class @SelectedClass?.ClassLevel @SelectedClass?.Section
-					</MudText>
-					<div class="select-container ms-2">
-						<MudSelect T="long" Label="Sınıf Seçin" @bind-Value="selectedClassId">
-							@foreach (var sinif in ClassList)
-							{
-								<MudSelectItem Value="@sinif.Id">@($"{sinif.ClassLevel} {sinif.Section}")</MudSelectItem>
-							}
-						</MudSelect>
-						<MudSelect T="LessonViewModel"
-								   Value="SelectedLesson"
-								   ValueChanged="OnSelectedLessonChanged"
-								   Label="Ders Seçin"
-								   Disabled="@(selectedClassId == 0)">
-							@foreach (var lesson in SelectedClassLessons)
-							{
-								<MudSelectItem Value="@lesson">@lesson.Name</MudSelectItem>
-							}
-						</MudSelect>
-						<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SelectAll" Color="Color.Success" OnClick="SaveGradesAsync">
+			<div class="grade-panel">
+				<MudDataGrid Items="@SelectedClassStudents" T="StudentViewModel" Hover="true" Bordered="true">
+					<ToolBarContent>
+						<MudText Typo="Typo.h6">
+							Students of Class @SelectedClass?.ClassLevel @SelectedClass?.Section
+						</MudText>
+						<div class="select-container ms-2">
+							<MudSelect Placeholder="Sinif secin" Variant="Variant.Outlined" Label="Sınıf Seçin" @bind-Value="SelectedClass">
+								@foreach (var sinif in ClassList)
+								{
+									<MudSelectItem Value="@sinif">@($"{sinif.ClassLevel} {sinif.Section}")</MudSelectItem>
+								}
+							</MudSelect>
+
+							<MudSelect T="LessonViewModel"
+									   Value="SelectedLesson"
+									   ValueChanged="OnSelectedLessonChanged"
+									   Class="ms-1"
+									   Label="Ders Seçin"
+									   Variant="Variant.Outlined"
+									   Disabled="@(SelectedClass == null)">
+								<MudSelectItem Value="@(null as LessonViewModel)">-- Ders Seçin --</MudSelectItem>
+								@foreach (var lesson in SelectedClassLessons)
+								{
+									<MudSelectItem Value="@lesson">@lesson.Name</MudSelectItem>
+								}
+							</MudSelect>
+						</div>
+						<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Success" OnClick="SaveGradesAsync">
 							Save Grades
 						</MudButton>
-					</div>
-				</ToolBarContent>
-				<Columns>
-					<PropertyColumn Property="x => x.Name" Title="Name" />
-					<PropertyColumn Property="x => x.StudentNumber" Title="Student Number" />
-					<PropertyColumn Property="x => x.IdentityNumber" Title="Identity Number" />
-					<TemplateColumn Title="Midterm">
-						<CellTemplate>
-							<MudNumericField Variant="Variant.Outlined" @bind-Value="context.Item.Midterm" Style="width: 100px;" />
-						</CellTemplate>
-					</TemplateColumn>
-					<TemplateColumn Title="Final">
-						<CellTemplate>
-							<MudNumericField Variant="Variant.Outlined" @bind-Value="context.Item.Final" Style="width: 100px;" />
-						</CellTemplate>
-					</TemplateColumn>
-					<TemplateColumn Title="Oral">
-						<CellTemplate>
-							<MudNumericField Variant="Variant.Outlined" @bind-Value="context.Item.Oral" Style="width: 100px;" />
-						</CellTemplate>
-					</TemplateColumn>
-					<TemplateColumn Title="Homework">
-						<CellTemplate>
-							<MudNumericField Variant="Variant.Outlined" @bind-Value="context.Item.Homework" Style="width: 100px;" />
-						</CellTemplate>
-					</TemplateColumn>
-					<PropertyColumn Property="x => x.Average" Title="Average" />
-				</Columns>
-			</MudDataGrid>
+					</ToolBarContent>
+					<Columns>
+						<PropertyColumn Property="x => x.Name" Title="Name" />
+						<PropertyColumn Property="x => x.StudentNumber" Title="Student Number" />
+						<PropertyColumn Property="x => x.IdentityNumber" Title="Identity Number" />
+						<TemplateColumn Title="Midterm">
+							<CellTemplate>
+								<MudNumericField HideSpinButtons="true" Variant="Variant.Outlined" @bind-Value="context.Item.Midterm" Max="100" Min="0" Style="width: 100px;" />
+							</CellTemplate>
+						</TemplateColumn>
+						<TemplateColumn Title="Final">
+							<CellTemplate>
+								<MudNumericField HideSpinButtons="true" Variant="Variant.Outlined" @bind-Value="context.Item.Final" Max="100" Min="0" Style="width: 100px;" />
+							</CellTemplate>
+						</TemplateColumn>
+						<TemplateColumn Title="Oral">
+							<CellTemplate>
+								<MudNumericField HideSpinButtons="true" Variant="Variant.Outlined" @bind-Value="context.Item.Oral" Max="100" Min="0" Style="width: 100px;" />
+							</CellTemplate>
+						</TemplateColumn>
+						<TemplateColumn Title="Homework">
+							<CellTemplate>
+								<MudNumericField HideSpinButtons="true" Variant="Variant.Outlined" @bind-Value="context.Item.Homework" Max="100" Min="0" Style="width: 100px;" />
+							</CellTemplate>
+						</TemplateColumn>
+						<PropertyColumn Property="x => x.Average" Title="Average" />
+					</Columns>
+				</MudDataGrid>
+			</div>
 		</div>
 	</div>
 </MudPaper>

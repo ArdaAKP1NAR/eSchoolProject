@@ -12,7 +12,7 @@ namespace eSchoolDatabase.Repositories.Base
 {
     public class BaseRepository<T>(eSchoolContext context) : IBaseRepository<T> where T : BaseEntity
     {
-        public IQueryable<T> GetAll(CancellationToken cancellationToken = default)
+        public IQueryable<T> GetAll()
         {
             return context.Set<T>().AsQueryable();
         }

@@ -6,7 +6,7 @@ namespace eSchoolDatabase.RequestModels
     {
         public string Name { get; set; } = default!;
         public string CourseCode { get; set; } = default!;
-        public long TeacherId { get; set; }
-        public List<ClassRequestModel> ClassList { get; set; } = new();
+        public TeacherViewModel? Teacher { get; set; }
+        public List<ClassViewModel> ClassList { get; set; } = new();
     }
 }

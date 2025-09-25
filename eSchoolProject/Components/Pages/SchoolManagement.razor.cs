@@ -2,6 +2,7 @@ using AutoMapper;
 using eSchoolDatabase.Models;
 using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
+using eSchoolDatabase.ViewModels.GridViewModels;
 using eSchoolProject.Authorization.Interface;
 using eSchoolProject.Components.PopupComponent;
 using eSchoolProject.Services.IServices;
@@ -18,19 +19,62 @@ namespace eSchoolProject.Components.Pages
         [Inject] NavigationManager NavigationManager { get; set; } = default!;
         [Inject] ISnackbar Snackbar { get; init; } = default!;
         [Inject] IMapper Mapper { get; init; } = default!;
-        [Inject] ISearchService SearchService { get; init; } = default!;
 
         private CancellationTokenSource cancellationTokenSource = new();
-        private SchoolViewModel schoolViewModel = default!;
+        private SchoolGridView schoolViewModel = default!;
         private bool IsManagerPopupVisible = false;
         private bool IsTeacherPopupVisible = false;
         private bool IsClassPopupVisible = false;
         private bool IsLessonPopupVisible = false;
         private StudentManagementPopup StudentManagementPopup = default!;
-        private string searchTextManagers = string.Empty;
-        private string searchTextTeachers = string.Empty;
-        private string searchTextStudents = string.Empty;
-
+        private MudDataGrid<TeacherGridView> MudDataGridTeachers { get; set; } = default!;
+        private MudDataGrid<ManagerGridView> MudDataGridManagers { get; set; } = default!;
+        private MudDataGrid<StudentGridView> MudDataGridStudents { get; set; } = default!;
+        private MudDataGrid<ClassGridView> MudDataGridClasses { get; set; } = default!;
+        private async Task<GridData<TeacherGridView>> LoadTeacher(GridState<TeacherGridView> state)
+        {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var schoolService = scope.ServiceProvider.GetRequiredService<ISchoolService>();
+            var teachers = await schoolService.GetTeacherForGridBySchoolAsync(SchoolId, cancellationTokenSource.Token);
+            return new GridData<TeacherGridView>()
+            {
+                Items = teachers,
+                TotalItems = teachers.Count
+            };
+        }
+        private async Task<GridData<ManagerGridView>> LoadManager(GridState<ManagerGridView> state)
+        {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var schoolService = scope.ServiceProvider.GetRequiredService<ISchoolService>();
+            var managers = await schoolService.GetManagersForGridBySchoolAsync(SchoolId, cancellationTokenSource.Token);
+            return new GridData<ManagerGridView>()
+            {
+                Items = managers,
+                TotalItems = managers.Count
+            };
+        }
+        private async Task<GridData<StudentGridView>> LoadStudent(GridState<StudentGridView> state)
+        {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var schoolService = scope.ServiceProvider.GetRequiredService<ISchoolService>();
+            var students = await schoolService.GetStudentsForGridBySchoolAsync(SchoolId, cancellationTokenSource.Token);
+            return new GridData<StudentGridView>()
+            {
+                Items = students,
+                TotalItems = students.Count
+            };
+        }
+        private async Task<GridData<ClassGridView>> LoadClass(GridState<ClassGridView> state)
+        {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var schoolService = scope.ServiceProvider.GetRequiredService<ISchoolService>();
+            var classes = await schoolService.GetClassesForGridViewBySchoolAsync(SchoolId, cancellationTokenSource.Token);
+            return new GridData<ClassGridView>()
+            {
+                Items = classes,
+                TotalItems = classes.Count
+            };
+        }
         private string ActiveTab = "Managers";
         private void SetActiveTab(string tab)
         {
@@ -52,18 +96,11 @@ namespace eSchoolProject.Components.Pages
         {
             StudentManagementPopup.OpenPopup(new());
         }
-        private void OpenStudentPopupFromViewModel(StudentViewModel studentViewModel)
+        private void OpenStudentPopupFromViewModel(StudentGridView studentGridView)
         {
-            if (studentViewModel != null)
+            if (studentGridView != null)
             {
-                var studentRequestModel = Mapper.Map<StudentRequestModel>(studentViewModel);
-                OpenStudentPopup(studentRequestModel);
-            }
-        }
-        private void OpenStudentPopup(StudentRequestModel studentRequestModel)
-        {
-            if (studentRequestModel != null)
-            {
+                var studentRequestModel = Mapper.Map<StudentRequestModel>(studentGridView);
                 StudentManagementPopup.OpenPopup(studentRequestModel);
             }
         }
@@ -79,24 +116,10 @@ namespace eSchoolProject.Components.Pages
         {
             NavigationManager.NavigateTo($"/gradepanel/{teacherId}");
         }
-        private IEnumerable<TeacherViewModel> FilteredTeachers =>
-            SearchService.FilterList(schoolViewModel.Teachers, searchTextTeachers, (teacher, search) =>
-                (!string.IsNullOrEmpty(teacher.Name) && teacher.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
-                (!string.IsNullOrEmpty(teacher.IdentityNumber) && teacher.IdentityNumber.Contains(search, StringComparison.OrdinalIgnoreCase))
-            );
-        private IEnumerable<StudentViewModel> FilteredStudents =>
-             SearchService.FilterList(schoolViewModel.Students, searchTextStudents, (student, search) =>
-                 (!string.IsNullOrEmpty(student.Name) && student.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
-                 student.StudentNumber.ToString().Contains(search) ||
-                 (!string.IsNullOrEmpty(student.IdentityNumber) && student.IdentityNumber.Contains(search))
-            );
-        private IEnumerable<ManagerViewModel> FilteredManagers =>
-            SearchService.FilterList(schoolViewModel.Managers, searchTextManagers, (manager, search) =>
-                (!string.IsNullOrEmpty(manager.Name) && manager.Name.Contains(search, StringComparison.OrdinalIgnoreCase)) ||
-                (!string.IsNullOrEmpty(manager.IdentityNumber) && manager.IdentityNumber.Contains(search, StringComparison.OrdinalIgnoreCase))
-            );
-
-
+        private void NavigateToSchedule(long schoolId)
+        {
+            NavigationManager.NavigateTo($"/lessonschedulemanagement/{schoolId}");
+        }
         protected override async Task OnInitializedAsync()
         {
             await GetSchoolByIdAsync();
@@ -107,7 +130,7 @@ namespace eSchoolProject.Components.Pages
             using var scope = ServiceScopeFactory.CreateScope();
             var schoolService = scope.ServiceProvider.GetRequiredService<ISchoolService>();
 
-            schoolViewModel = await schoolService.GetSchoolByIdAsync(SchoolId, cancellationTokenSource.Token);
+            schoolViewModel = await schoolService.GetSchoolForGridViewByIdAsync(SchoolId, cancellationTokenSource.Token);
         }
         private async Task OnSavedAsync()
         {

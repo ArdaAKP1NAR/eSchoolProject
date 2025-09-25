@@ -1,11 +1,15 @@
-﻿using eSchoolDatabase.RequestModels;
+﻿using eSchoolDatabase.Repositories.Interface;
+using eSchoolDatabase.RequestModels;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace eSchoolProject.Components.PopupComponent.Validator
 {
     public class LessonValidator : AbstractValidator<LessonRequestModel>
     {
-        public LessonValidator()
+        private readonly IServiceScopeFactory serviceScopeFactory;
+
+        public LessonValidator(IServiceScopeFactory serviceScopeFactory)
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
@@ -16,13 +20,22 @@ namespace eSchoolProject.Components.PopupComponent.Validator
                 .NotEmpty()
                 .WithMessage("Course code is required.")
                 .MaximumLength(50)
-                .WithMessage("Course code must not exceed 50 characters.");
-            RuleFor(x => x.TeacherId)
-                .GreaterThan(0)
-                .WithMessage("Teacher ID must be a positive number.");
+                .WithMessage("Course code must not exceed 50 characters.")
+                .MustAsync(async (obj ,_,_, cancellationToken) => await CourseMustNotExist(obj,cancellationToken))
+                .WithMessage("Course already exists.")
+                ;
+            RuleFor(x => x.Teacher)
+                .NotNull()
+                .WithMessage("Teacher must be selected.");
             RuleFor(x => x.ClassList)
                 .NotEmpty()
                 .WithMessage("At least one class must be selected.");
+            this.serviceScopeFactory = serviceScopeFactory;
+        }
+        private async Task<bool> CourseMustNotExist(LessonRequestModel q,CancellationToken cancellationToken)
+        {
+            using var scope = serviceScopeFactory.CreateScope();
+            return !await scope.ServiceProvider.GetRequiredService<ILessonRepository>().GetAll().AnyAsync(a => a.CourseCode == q.CourseCode,cancellationToken );
         }
     }
 }

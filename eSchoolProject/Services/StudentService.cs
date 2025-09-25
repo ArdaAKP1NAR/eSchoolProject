@@ -39,7 +39,7 @@ namespace eSchoolProject.Services
         }
         public async Task<List<GradeViewModel>> GetGradesByLessonAndStudentAsync(long lessonId, List<long> studentIds, CancellationToken cancellationToken)
         {
-            return await gradeRepository.GetAll(cancellationToken)
+            return await gradeRepository.GetAll()
                 .Where(g => g.LessonId == lessonId && studentIds.Contains(g.StudentId))
                 .ProjectTo<GradeViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);

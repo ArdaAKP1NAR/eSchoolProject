@@ -15,12 +15,10 @@ namespace eSchoolProject.Components.Pages
         private List<StudentViewModel> Students = new();
         private List<ClassViewModel> ClassList = new();
         private List<LessonViewModel> Lessons = new();
-        private long selectedClassId;
         private LessonViewModel SelectedLesson = default!;
-        private List<GradeInputModel> GradeInputModels = new();
-        private List<StudentViewModel> SelectedClassStudents => Students.Where(a => a.ClassId == selectedClassId).ToList();
-        private ClassViewModel SelectedClass => ClassList.Where(a => a.Id == selectedClassId).FirstOrDefault();
-        private List<LessonViewModel> SelectedClassLessons => Lessons.Where(a => a.ClassList.Any(c => c.Id == selectedClassId)).ToList();
+        private List<StudentViewModel> SelectedClassStudents = default!;
+        private ClassViewModel SelectedClass = default!;
+        private List<LessonViewModel> SelectedClassLessons => Lessons.Where(a => a.ClassList.Any(c => c.Id == SelectedClass.Id)).ToList();
         protected override async Task OnInitializedAsync()
         {
             await LoadInitialDataAsync();
@@ -42,12 +40,8 @@ namespace eSchoolProject.Components.Pages
             SelectedLesson = lesson;
             await LoadGradesForSelectedLessonAsync();
         }
-
         private async Task LoadGradesForSelectedLessonAsync()
         {
-            if (SelectedLesson is null)
-                return;
-
             using var scope = ServiceScopeFactory.CreateScope();
             var studentService = scope.ServiceProvider.GetRequiredService<IStudentService>();
 
@@ -64,6 +58,7 @@ namespace eSchoolProject.Components.Pages
                 student.Oral = studentGrades.FirstOrDefault(g => g.GradeType == GradeType.Oral)?.GradeValue;
                 student.Homework = studentGrades.FirstOrDefault(g => g.GradeType == GradeType.Homework)?.GradeValue;
             }
+            StateHasChanged();
         }
 
         private async Task SaveGradesAsync()
@@ -80,10 +75,10 @@ namespace eSchoolProject.Components.Pages
             {
                 var gradeEntries = new (double? Grade, GradeType Type)[]
                 {
-            (student.Midterm, GradeType.Midterm),
-            (student.Final, GradeType.Final),
-            (student.Oral, GradeType.Oral),
-            (student.Homework, GradeType.Homework)
+                    (student.Midterm, GradeType.Midterm),
+                    (student.Final, GradeType.Final),
+                    (student.Oral, GradeType.Oral),
+                    (student.Homework, GradeType.Homework)
                 };
 
                 foreach (var (grade, type) in gradeEntries)

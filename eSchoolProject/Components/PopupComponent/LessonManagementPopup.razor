@@ -9,10 +9,10 @@
 		{
 			<h3>Add lesson</h3>
 			<EditForm OnValidSubmit="AddLessonAsync" Model="LessonRequestModel">
-				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
+				<FluentValidationValidator Validator="validationRules"  />
 				<MudSelect T="ClassViewModel"
-						   SelectedValues="selectedClassList"
-						   SelectedValuesChanged="OnSelectedClassChanged"
+						   SelectedValues="LessonRequestModel.ClassList"
+						   SelectedValuesChanged="(IEnumerable<ClassViewModel> selected) => {LessonRequestModel.ClassList = selected.ToList();}"
 						   MultiSelection="true"
 						   Label="Select class"
 						   ToStringFunc="@(s => s.FullClassName)">
@@ -21,10 +21,10 @@
 						<MudSelectItem Value="classView">@classView.FullClassName</MudSelectItem>
 					}
 				</MudSelect>
-				<MudSelect T="long" @bind-Value="selectedTeacherId" Label="Select teacher">
+				<MudSelect @bind-Value="LessonRequestModel.Teacher" Label="Select teacher">
 					@foreach (var teacher in teacherList)
 					{
-						<MudSelectItem Value="@teacher.Id">@teacher.Name</MudSelectItem>
+						<MudSelectItem Value="@teacher">@teacher.Name</MudSelectItem>
 					}
 				</MudSelect>
 

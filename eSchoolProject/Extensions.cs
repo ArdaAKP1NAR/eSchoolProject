@@ -22,6 +22,7 @@ namespace eSchoolProject
             services.AddScoped<IAttendanceRepository, AttendanceRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ILessonScheduleRepository, LessonScheduleRepository>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddScoped<ITransactionService, TransactionService>();
@@ -32,8 +33,8 @@ namespace eSchoolProject
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IClassService, ClassService>();
             services.AddScoped<ILessonService, LessonService>();
-            services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IGradeService, GradeService>();
+            services.AddScoped<ILessonScheduleService, LessonScheduleService>();
             services.AddScoped<IConfirmationService, ConfirmationService>();
         }
     }

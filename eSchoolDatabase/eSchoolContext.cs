@@ -15,6 +15,7 @@ namespace eSchoolDatabase
         public DbSet<Class> Classes { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<LessonSchedule> LessonSchedules { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Attendance>()

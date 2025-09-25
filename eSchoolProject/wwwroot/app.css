@@ -118,3 +118,26 @@ h1:focus {
     margin-inline-end: 8px;
     margin-top: -2px;
 }
+.grade-panel .mud-table-cell{
+    padding: 6px !important;
+}
+.grade-panel .mud-input-slot{
+    padding: 16px 4px !important;
+}
+.grade-panel .mud-input-number-control .mud-input-slot {
+    padding: 11px 4px !important;
+}
+.grade-panel .mud-select {
+    max-width: 350px !important;
+}
+.grade-panel .mud-button {
+    white-space: nowrap !important;
+    height: 80% !important;
+}
+.schedule-grid .mud-table-cell {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+    .schedule-grid .mud-table-cell:hover {
+        transform: translateY(-2px);
+        background-color: var(--bs-gray-300);
+    }

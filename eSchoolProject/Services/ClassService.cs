@@ -35,7 +35,7 @@ namespace eSchoolProject.Services
 
         public async Task<List<StudentViewModel>> GetStudentsByClassAsync(long classId, CancellationToken cancellationToken)
         {
-            return await studentRepository.GetAll(cancellationToken)
+            return await studentRepository.GetAll()
                 .Where(a => a.ClassId == classId)
                 .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync();
@@ -44,7 +44,7 @@ namespace eSchoolProject.Services
         {
             var selectedStudentIds = studentViews.Select(s => s.Id).ToList();
 
-            var studentsToRemoveClass = await studentRepository.GetAll(cancellationToken)
+            var studentsToRemoveClass = await studentRepository.GetAll()
                 .Where(s => s.ClassId == classId && selectedStudentIds.Contains(s.Id))
                 .ToListAsync(cancellationToken);
 
@@ -64,7 +64,7 @@ namespace eSchoolProject.Services
         {
             var studentIds = students.Select(s => s.Id).ToList();
 
-            var studentsToUpdate = await studentRepository.GetAll(cancellationToken)
+            var studentsToUpdate = await studentRepository.GetAll()
                 .Where(s => studentIds.Contains(s.Id) && s.ClassId == null)
                 .ToListAsync(cancellationToken);
 
@@ -82,7 +82,7 @@ namespace eSchoolProject.Services
         }
         public async Task<List<StudentViewModel>> GetStudentsWithoutClassBySchoolAsync(long schoolId, CancellationToken cancellationToken) // This method retrieves students without a class in a specific school
         {
-            return await studentRepository.GetAll(cancellationToken)
+            return await studentRepository.GetAll()
                 .Where(a => a.SchoolId == schoolId && a.ClassId == null)
                 .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
@@ -91,7 +91,7 @@ namespace eSchoolProject.Services
         {
             var studentIds = students.Select(s => s.Id).ToList();
             
-            var studentsToUpdate = await studentRepository.GetAll(cancellationToken)
+            var studentsToUpdate = await studentRepository.GetAll()
                 .Where(s => studentIds.Contains(s.Id))
                 .ToListAsync(cancellationToken);
          
@@ -109,7 +109,7 @@ namespace eSchoolProject.Services
         }
         public async Task<List<LessonViewModel>> GetLessonByClassAsync(long classId, CancellationToken cancellationToken)
         {
-            return await lessonRepository.GetAll(cancellationToken)
+            return await lessonRepository.GetAll()
                 .Where(a => a.ClassList.Any(b => b.Id == classId))
                 .ProjectTo<LessonViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
