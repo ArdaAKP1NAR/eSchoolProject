@@ -15,13 +15,22 @@ namespace eSchoolProject.Components.PopupComponent
         [Parameter] public bool IsLessonSchedulePopupVisible { get; set; }
         [Parameter] public EventCallback ClosePopup { get; set; }
         [Parameter] public EventCallback SaveClicked { get; set; }
-        [Parameter] public LessonScheduleRequestModel? RequestModel { get; set; }
+        [Parameter] public LessonScheduleRequestModel RequestModel { get; set; } = default!;
         [Parameter] public List<ClassViewModel> ClassList { get; set; } = new();
         [Parameter] public List<TeacherViewModel> Teachers { get; set; } = new();
-        private long SelectedTeacherId { get; set; }
         [Parameter] public List<LessonViewModel> Lessons { get; set; } = new();
-        public List<LessonViewModel> LessonsForSelectedTeacher => Lessons.Where(a => a.TeacherId == RequestModel.TeacherId).ToList();
+        public List<LessonViewModel> LessonsForSelectedTeacher
+            => RequestModel?.Teacher != null
+               ? Lessons.Where(a => a.TeacherId == RequestModel.Teacher.Id && a.ClassList.Any(c => c.Id == RequestModel.ClassId)).ToList()
+               : new List<LessonViewModel>();
+
+        public List<TeacherViewModel> TeachersForSelectedClass
+            => RequestModel?.ClassId > 0
+                ? Teachers.Where(t => Lessons.Any(l => l.TeacherId == t.Id && l.ClassList.Any(c => c.Id == RequestModel.ClassId))).ToList()
+                : new List<TeacherViewModel>();
+
         private CancellationTokenSource cancellationTokenSource = new();
+
         public void Open(LessonScheduleRequestModel model)
         {
             RequestModel = model;
@@ -35,18 +44,22 @@ namespace eSchoolProject.Components.PopupComponent
                 // Gün ve saat zaten modelde mevcut, sadece servis çaðrýsý
                 using var scope = ServiceScopeFactory.CreateScope();
                 var service = scope.ServiceProvider.GetRequiredService<ILessonScheduleService>();
-                var (success, errorMessage) = await service.AddOrUpdateScheduleAsync(RequestModel, cancellationTokenSource.Token);
 
-                if (!success)
+                try
                 {
-                    Snackbar.Add(errorMessage!, Severity.Error);
+                    await service.AddOrUpdateScheduleAsync(RequestModel, cancellationTokenSource.Token);
+                    await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
+                    Snackbar.Add("Ders programý kaydedildi.", Severity.Success);
+                }
+                catch (Exception ex)
+                {
+                    Snackbar.Add($"An error occurred: {ex.Message}", Severity.Error);
                     return;
                 }
-                await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
-                Snackbar.Add("Ders programý kaydedildi.", Severity.Success);
 
                 IsLessonSchedulePopupVisible = false;
             }
+        
         }
 
         private async Task ClosePopupAsync()

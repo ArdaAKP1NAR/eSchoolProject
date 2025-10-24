@@ -1,6 +1,28 @@
 ﻿@page "/gradepanel/{TeacherId:long}"
 @using eSchoolDatabase.ViewModels
 <MudPaper Class="pa-4">
+	<div class="select-container grade-panel-select gap-1">
+		<MudSelect Placeholder="Sinif secin" Variant="Variant.Outlined" Label="Sınıf Seçin" @bind-Value="SelectedClass" @bind-Value:after=LoadLessons>
+			@foreach (var sinif in ClassList)
+			{
+				<MudSelectItem Value="@sinif">@($"{sinif.ClassLevel} {sinif.Section}")</MudSelectItem>
+			}
+		</MudSelect>
+		@if (SelectedClass != null)
+		{
+			<MudSelect T="LessonViewModel"
+					   Value="SelectedLesson"
+					   ValueChanged="OnSelectedLessonChanged"
+					   Class="ms-1"
+					   Label="Ders Seçin"
+					   Variant="Variant.Outlined">
+				@foreach (var lesson in SelectedClassLessons)
+				{
+					<MudSelectItem Value="@lesson">@lesson.Name</MudSelectItem>
+				}
+			</MudSelect>
+		}
+	</div>
 	<div class="tab-container">
 		<div class="tab-content">
 			<div class="grade-panel">
@@ -10,26 +32,6 @@
 							Students of Class @SelectedClass?.ClassLevel @SelectedClass?.Section
 						</MudText>
 						<div class="select-container ms-2">
-							<MudSelect Placeholder="Sinif secin" Variant="Variant.Outlined" Label="Sınıf Seçin" @bind-Value="SelectedClass">
-								@foreach (var sinif in ClassList)
-								{
-									<MudSelectItem Value="@sinif">@($"{sinif.ClassLevel} {sinif.Section}")</MudSelectItem>
-								}
-							</MudSelect>
-
-							<MudSelect T="LessonViewModel"
-									   Value="SelectedLesson"
-									   ValueChanged="OnSelectedLessonChanged"
-									   Class="ms-1"
-									   Label="Ders Seçin"
-									   Variant="Variant.Outlined"
-									   Disabled="@(SelectedClass == null)">
-								<MudSelectItem Value="@(null as LessonViewModel)">-- Ders Seçin --</MudSelectItem>
-								@foreach (var lesson in SelectedClassLessons)
-								{
-									<MudSelectItem Value="@lesson">@lesson.Name</MudSelectItem>
-								}
-							</MudSelect>
 						</div>
 						<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Success" OnClick="SaveGradesAsync">
 							Save Grades

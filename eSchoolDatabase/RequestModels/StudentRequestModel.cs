@@ -18,7 +18,7 @@ namespace eSchoolDatabase.RequestModels
         public long Id { get; set; }
         public string IdentityNumber { get; set; } = default!;
         public string Name { get; set; } = default!;
-        public int StudentNumber { get; set; }
+        public int? StudentNumber { get; set; }
         public DateTime? BirthdayDate { get; set; }
         public AddressRequestModel Address { get; set; } = default!;
         public string ParentNumber { get; set; } = default!;

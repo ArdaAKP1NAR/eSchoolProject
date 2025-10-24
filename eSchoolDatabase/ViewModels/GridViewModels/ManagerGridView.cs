@@ -9,6 +9,8 @@ namespace eSchoolDatabase.ViewModels.GridViewModels
     public class ManagerGridView
     {
         public long Id { get; set; }
+        public string PhoneNumber { get; set; } = default!;
         public string Name { get; set; } = default!;
+        public string IdentityNumber { get; set; } = default!;
     }
 }

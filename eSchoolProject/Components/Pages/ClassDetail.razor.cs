@@ -1,5 +1,6 @@
 using eSchoolDatabase.ViewModels;
 using eSchoolProject.Authorization.Interface;
+using eSchoolProject.Components.PopupComponent;
 using eSchoolProject.Exceptions;
 using eSchoolProject.Services;
 using eSchoolProject.Services.IServices;
@@ -8,7 +9,7 @@ using MudBlazor;
 
 namespace eSchoolProject.Components.Pages
 {
-    public partial class ClassDetail
+    public partial class ClassDetail : IDisposable
     {
         [Inject] private IServiceScopeFactory ServiceScopeFactory { get; init; } = default!;
         [Parameter] public long ClassId { get; set; }
@@ -23,23 +24,18 @@ namespace eSchoolProject.Components.Pages
 
         private MudDataGrid<StudentWithCheckbox> grid;
         List<StudentWithCheckbox> ClassStudents = new();
-        private List<StudentViewModel> UnassignedStudents = new();
-        private List<StudentViewModel> SelectedStudents = new();
-        private bool IsAddStudentPopupOpen = false;
+        private ClassManagementPopup ClassManagementPopup = default!;
 
-        private bool _visible = false;
         private List<ClassViewModel> AvailableClasses = new();
         private long SelectedTargetClassId;
         private IEnumerable<StudentWithCheckbox> SelectedClassStudents => ClassStudents.Where(x => x.IsSelected);
-
-        public async Task OpenPopup()
+        private void LoadStudents()
         {
-            using var scope = ServiceScopeFactory.CreateScope();
-            var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
-            SelectedStudents.Clear();
-            UnassignedStudents = await classService.GetStudentsWithoutClassBySchoolAsync(SelectedClass.SchoolId, cancellationTokenSource.Token);
-
-            IsAddStudentPopupOpen = true;
+            grid.ReloadServerData();
+        }
+        private void OpenPopup()
+        {
+            ClassManagementPopup.OpenAddStudentToClassPopup();
         }
         protected override async Task OnInitializedAsync()
         {
@@ -57,42 +53,12 @@ namespace eSchoolProject.Components.Pages
             ClassStudents = studentList.Select(s => new StudentWithCheckbox { Student = s, IsSelected = false }).ToList();
 
         }
-
         private void OnActionWithConfirmationClicked(string message, Func<Task> action)
         {
             ConfirmationService.ShowConfirmSnackbar(message, async () =>
             {
                 await action();
             });
-        }
-        private Task OnSelectedStudentsChanged(IEnumerable<StudentViewModel> students)
-        {
-            SelectedStudents = students.ToList();
-            return Task.CompletedTask;
-        }
-
-        private async Task AddStudentToClassAsync()
-        {
-            if (!SelectedStudents.Any())
-            {
-                Snackbar.Add("Lütfen en az bir öðrenci seçin.", Severity.Warning);
-                return;
-            }
-
-            using var scope = ServiceScopeFactory.CreateScope();
-            var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
-
-            await classService.AssignStudentsToClassAsync(SelectedStudents, ClassId, cancellationTokenSource.Token);
-            Snackbar.Add($"{SelectedStudents.Count} öðrenci sýnýfa eklendi.", Severity.Success);
-            if (StudentAdded.HasDelegate)
-            {
-                await StudentAdded.InvokeAsync();
-            }
-            ClosePopup();
-        }
-        private void ClosePopup()
-        {
-            IsAddStudentPopupOpen = false;
         }
         private async Task RemoveSelectedStudentsAsync()
         {
@@ -118,9 +84,6 @@ namespace eSchoolProject.Components.Pages
 
                 var updatedStudents = await classService.GetStudentsByClassAsync(SelectedClass.Id, cancellationTokenSource.Token);
                 ClassStudents = updatedStudents.Select(s => new StudentWithCheckbox { Student = s, IsSelected = false }).ToList();
-
-                UnassignedStudents = await classService.GetStudentsWithoutClassBySchoolAsync(SelectedClass!.SchoolId, cancellationTokenSource.Token);
-
                 StateHasChanged();
             }
             catch (Exception ex)
@@ -134,8 +97,12 @@ namespace eSchoolProject.Components.Pages
         }
         private async Task OnStudentSavedAsync()
         {
-            await grid.ReloadServerData();
+            using var scope = ServiceScopeFactory.CreateScope();
+            var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
 
+            var studentList = await classService.GetStudentsByClassAsync(ClassId, cancellationTokenSource.Token);
+            ClassStudents = studentList.Select(s => new StudentWithCheckbox { Student = s, IsSelected = false }).ToList();
+            StateHasChanged();
         }
 
         private async Task ReassignStudentsToClassAsync()
@@ -167,11 +134,8 @@ namespace eSchoolProject.Components.Pages
 
                 Snackbar.Add($"{selectedStudents.Count} öðrenci sýnýfa yeniden atandý.", Severity.Success);
 
-                var updatedStudents = await classService.GetStudentsByClassAsync(SelectedClass.Id, cancellationTokenSource.Token);
-                ClassStudents = updatedStudents.Select(s => new StudentWithCheckbox { Student = s, IsSelected = false }).ToList();
-
-                UnassignedStudents = await classService.GetStudentsWithoutClassBySchoolAsync(SelectedClass!.SchoolId, cancellationTokenSource.Token);
                 await OnStudentSavedAsync();
+                
             }
             catch (Exception ex)
             {
@@ -196,11 +160,10 @@ namespace eSchoolProject.Components.Pages
             }
             StateHasChanged();
         }
-
-        public class StudentWithCheckbox
+        public void Dispose()
         {
-            public StudentViewModel Student { get; set; } = default!;
-            public bool IsSelected { get; set; }
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
         }
     }
 

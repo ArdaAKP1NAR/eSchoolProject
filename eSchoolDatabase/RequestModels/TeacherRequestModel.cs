@@ -10,6 +10,7 @@ namespace eSchoolDatabase.RequestModels
 {
     public class TeacherRequestModel
     {
+        public long Id { get; set; }
         public string IdentityNumber { get; set; } = default!;
         public string Name { get; set; } = default!;
         public string PhoneNumber { get; set; } = default!;

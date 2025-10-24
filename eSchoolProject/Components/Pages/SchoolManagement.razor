@@ -47,11 +47,19 @@
 								<MudText Typo="Typo.h6">Manager List</MudText>
 								<MudSpacer />
 								<div class="add-button-management">
-									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenManagerPopup">Add Manager</MudButton>
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateNewManager">Add Manager</MudButton>
 								</div>
 							</ToolBarContent>
 							<Columns>
 								<PropertyColumn Property="x => x.Name" Title="Name" />
+								<PropertyColumn Property="x => x.PhoneNumber" Title="Phone number" />
+								<TemplateColumn Title="Update Manager">
+									<CellTemplate>
+										<MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Edit" OnClick=" () => OpenManagerPopupFromViewModel(context.Item)">
+											Update
+										</MudButton>
+									</CellTemplate>
+								</TemplateColumn>
 							</Columns>
 						</MudDataGrid>
 					</div>
@@ -66,7 +74,7 @@
 								<MudText Typo="Typo.h6">Teacher List</MudText>
 								<MudSpacer />
 								<div class="add-button-management">
-									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenTeacherPopup">Add Teacher</MudButton>
+									<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateNewTeacher">Add Teacher</MudButton>
 								</div>
 							</ToolBarContent>
 							<Columns>
@@ -77,6 +85,13 @@
 										<MudButton Variant="Variant.Outlined" Color="Color.Dark" StartIcon="@Icons.Material.Filled.ChevronRight"
 												   OnClick="() => NavigateToGradePanel(context.Item.Id)">
 											Grade Panel
+										</MudButton>
+									</CellTemplate>
+								</TemplateColumn>
+								<TemplateColumn Title="Update Teacher">
+									<CellTemplate>
+										<MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Edit" OnClick=" () => OpenTeacherPopupFromViewModel(context.Item)">
+											Update
 										</MudButton>
 									</CellTemplate>
 								</TemplateColumn>
@@ -126,12 +141,14 @@
 								<div class="grid-header">
 									<MudText Typo="Typo.h6">Class List</MudText>
 									<MudSpacer />
-									<div class="add-button-management">
-										<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenLessonPopup">Add Lesson</MudButton>
-									</div>
-									<div class="add-button-management">
-										<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenClassPopup">Add Class</MudButton>
-									</div>
+									<div class="button-container">
+										<div class="add-button-management">
+											<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenLessonPopup">Add Lesson</MudButton>
+										</div>
+										<div class="add-button-management">
+											<MudButton Class="add-button" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenClassPopup">Add Class</MudButton>
+										</div>
+									</div>	
 								</div>
 							</ToolBarContent>
 							<Columns>
@@ -161,13 +178,11 @@
 		</div>
 	</MudCard>
 
-	<ManagerManagementPopup IsManagerPopupVisible="IsManagerPopupVisible"
+	<ManagerManagementPopup @ref=ManagerManagementPopup
 							SchoolId="SchoolId"
-							PopupClosed="() => {IsManagerPopupVisible = false;}"
 							SaveClicked="OnSavedAsync" />
-	<TeacherManagementPopup IsTeacherPopupVisible="IsTeacherPopupVisible"
+	<TeacherManagementPopup @ref=TeacherManagementPopup
 							SchoolId="SchoolId"
-							PopupClosed="() => {IsTeacherPopupVisible = false;}"
 							SaveClicked="OnSavedAsync" />
 	<StudentManagementPopup @ref=StudentManagementPopup
 							SchoolId="SchoolId"

@@ -1,18 +1,19 @@
 using eSchoolDatabase;
 using eSchoolDatabase.ViewModels;
+using eSchoolProject.Services;
 using eSchoolProject.Services.IServices;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Threading;
 
 namespace eSchoolProject.Components.Pages
 {
-    public partial class GradePanel
+    public partial class GradePanel : IDisposable
     {
         [Inject] private IServiceScopeFactory ServiceScopeFactory { get; init; } = default!;
         [Inject] ISnackbar Snackbar { get; init; } = default!;
         [Parameter] public long TeacherId { get; set; }
         private CancellationTokenSource CancellationTokenSource = new();
-        private List<StudentViewModel> Students = new();
         private List<ClassViewModel> ClassList = new();
         private List<LessonViewModel> Lessons = new();
         private LessonViewModel SelectedLesson = default!;
@@ -29,37 +30,43 @@ namespace eSchoolProject.Components.Pages
             using var scope = ServiceScopeFactory.CreateScope();
             var teacherService = scope.ServiceProvider.GetRequiredService<ITeacherService>();
 
-            var teacher = await teacherService.GetTeacherByIdAsync(TeacherId, CancellationTokenSource.Token);
-
             ClassList = await teacherService.GetClassesByTeacherIdAsync(TeacherId, CancellationTokenSource.Token);
-            Students = await teacherService.GetStudentsByTeacherIdAsync(TeacherId, CancellationTokenSource.Token);
-            Lessons = await teacherService.GetLessonByTeacherAsync(TeacherId, CancellationTokenSource.Token);
         }
         private async Task OnSelectedLessonChanged(LessonViewModel lesson)
         {
             SelectedLesson = lesson;
             await LoadGradesForSelectedLessonAsync();
         }
+        private async Task LoadLessons()
+        {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var teacherService = scope.ServiceProvider.GetRequiredService<ITeacherService>();
+
+            SelectedLesson = null;
+            SelectedClassStudents = new();
+
+            Lessons = await teacherService.GetLessonByTeacherAsync(TeacherId, SelectedClass.Id, CancellationTokenSource.Token);
+        }
         private async Task LoadGradesForSelectedLessonAsync()
         {
             using var scope = ServiceScopeFactory.CreateScope();
-            var studentService = scope.ServiceProvider.GetRequiredService<IStudentService>();
+            var gradeService = scope.ServiceProvider.GetRequiredService<IGradeService>();
 
-            var studentIds = SelectedClassStudents.Select(s => s.Id).ToList();
-
-            var grades = await studentService.GetGradesByLessonAndStudentAsync(SelectedLesson.Id, studentIds, CancellationTokenSource.Token);
-
-            foreach (var student in SelectedClassStudents)
+            try
             {
-                var studentGrades = grades.Where(g => g.StudentId == student.Id).ToList();
-
-                student.Midterm = studentGrades.FirstOrDefault(g => g.GradeType == GradeType.Midterm)?.GradeValue;
-                student.Final = studentGrades.FirstOrDefault(g => g.GradeType == GradeType.Final)?.GradeValue;
-                student.Oral = studentGrades.FirstOrDefault(g => g.GradeType == GradeType.Oral)?.GradeValue;
-                student.Homework = studentGrades.FirstOrDefault(g => g.GradeType == GradeType.Homework)?.GradeValue;
+                SelectedClassStudents = await gradeService.LoadGradesForSelectedLesson(
+                       SelectedClass.Id,
+                       SelectedLesson.Id,
+                       TeacherId,
+                       CancellationTokenSource.Token);
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Hata oluþtu: {ex.Message}", Severity.Error);
             }
             StateHasChanged();
         }
+
 
         private async Task SaveGradesAsync()
         {
@@ -102,15 +109,24 @@ namespace eSchoolProject.Components.Pages
                 return;
             }
 
-            using var scope = ServiceScopeFactory.CreateScope();
-            var gradeService = scope.ServiceProvider.GetRequiredService<IGradeService>();
-
-            foreach (var grade in gradesToSave)
+            try
             {
-                await gradeService.AddOrUpdateGradeAsync(grade, CancellationTokenSource.Token);
-            }
+                using var scope = ServiceScopeFactory.CreateScope();
+                var gradeService = scope.ServiceProvider.GetRequiredService<IGradeService>();
 
-            Snackbar.Add("Notlar baþarýyla kaydedildi.", Severity.Success);
+                await gradeService.SaveGradesAsync(gradesToSave, CancellationTokenSource.Token);
+
+                Snackbar.Add("Notlar baþarýyla kaydedildi.", Severity.Success);
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Hata oluþtu: {ex.Message}", Severity.Error);
+            }
+        }
+        public void Dispose()
+        {
+            CancellationTokenSource.Cancel();
+            CancellationTokenSource.Dispose();
         }
     }
 }

@@ -141,3 +141,6 @@ h1:focus {
         transform: translateY(-2px);
         background-color: var(--bs-gray-300);
     }
+.grade-panel-select .mud-select{
+    max-width : 812px;
+}

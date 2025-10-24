@@ -6,15 +6,20 @@
 	<Body>
 		@if (ManagerRequestModel != null && SchoolId != 0)
 		{
-			<h3>Add manager</h3>
-			<EditForm OnValidSubmit="AddManagerAsync" Model="ManagerRequestModel">
+			<h3>@(ManagerRequestModel.Id != 0 ? "Update Manager" : "Add Manager")</h3>
+			<EditForm OnValidSubmit="@((ManagerRequestModel.Id != 0) ? UpdateManagerAsync : AddManagerAsync)" Model="ManagerRequestModel">
 				<FluentValidationValidator Options="@(options => options.IncludeAllRuleSets())" />
 				<MudTextField @bind-Value=ManagerRequestModel.Name For="@(() => ManagerRequestModel.Name)" Label="Name" />
-				<MudTextField @bind-Value="ManagerRequestModel.IdentityNumber" For="@(() => ManagerRequestModel.IdentityNumber)" Label="Identity number" />
-
+				<MudTextField @bind-Value="ManagerRequestModel.PhoneNumber" For="@(() => ManagerRequestModel.PhoneNumber)" Label="Phone number" />
+				@if (ManagerRequestModel.Id == 0)
+				{
+					<MudTextField @bind-Value="ManagerRequestModel.IdentityNumber" For="@(() => ManagerRequestModel.IdentityNumber)" Label="Identity number" />
+				}
 				<div class="popup-actions">
 					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="Close">Cancel</MudButton>
-					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Add</MudButton>
+					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">
+						@(ManagerRequestModel.Id != 0 ? "Update Manager" : "Add Manager")
+					</MudButton>
 				</div>
 			</EditForm>
 		}

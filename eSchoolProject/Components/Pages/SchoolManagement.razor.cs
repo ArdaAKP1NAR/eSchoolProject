@@ -1,5 +1,6 @@
 using AutoMapper;
 using eSchoolDatabase.Models;
+using eSchoolDatabase.RequestModel;
 using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
 using eSchoolDatabase.ViewModels.GridViewModels;
@@ -11,7 +12,7 @@ using MudBlazor;
 
 namespace eSchoolProject.Components.Pages
 {
-    public partial class SchoolManagement
+    public partial class SchoolManagement : IDisposable
     {
         [Inject] private IServiceScopeFactory ServiceScopeFactory { get; init; } = default!;
         [Parameter] public long SchoolId { get; set; }
@@ -22,11 +23,11 @@ namespace eSchoolProject.Components.Pages
 
         private CancellationTokenSource cancellationTokenSource = new();
         private SchoolGridView schoolViewModel = default!;
-        private bool IsManagerPopupVisible = false;
-        private bool IsTeacherPopupVisible = false;
         private bool IsClassPopupVisible = false;
         private bool IsLessonPopupVisible = false;
         private StudentManagementPopup StudentManagementPopup = default!;
+        private TeacherManagementPopup TeacherManagementPopup = default!;
+        private ManagerManagementPopup ManagerManagementPopup = default!;
         private MudDataGrid<TeacherGridView> MudDataGridTeachers { get; set; } = default!;
         private MudDataGrid<ManagerGridView> MudDataGridManagers { get; set; } = default!;
         private MudDataGrid<StudentGridView> MudDataGridStudents { get; set; } = default!;
@@ -80,17 +81,33 @@ namespace eSchoolProject.Components.Pages
         {
             ActiveTab = tab;
         }
-        private void OpenManagerPopup()
-        {
-            IsManagerPopupVisible = true;
-        }
-        private void OpenTeacherPopup()
-        {
-            IsTeacherPopupVisible = true;
-        }
         private void OpenLessonPopup()
         {
             IsLessonPopupVisible = true;
+        }
+        private void CreateNewManager()
+        {
+            ManagerManagementPopup.OpenPopup(new());
+        }
+        private void OpenManagerPopupFromViewModel(ManagerGridView managerGridView)
+        {
+            if (managerGridView != null)
+            {
+                var managerRequestModel = Mapper.Map<ManagerRequestModel>(managerGridView);
+                ManagerManagementPopup.OpenPopup(managerRequestModel);
+            }
+        }
+        private void CreateNewTeacher()
+        {
+            TeacherManagementPopup.OpenPopup(new());
+        }
+        private void OpenTeacherPopupFromViewModel(TeacherGridView teacherGridView)
+        {
+            if (teacherGridView != null)
+            {
+                var teacherRequestModel = Mapper.Map<TeacherRequestModel>(teacherGridView);
+                TeacherManagementPopup.OpenPopup(teacherRequestModel);
+            }
         }
         private void CreateNewStudent()
         {
@@ -112,8 +129,18 @@ namespace eSchoolProject.Components.Pages
         {
             NavigationManager.NavigateTo($"/class/{Id}");
         }
-        private void NavigateToGradePanel(long teacherId)
+        private async Task NavigateToGradePanel(long teacherId)
         {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<ITeacherService>();
+
+            var teacher = await service.GetTeacherByIdAsync(teacherId, cancellationTokenSource.Token);
+
+            if (!teacher.Lessons.Any())
+            {
+                Snackbar.Add("Bu öðretmenin atanmýþ sýnýfý veya dersi bulunmamaktadýr.", Severity.Warning);
+                return;
+            }
             NavigationManager.NavigateTo($"/gradepanel/{teacherId}");
         }
         private void NavigateToSchedule(long schoolId)
@@ -134,10 +161,14 @@ namespace eSchoolProject.Components.Pages
         }
         private async Task OnSavedAsync()
         {
-            IsManagerPopupVisible = false;
-            IsTeacherPopupVisible = false;
             IsClassPopupVisible = false;
             await GetSchoolByIdAsync();
+        }
+
+        public void Dispose()
+        {
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
         }
     }
 }

@@ -23,7 +23,6 @@ namespace eSchoolProject.Services
             var lesson = mapper.Map<Lesson>(lessonRequestModel);
             if (await lessonRepository.GetAll().AnyAsync(a => a.CourseCode == lesson.CourseCode, cancellationToken))
             {
-
                 throw new LessonAlreadyExistsException("A lesson with the same course code already exists.");
             }
 

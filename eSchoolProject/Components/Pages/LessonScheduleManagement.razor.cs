@@ -6,10 +6,12 @@ using eSchoolProject.Services;
 using eSchoolProject.Services.IServices;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Linq;
+using System.Threading;
 
 namespace eSchoolProject.Components.Pages
 {
-    public partial class LessonScheduleManagement
+    public partial class LessonScheduleManagement : IDisposable
     {
         [Inject] private IServiceScopeFactory ServiceScopeFactory { get; init; } = default!;
         [Inject] ISnackbar Snackbar { get; init; } = default!;
@@ -76,6 +78,11 @@ namespace eSchoolProject.Components.Pages
                 EndTime = startTime.Add(TimeSpan.FromHours(1)) // 1 saatlik blok
             };
             schedulePopup.Open(newRequest);
+        }
+        public void Dispose()
+        {
+            CancellationTokenSource.Cancel();
+            CancellationTokenSource.Dispose();
         }
     }
 }

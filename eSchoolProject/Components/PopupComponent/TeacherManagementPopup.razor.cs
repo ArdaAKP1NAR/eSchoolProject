@@ -20,9 +20,16 @@ namespace eSchoolProject.Components.PopupComponent
         {
             if (value)
             {
-                TeacherRequestModel = new() { SchoolId = SchoolId };
+                if (TeacherRequestModel == null)
+                    TeacherRequestModel = new() { SchoolId = SchoolId };
             }
+            TeacherRequestModel.SchoolId = SchoolId;
             _visible = value;
+        }
+        public void OpenPopup(TeacherRequestModel teacherRequestModel)
+        {
+            TeacherRequestModel = teacherRequestModel;
+            IsTeacherPopupVisible = true;
         }
         private async Task AddTeacherAsync()
         {
@@ -34,6 +41,18 @@ namespace eSchoolProject.Components.PopupComponent
            
             await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
             
+            IsTeacherPopupVisible = false;
+        }
+        private async Task UpdateTeacherAsync()
+        {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<ITeacherService>();
+
+            await service.UpdateTeacherAsync(TeacherRequestModel, cancellationTokenSource.Token);
+            Snackbar.Add("Teacher has been updated succesfuly.", Severity.Success);
+
+            await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
+
             IsTeacherPopupVisible = false;
         }
         private async Task ClosePopupAsync()

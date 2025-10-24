@@ -10,6 +10,7 @@ namespace eSchoolDatabase.ViewModels
     public class ManagerViewModel
     {
         public long Id { get; set; }
+        public string PhoneNumber { get; set; } = default!;
         public string IdentityNumber { get; set; } = default!;
         public string Name { get; set; } = default!;
         public long SchoolId { get; set; }

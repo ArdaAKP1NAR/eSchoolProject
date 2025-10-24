@@ -33,5 +33,10 @@ namespace eSchoolProject.Services
            
             await transaction.CommitAsync();
         }
+        public async Task UpdateManagerAsync(ManagerRequestModel managerRequestModel, CancellationToken cancellationToken)
+        {
+            var manager = mapper.Map<Manager>(managerRequestModel);
+            await managerRepository.UpdateAsync(manager, cancellationToken);
+        }
     }
 }

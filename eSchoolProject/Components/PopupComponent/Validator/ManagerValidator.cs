@@ -18,6 +18,12 @@ namespace eSchoolProject.Components.PopupComponent.Validator
                 .NotEmpty().WithMessage("IdentityNumber cannot be empty.")
                 .Matches("^[0-9]+$").WithMessage("IdentityNumber must contain only numbers.")
                 .Length(11).WithMessage("IdentityNumber must be exactly 11 digits.");
+           
+            RuleFor(a => a.PhoneNumber)
+                .NotNull().WithMessage("Phone number is required")
+                .NotEmpty().WithMessage("Phone number cannot be empty")
+                .Matches("^[0-9]+$").WithMessage("Phone number must contain only numbers.")
+                .Length(11).WithMessage("IdentityNumber must be exactly 11 digits.");
         }
     }
 }

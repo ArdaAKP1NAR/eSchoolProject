@@ -12,17 +12,17 @@
                 <MudTextField Label="Sınıf" Value="@ClassList.FirstOrDefault(c => c.Id == RequestModel.ClassId)?.FullClassName" Disabled="true" />
 
 
-                <MudSelect T="long" Label="Öğretmen Seç" @bind-Value="RequestModel.TeacherId" >
-                    @foreach (var teacher in Teachers)
+                <MudSelect Label="Öğretmen Seç" @bind-Value="RequestModel.Teacher" >
+                    @foreach (var teacher in TeachersForSelectedClass)
                     {
-                        <MudSelectItem Value="@teacher.Id">@teacher.Name</MudSelectItem>
+                        <MudSelectItem Value="@teacher">@teacher.Name</MudSelectItem>
                     }
                 </MudSelect>
 
-                <MudSelect T="long" Label="Ders Seç" @bind-Value="RequestModel.LessonId" Disabled="@(!LessonsForSelectedTeacher.Any())">
+                <MudSelect Label="Ders Seç" @bind-Value="RequestModel.Lesson" Disabled="@(!LessonsForSelectedTeacher.Any())">
                     @foreach (var lesson in LessonsForSelectedTeacher)
                     {
-                        <MudSelectItem Value="@lesson.Id">@lesson.Name</MudSelectItem>
+                        <MudSelectItem Value="@lesson">@lesson.Name</MudSelectItem>
                     }
                 </MudSelect>
 

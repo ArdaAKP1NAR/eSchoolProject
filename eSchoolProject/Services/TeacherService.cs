@@ -32,10 +32,16 @@ namespace eSchoolProject.Services
 
             await transaction.CommitAsync(cancellationToken);
         }
-        public async Task<List<LessonViewModel>> GetLessonByTeacherAsync(long teacherId, CancellationToken cancellationToken)
+        public async Task UpdateTeacherAsync(TeacherRequestModel teacherRequestModel, CancellationToken cancellationToken)
+        {
+            var teacher = mapper.Map<Teacher>(teacherRequestModel);
+            await teacherRepository.UpdateAsync(teacher, cancellationToken);
+        }
+        public async Task<List<LessonViewModel>> GetLessonByTeacherAsync(long teacherId, long classId, CancellationToken cancellationToken)
         {
             return await lessonRepository.GetAll()
-                .Where(a => a.TeacherId == teacherId)
+                .Where(a => a.TeacherId == teacherId &&
+                       a.ClassList.Any(a => a.Id == classId))
                 .ProjectTo<LessonViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }

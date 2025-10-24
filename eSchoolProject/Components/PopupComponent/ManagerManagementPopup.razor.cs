@@ -20,9 +20,16 @@ namespace eSchoolProject.Components.PopupComponent
         {
             if (value)
             {
-                ManagerRequestModel = new() { SchoolId = SchoolId };
+                if (ManagerRequestModel == null)
+                    ManagerRequestModel = new() { SchoolId = SchoolId };
             }
+            ManagerRequestModel.SchoolId = SchoolId;
             _visible = value;
+        }
+        public void OpenPopup(ManagerRequestModel managerRequestModel)
+        {
+            ManagerRequestModel = managerRequestModel;
+            IsManagerPopupVisible = true;
         }
         private async Task AddManagerAsync()
         {
@@ -34,6 +41,18 @@ namespace eSchoolProject.Components.PopupComponent
            
             await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
             
+            IsManagerPopupVisible = false;
+        }
+        private async Task UpdateManagerAsync()
+        {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<IManagerService>();
+           
+            await service.UpdateManagerAsync(ManagerRequestModel, cancellationTokenSource.Token);
+            Snackbar.Add("Manager updated successfully!", Severity.Success);
+           
+            await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
+           
             IsManagerPopupVisible = false;
         }
         private async Task Close()

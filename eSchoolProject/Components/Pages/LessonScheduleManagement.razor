@@ -48,8 +48,11 @@
 							if (schedule != null)
 							{
 								<MudTd Class="bg-blue-200 cursor-pointer"
-									   @onclick="() => OpenSchedulePopupFromViewModel(schedule)">
-									<div>@Lessons.FirstOrDefault(l => l.Id == schedule.LessonId)?.Name</div>
+									@onclick="() => OpenSchedulePopupFromViewModel(schedule)">
+									@{
+										var lesson = Lessons.FirstOrDefault(l => l.Id == schedule.LessonId);
+									}
+									<div>@($"{lesson?.Name} - {lesson?.CourseCode}")</div>
 									<div>@Teachers.FirstOrDefault(t => t.Id == schedule.TeacherId)?.Name</div>
 								</MudTd>
 							}

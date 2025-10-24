@@ -1,6 +1,7 @@
 ﻿@using Blazored.FluentValidation
 @using Microsoft.AspNetCore.Components.Forms
 @using MudBlazor
+@using eSchoolDatabase.ViewModels
 <Popup IsVisible="IsClassPopupVisible" PopupClosed="ClosePopupAsync">
 	<Body>
 		@if (ClassRequestModel != null && SchoolId != 0)
@@ -19,4 +20,24 @@
 		}
 	</Body>
 </Popup>
+<Popup IsVisible="IsAddStudentPopupOpen" PopupClosed="ClosePopupAsync">
+	<Body>
+		<MudSelect T="StudentViewModel"
+				   SelectedValues="SelectedStudents"
+				   SelectedValuesChanged="OnSelectedStudentsChanged"
+				   MultiSelection="true"
+				   Label="Select student"
+				   ToStringFunc="@(s => s.Name + " (" + s.StudentNumber + ")")">
+			@foreach (var student in UnassignedStudents)
+			{
+				<MudSelectItem Value="student">@student.Name (@student.StudentNumber)</MudSelectItem>
+			}
+		</MudSelect>
+		<div class="popup-actions">
+			<MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="AddStudentToClassAsync">Add</MudButton>
+			<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="ClosePopupAsync">Cancel</MudButton>
+		</div>
+	</Body>
+</Popup>
+
 

@@ -5,7 +5,7 @@
 <MudPaper Class="pa-4">
 	<div class="tab-container">
 		<div class="tab-content">
-			<MudDataGrid @ref=grid serv  Items="@ClassStudents" T="StudentWithCheckbox" Hover="true" Bordered="true">
+			<MudDataGrid @ref=grid Items="@ClassStudents" T="StudentWithCheckbox" Hover="true" Bordered="true">
 				<ToolBarContent>
 					<MudText Typo="Typo.h6">
 						Students of Class @SelectedClass?.ClassLevel @SelectedClass?.Section
@@ -68,24 +68,6 @@
 		</div>
 	</div>
 </MudPaper>
-
-<Popup IsVisible="IsAddStudentPopupOpen" PopupClosed="ClosePopup">
-	<Body>
-		<MudSelect T="StudentViewModel"
-				   SelectedValues="SelectedStudents"
-				   SelectedValuesChanged="OnSelectedStudentsChanged"
-				   MultiSelection="true"
-				   Label="Select student"
-				   ToStringFunc="@(s => s.Name + " (" + s.StudentNumber + ")")">
-			@foreach (var student in UnassignedStudents)
-			{
-				<MudSelectItem Value="student">@student.Name (@student.StudentNumber)</MudSelectItem>
-			}
-		</MudSelect>
-		<div class="popup-actions">
-			<MudButton Color="Color.Primary" OnClick="AddStudentToClassAsync">Ekle</MudButton>
-			<MudButton OnClick="() => IsAddStudentPopupOpen = false">İptal</MudButton>
-		</div>
-
-	</Body>
-</Popup>
+<ClassManagementPopup @ref="ClassManagementPopup"
+				      ClassId="ClassId"
+					  SaveClicked="OnStudentSavedAsync" />

@@ -4,6 +4,7 @@ using eSchoolDatabase.Models;
 using eSchoolDatabase.Repositories.Interface;
 using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
+using eSchoolProject.Exceptions;
 using eSchoolProject.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,18 +33,22 @@ namespace eSchoolProject.Services
                 .ProjectTo<LessonScheduleViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync();
         }
-        public async Task<(bool Success, string? ErrorMessage)> AddOrUpdateScheduleAsync(LessonScheduleRequestModel request, CancellationToken cancellationToken)
+        public async Task AddOrUpdateScheduleAsync(LessonScheduleRequestModel request, CancellationToken cancellationToken)
         {
-            // 1. Mevcut Id’ye göre güncelleme
+            if (request.Teacher == null || request.Lesson == null)
+            {
+                throw new ArgumentException("expected teacher and lesson to be filled but recieved null");
+            }
             if (request.Id > 0)
             {
                 var existingById = await lessonScheduleRepository.GetByIdAsync(request.Id, cancellationToken);
                 if (existingById != null)
                 {
                     mapper.Map(request, existingById);
+                    existingById.TeacherId = request.Teacher.Id;
+                    existingById.LessonId = request.Lesson.Id;
                     await lessonScheduleRepository.UpdateAsync(existingById, cancellationToken);
                     await lessonScheduleRepository.SaveChangesAsync(cancellationToken);
-                    return (true, null);
                 }
             }
 
@@ -58,6 +63,8 @@ namespace eSchoolProject.Services
             if (existingClassSchedule != null)
             {
                 mapper.Map(request, existingClassSchedule);
+                existingClassSchedule.TeacherId = request.Teacher.Id;
+                existingClassSchedule.LessonId = request.Lesson.Id;
                 await lessonScheduleRepository.UpdateAsync(existingClassSchedule, cancellationToken);
             }
             else
@@ -65,25 +72,23 @@ namespace eSchoolProject.Services
                 // 3. Öğretmenin aynı saatte başka dersi var mı kontrol
                 var existingTeacherSchedule = await lessonScheduleRepository.GetAll()
                     .FirstOrDefaultAsync(s =>
-                        s.TeacherId == request.TeacherId &&
+                        s.TeacherId == request.Teacher.Id &&
                         s.Day == request.Day &&
                         s.StartTime == request.StartTime,
                         cancellationToken);
 
                 if (existingTeacherSchedule != null)
                 {
-                    // Hata mesajı döndür
-                    return (false, "Seçilen öğretmenin o saatte başka bir dersi var.");
+                    throw new AlreadyExistException("Bu öğretmenin aynı saatte başka bir dersi bulunmaktadır.");
                 }
 
-                // 4. Yeni ekleme
                 var entity = mapper.Map<LessonSchedule>(request);
+                entity.TeacherId = request.Teacher.Id;
+                entity.LessonId = request.Lesson.Id;
                 await lessonScheduleRepository.AddAsync(entity, cancellationToken);
             }
 
             await lessonScheduleRepository.SaveChangesAsync(cancellationToken);
-            return (true, null);
         }
-
     }
 }

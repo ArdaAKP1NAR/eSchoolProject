@@ -6,5 +6,6 @@ namespace eSchoolProject.Services.IServices
     public interface IManagerService
     {
         Task AddManagerAsync(ManagerRequestModel managerRequestModel, CancellationToken cancellationToken);
+        Task UpdateManagerAsync(ManagerRequestModel managerRequestModel, CancellationToken cancellationToken);
     }
 }
