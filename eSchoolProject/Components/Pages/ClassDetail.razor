@@ -12,6 +12,10 @@
 					</MudText>
 					<MudSpacer />
 					<div class="button-container ms-2">
+						<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ChevronRight" Color="Color.Info" OnClick="NavigateToLessonEditPage">
+							Lesson Process
+						</MudButton>
+
 						<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Clear" Color="Color.Error" OnClick="DeselectAllStudents">
 							Deselect All Students
 						</MudButton>
@@ -71,3 +75,4 @@
 <ClassManagementPopup @ref="ClassManagementPopup"
 				      ClassId="ClassId"
 					  SaveClicked="OnStudentSavedAsync" />
+<LessonManagementPopup @ref="LessonManagementPopup" SaveClicked="OnStudentSavedAsync"/>

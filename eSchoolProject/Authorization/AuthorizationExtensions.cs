@@ -24,7 +24,6 @@ namespace eSchoolProject.Authorization
                 {
                     options.AddPolicy(item, policy => policy.RequireRole(item));
                 }
-
             });
 
             services.AddCascadingAuthenticationState();

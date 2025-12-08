@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using eSchoolDatabase.RequestModel;
 using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
@@ -15,7 +15,8 @@ namespace eSchoolProject.Components.PopupComponent
         [Inject] private ISnackbar Snackbar { get; init; } = default!;
         [Inject] private IMapper mapper { get; init; } = default!;
         private readonly CancellationTokenSource cancellationTokenSource = new();
-        [Parameter] public bool IsLessonPopupVisible { get; set; }
+        private bool _visible;
+        [Parameter] public bool IsLessonPopupVisible { get; set; } 
         [Parameter] public long SchoolId { get; set; }
         private LessonValidator validationRules = default!;
         private LessonRequestModel LessonRequestModel { get; set; } = new();
@@ -26,12 +27,32 @@ namespace eSchoolProject.Components.PopupComponent
 
         protected override async Task OnInitializedAsync()
         {
-
             validationRules = new LessonValidator(ServiceScopeFactory);
 
             await GetClassBySchoolAsync();
             await base.OnInitializedAsync();
         }
+
+        public async void OpenPopup(LessonRequestModel model)
+        {
+            // ✅ Eğer liste henüz dolmadıysa yükle
+            if (!classList.Any() || !teacherList.Any())
+                await GetClassBySchoolAsync();
+
+            LessonRequestModel = model;
+
+            // ✅ SINIFLARI REFERANS EŞLE
+            LessonRequestModel.ClassList = classList
+                .Where(c => model.ClassList?.Any(x => x.Id == c.Id) == true)
+                .ToList();
+
+            // ✅ ÖĞRETMENİ REFERANS EŞLE
+            LessonRequestModel.Teacher = teacherList
+                .FirstOrDefault(t => t.Id == model.Teacher?.Id);
+
+            IsLessonPopupVisible = true;
+        }
+
         private async Task GetClassBySchoolAsync()
         {
             using var scope = ServiceScopeFactory.CreateScope();
@@ -61,6 +82,24 @@ namespace eSchoolProject.Components.PopupComponent
 
             await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
 
+            IsLessonPopupVisible = false;
+        }
+
+        private async Task UpdateLessonAsync()
+        {
+            using var scope = ServiceScopeFactory.CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<ILessonService>();
+            try
+            {
+                await service.UpdateLessonAsync(LessonRequestModel, cancellationTokenSource.Token);
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add(ex.Message, Severity.Error);
+                return;
+            }
+            Snackbar.Add("Lesson updated successfully!", Severity.Success);
+            await SaveClicked.InvokeAsync(cancellationTokenSource.Token);
             IsLessonPopupVisible = false;
         }
         private async Task Close()

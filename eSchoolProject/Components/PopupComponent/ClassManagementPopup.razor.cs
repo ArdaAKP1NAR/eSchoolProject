@@ -53,7 +53,9 @@ namespace eSchoolProject.Components.PopupComponent
         {
             using var scope = ServiceScopeFactory.CreateScope();
             var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
+
             UnassignedStudents = await classService.GetStudentsWithoutClassBySchoolAsync(ClassId, cancellationTokenSource.Token);
+
             IsAddStudentPopupOpen = true;
         }
         private Task OnSelectedStudentsChanged(IEnumerable<StudentViewModel> students)

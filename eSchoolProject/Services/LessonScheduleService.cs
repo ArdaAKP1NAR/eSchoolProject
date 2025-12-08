@@ -17,22 +17,24 @@ namespace eSchoolProject.Services
             var query = lessonScheduleRepository.GetAll()
                 .Include(ls => ls.Class)
                 .Include(ls => ls.Lesson)
-                .Include(ls => ls.Teacher)
+                    .ThenInclude(l => l.Teacher)
                 .AsQueryable();
 
             if (classId.HasValue)
             {
                 query = query.Where(ls => ls.ClassId == classId.Value);
             }
+
             if (teacherId.HasValue)
             {
-                query = query.Where(ls => ls.TeacherId == teacherId.Value);
+                query = query.Where(ls => ls.Lesson.TeacherId == teacherId.Value);
             }
 
             return await query
                 .ProjectTo<LessonScheduleViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync();
         }
+
         public async Task AddOrUpdateScheduleAsync(LessonScheduleRequestModel request, CancellationToken cancellationToken)
         {
             if (request.Teacher == null || request.Lesson == null)

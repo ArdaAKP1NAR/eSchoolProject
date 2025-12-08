@@ -15,7 +15,9 @@
 				}
 				<div class="popup-actions">
 					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="ClosePopupAsync">Cancel</MudButton>
-					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">@(TeacherRequestModel.Id != 0 ? "Update Teacher" : "Add Teacher")</MudButton>
+					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">
+						@(TeacherRequestModel.Id != 0 ? "Update" : "Add")
+					</MudButton>
 				</div>
 			</EditForm>
 		}

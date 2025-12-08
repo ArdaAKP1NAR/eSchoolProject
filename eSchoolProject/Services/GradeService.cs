@@ -91,10 +91,5 @@ namespace eSchoolProject.Services
                 throw new LoadGradesException("Öğrenci notları yüklenirken hata oluştu.");
             }
         }
-        
-        private double? FetchValue(GradeViewModel? gradeViewModel)
-        { 
-            return gradeViewModel?.GradeValue != null ? gradeViewModel.GradeValue : null;
-        }
     }
 }

@@ -25,7 +25,7 @@ namespace eSchoolProject.Components.Pages
         private MudDataGrid<StudentWithCheckbox> grid;
         List<StudentWithCheckbox> ClassStudents = new();
         private ClassManagementPopup ClassManagementPopup = default!;
-
+        private LessonManagementPopup LessonManagementPopup = default!;
         private List<ClassViewModel> AvailableClasses = new();
         private long SelectedTargetClassId;
         private IEnumerable<StudentWithCheckbox> SelectedClassStudents => ClassStudents.Where(x => x.IsSelected);
@@ -36,6 +36,10 @@ namespace eSchoolProject.Components.Pages
         private void OpenPopup()
         {
             ClassManagementPopup.OpenAddStudentToClassPopup();
+        }
+        private void NavigateToLessonEditPage()
+        {
+            NavigationManager.NavigateTo($"/lessonsforclass/{ClassId}");
         }
         protected override async Task OnInitializedAsync()
         {

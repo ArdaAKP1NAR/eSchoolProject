@@ -21,12 +21,12 @@ namespace eSchoolProject.Components.PopupComponent
         [Parameter] public List<LessonViewModel> Lessons { get; set; } = new();
         public List<LessonViewModel> LessonsForSelectedTeacher
             => RequestModel?.Teacher != null
-               ? Lessons.Where(a => a.TeacherId == RequestModel.Teacher.Id && a.ClassList.Any(c => c.Id == RequestModel.ClassId)).ToList()
+               ? Lessons.Where(a => a.Teacher.Id == RequestModel.Teacher.Id && a.ClassList.Any(c => c.Id == RequestModel.ClassId)).ToList()
                : new List<LessonViewModel>();
 
         public List<TeacherViewModel> TeachersForSelectedClass
             => RequestModel?.ClassId > 0
-                ? Teachers.Where(t => Lessons.Any(l => l.TeacherId == t.Id && l.ClassList.Any(c => c.Id == RequestModel.ClassId))).ToList()
+                ? Teachers.Where(t => Lessons.Any(l => l.Teacher.Id == t.Id && l.ClassList.Any(c => c.Id == RequestModel.ClassId))).ToList()
                 : new List<TeacherViewModel>();
 
         private CancellationTokenSource cancellationTokenSource = new();

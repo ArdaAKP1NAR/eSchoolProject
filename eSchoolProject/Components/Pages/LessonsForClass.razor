@@ -1,0 +1,39 @@
+﻿@page "/lessonsforclass/{ClassId:long}"
+@using eSchoolDatabase.ViewModels.GridViewModels
+<MudCard Elevation="2">
+	<div class="m-3">
+		<MudDataGrid @ref=MudDataGrid T="LessonGridView" ServerData="LoadDataAsync" SortMode="SortMode.Multiple" Filterable="true">
+			<ToolBarContent>
+				<MudText Typo="Typo.h6">Lesson List</MudText>
+			</ToolBarContent>
+			<Columns>
+				<PropertyColumn Property="x => x.Name" />
+				<PropertyColumn Property="x => x.CourseCode" />
+				<TemplateColumn Title="Teacher">
+					<CellTemplate>
+						@context.Item.Teacher?.Name
+					</CellTemplate>
+				</TemplateColumn>
+
+				<!-- ✅ Sınıflar (Birden Fazla) -->
+				<TemplateColumn Title="Classes">
+					<CellTemplate>
+						@string.Join(", ", context.Item.ClassList.Select(x => x.FullClassName))
+					</CellTemplate>
+				</TemplateColumn>
+				<TemplateColumn Title="Update">
+					<CellTemplate>
+						<MudButton Variant="Variant.Outlined" Color="Color.Dark" StartIcon="@Icons.Material.Filled.Info"
+								   OnClick="() => OpenLessonPopup(context.Item)">
+							School Info
+						</MudButton>
+					</CellTemplate>
+				</TemplateColumn>
+			</Columns>
+		</MudDataGrid>
+	</div>
+</MudCard>
+
+<LessonManagementPopup @ref=LessonManagementPopup
+					   SchoolId="SchoolId"
+					   SaveClicked="OnSavedAsync" />

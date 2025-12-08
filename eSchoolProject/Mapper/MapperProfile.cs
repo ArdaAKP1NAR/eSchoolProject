@@ -42,12 +42,18 @@ namespace eSchoolProject.Mapper
             CreateMap<Class, ClassGridView>().ReverseMap();
 
             CreateMap<Lesson, LessonViewModel>().ReverseMap();
-            CreateMap<Lesson, LessonRequestModel>().ReverseMap();
+            CreateMap<Lesson, LessonRequestModel>().ReverseMap()
+                .ForMember(dest => dest.ClassList, opt => opt.Ignore())
+                .ForMember(dest => dest.Teacher, opt => opt.Ignore());
+            CreateMap<LessonRequestModel, LessonGridView>().ReverseMap();
+            CreateMap<Lesson, LessonGridView>().ReverseMap();
 
             CreateMap<Grade, GradeViewModel>().ReverseMap();
             CreateMap<Grade, GradeInputModel>().ReverseMap();
 
-            CreateMap<LessonSchedule, LessonScheduleViewModel>().ReverseMap();
+            CreateMap<LessonSchedule, LessonScheduleViewModel>()
+                .ForMember(dest => dest.TeacherId,
+                           opt => opt.MapFrom(src => src.Lesson.TeacherId));
             CreateMap<LessonScheduleRequestModel, LessonSchedule>()
                 .ForMember(dest => dest.Lesson, opt => opt.Ignore())
                 .ForMember(dest => dest.Teacher, opt => opt.Ignore());

@@ -1,6 +1,7 @@
 ﻿using eSchoolDatabase.Models;
 using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
+using eSchoolDatabase.ViewModels.GridViewModels;
 
 namespace eSchoolProject.Services.IServices
 {
@@ -13,5 +14,6 @@ namespace eSchoolProject.Services.IServices
         Task<ClassViewModel> GetClassByIdAsync(long classId, CancellationToken cancellationToken);
         Task RemoveStudentFromClassAsync(List<StudentViewModel> studentViews, long classId, CancellationToken cancellationToken);
         Task ReassignStudentsToClassAsync(List<StudentViewModel> students, long classId, CancellationToken cancellationToken);
+        Task<List<LessonGridView>> GetLessonByClassAsync(long classId, CancellationToken cancellationToken);
     }
 }

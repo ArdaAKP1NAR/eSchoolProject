@@ -1,14 +1,12 @@
-﻿using eSchoolDatabase.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eSchoolDatabase.ViewModels
+namespace eSchoolDatabase.ViewModels.GridViewModels
 {
-    public class LessonViewModel
+    public class LessonGridView
     {
         public long Id { get; set; }
         public string Name { get; set; } = default!;

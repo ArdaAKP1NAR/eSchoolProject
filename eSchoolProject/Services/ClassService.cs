@@ -5,6 +5,7 @@ using eSchoolDatabase.Repositories;
 using eSchoolDatabase.Repositories.Interface;
 using eSchoolDatabase.RequestModels;
 using eSchoolDatabase.ViewModels;
+using eSchoolDatabase.ViewModels.GridViewModels;
 using eSchoolProject.Exceptions;
 using eSchoolProject.Services.IServices;
 using Microsoft.EntityFrameworkCore;
@@ -107,11 +108,12 @@ namespace eSchoolProject.Services
             
             await studentRepository.UpdateRangeAsync(studentsToUpdate, cancellationToken);
         }
-        public async Task<List<LessonViewModel>> GetLessonByClassAsync(long classId, CancellationToken cancellationToken)
+        public async Task<List<LessonGridView>> GetLessonByClassAsync(long classId, CancellationToken cancellationToken)
         {
             return await lessonRepository.GetAll()
+                .Include(a => a.ClassList)
                 .Where(a => a.ClassList.Any(b => b.Id == classId))
-                .ProjectTo<LessonViewModel>(mapper.ConfigurationProvider)
+                .ProjectTo<LessonGridView>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
     }

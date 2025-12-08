@@ -18,7 +18,7 @@
 				<div class="popup-actions">
 					<MudButton Color="Color.Secondary" Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="Close">Cancel</MudButton>
 					<MudButton Color="Color.Success" Variant="Variant.Filled" ButtonType="ButtonType.Submit">
-						@(ManagerRequestModel.Id != 0 ? "Update Manager" : "Add Manager")
+						@(ManagerRequestModel.Id != 0 ? "Update" : "Add")
 					</MudButton>
 				</div>
 			</EditForm>
