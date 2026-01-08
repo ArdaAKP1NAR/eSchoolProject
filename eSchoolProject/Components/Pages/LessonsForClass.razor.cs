@@ -23,10 +23,10 @@ namespace eSchoolProject.Components.Pages
         private long SchoolId;
         protected override async Task OnInitializedAsync()
         {
-            await GetSchoolId();
+            await GetSchoolByAsyncId();
             await base.OnInitializedAsync();
         }
-        private async Task GetSchoolId()
+        private async Task GetSchoolByAsyncId()
         {
             using var scope = ServiceScopeFactory.CreateScope();
             var classService = scope.ServiceProvider.GetRequiredService<IClassService>();
