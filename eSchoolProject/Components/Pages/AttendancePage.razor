@@ -1,0 +1,186 @@
+@page "/attendance/{TeacherId:long}/{SchoolId:long}"
+@using eSchoolDatabase.ViewModels
+@using eSchoolDatabase.RequestModels
+@using eSchoolProject.Services.IServices
+@inject IAttendanceService AttendanceService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <div class="d-flex justify-space-between align-center mb-4">
+        <MudText Typo="Typo.h4">Yoklama Girişi</MudText>
+        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="GoBack">Geri Dön</MudButton>
+    </div>
+
+    <!-- Selection Area -->
+    <MudGrid Class="align-center">
+        <MudItem xs="12" sm="4">
+            <MudSelect T="long" Label="Sınıf Seçin" @bind-Value="SelectedClassId" AnchorOrigin="Origin.BottomCenter">
+                <MudSelectItem Value="@(0L)">Sınıf Seçiniz</MudSelectItem>
+                @foreach (var cls in TeacherClasses)
+                {
+                    <MudSelectItem Value="@cls.Id">@cls.FullClassName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudDatePicker Label="Tarih Seçin" @bind-Date="SelectedDate" DateFormat="dd.MM.yyyy" />
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadSchedules" Disabled="@(SelectedClassId == 0)">Dersleri Getir</MudButton>
+        </MudItem>
+    </MudGrid>
+
+    <MudDivider Class="my-4" />
+
+    <!-- Schedule List -->
+    @if (Schedules != null)
+    {
+        if (Schedules.Any())
+        {
+            <MudText Typo="Typo.h5" Class="mb-3">Ders Programı (@SelectedDate?.ToString("dd.MM.yyyy") - @SelectedDate?.DayOfWeek)</MudText>
+            <MudGrid>
+                @foreach (var schedule in Schedules)
+                {
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudCard Elevation="@(SelectedSchedule?.Id == schedule.Id ? 10 : 2)" 
+                                 Class="@("d-flex flex-column cursor-pointer " + (SelectedSchedule?.Id == schedule.Id ? "border-solid border-2 border-primary" : ""))"
+                                 @onclick="() => SelectSchedule(schedule)" Style="cursor: pointer;">
+                            <MudCardContent>
+                                <MudText Typo="Typo.h6">@schedule.LessonName</MudText>
+                                <MudText Typo="Typo.body2">@schedule.ClassName</MudText>
+                                <MudText Typo="Typo.caption">@schedule.StartTimeStr - @schedule.EndTimeStr</MudText>
+                                <MudText Typo="Typo.caption" Class="d-block">Öğretmen: @schedule.TeacherName</MudText>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+        else
+        {
+             <MudAlert Severity="Severity.Info">Bu tarihte ders kaydı bulunamadı.</MudAlert>
+        }
+    }
+
+    <!-- Student Attendance List -->
+    @if (SelectedSchedule != null && StudentAttendances != null)
+    {
+        <MudDivider Class="my-4" />
+        <MudPaper Elevation="3" Class="p-4">
+            <div class="d-flex justify-space-between align-center mb-4">
+                <MudText Typo="Typo.h5">
+                    Öğrenci Listesi: @SelectedSchedule.ClassName - @SelectedSchedule.LessonName
+                </MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveAttendance">
+                    Kaydet
+                </MudButton>
+            </div>
+            
+            <MudTable Items="@StudentAttendances" Hover="true" Breakpoint="Breakpoint.Sm" Dense="true" Elevation="0">
+                <HeaderContent>
+                    <MudTh>No</MudTh>
+                    <MudTh>Öğrenci Adı</MudTh>
+                    <MudTh>Durum</MudTh>
+                    <MudTh>Kayıt</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="No">@context.StudentNumber</MudTd>
+                    <MudTd DataLabel="Adı">@context.StudentName</MudTd>
+                    <MudTd DataLabel="Durum">
+                        <MudSwitch @bind-Value="@context.IsPresent" Color="Color.Success" UnCheckedColor="Color.Error">
+                            @(context.IsPresent ? "Geldi" : "Gelmedi")
+                        </MudSwitch>
+                    </MudTd>
+                    <MudTd DataLabel="Kayıt">
+                        @if (context.IsRecorded)
+                        {
+                            <MudChip T="string" Color="Color.Info" Size="Size.Small">Kayıtlı</MudChip>
+                        }
+                        else
+                        {
+                            <MudChip T="string" Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">Yeni</MudChip>
+                        }
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    [Parameter]
+    public long TeacherId { get; set; }
+
+    [Parameter]
+    public long SchoolId { get; set; }
+	private CancellationTokenSource CancellationTokenSource = new();
+    private DateTime? SelectedDate = DateTime.Today;
+    private long SelectedClassId;
+    private List<ClassViewModel> TeacherClasses = new();
+    private List<LessonScheduleViewModel>? Schedules;
+    private LessonScheduleViewModel? SelectedSchedule;
+    private List<AttendanceViewModel>? StudentAttendances;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (TeacherId > 0)
+        {
+            TeacherClasses = await AttendanceService.GetTeacherClassesAsync(TeacherId);
+        }
+    }
+
+    private async Task LoadSchedules()
+    {
+        if (SelectedDate.HasValue && TeacherId > 0 && SelectedClassId > 0)
+        {
+            Schedules = await AttendanceService.GetLessonSchedulesAsync(TeacherId, SelectedClassId, SelectedDate.Value);
+            SelectedSchedule = null;
+            StudentAttendances = null;
+        }
+        else if (SelectedClassId == 0)
+        {
+            Snackbar.Add("Lütfen önce bir sınıf seçiniz.", Severity.Warning);
+        }
+    }
+
+    private async Task SelectSchedule(LessonScheduleViewModel schedule)
+    {
+        SelectedSchedule = schedule;
+        if (SelectedDate.HasValue)
+        {
+            StudentAttendances = await AttendanceService.GetStudentAttendanceListAsync(schedule.Id, SelectedDate.Value);
+        }
+    }
+
+    private async Task SaveAttendance()
+    {
+        if (StudentAttendances == null || !StudentAttendances.Any()) return;
+
+        var requestModels = StudentAttendances.Select(s => new AttendanceRequestModel
+        {
+            StudentId = s.StudentId,
+            LessonId = s.LessonId,
+            AttendanceDate = s.AttendanceDate,
+            IsPresent = s.IsPresent
+        }).ToList();
+
+        var result = await AttendanceService.SaveAttendanceAsync(requestModels, CancellationTokenSource.Token);
+
+        if (result)
+        {
+            Snackbar.Add("Yoklama başarıyla kaydedildi.", Severity.Success);
+            await SelectSchedule(SelectedSchedule!); 
+        }
+        else
+        {
+            Snackbar.Add("Kayıt sırasında bir hata oluştu.", Severity.Error);
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/SchoolManagement/{SchoolId}");
+    }
+}

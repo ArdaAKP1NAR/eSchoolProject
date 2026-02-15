@@ -14,7 +14,8 @@ builder.Services.AddRazorComponents()
     ;
 builder.Services.AddRazorPages();
 builder.Services.AddServices();
-builder.Services.AddDbContext<eSchoolContext>(options => options.UseSqlServer("Server=DESKTOP-4153DFB;Database=eSchoolDatabase;Trusted_Connection=True;TrustServerCertificate=True;"));
+builder.Services.AddDbContext<eSchoolContext>(options =>
+    options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=eSchoolDatabase;Trusted_Connection=True;TrustServerCertificate=True;")); 
 builder.Services.AddMudServices();
 builder.Services.ConfigureAuthorizationServices();
 var app = builder.Build();

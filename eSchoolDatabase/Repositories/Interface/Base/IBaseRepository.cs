@@ -5,6 +5,7 @@ namespace eSchoolDatabase.Repositories.Interface.Base
     public interface IBaseRepository<T> where T : BaseEntity
     {
         Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);
+        Task AddRangeAsync(ICollection<T> entities, CancellationToken cancellationToken = default);
         Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
         Task DeleteAsyncById(long Id, CancellationToken cancellationToken = default);
         IQueryable<T> GetAll();

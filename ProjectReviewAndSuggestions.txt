@@ -1,0 +1,68 @@
+# Project Review & Suggestions
+
+## 1. Critical Issues & Configuration
+
+### Hardcoded Connection String
+**Location:** `eSchoolProject/Program.cs`
+**Issue:** The connection string is hardcoded in `Program.cs` (`options.UseSqlServer("Server=DESKTOP-4153DFB;...")`).
+**Recommendation:** Move the connection string to `appsettings.json` and access it via `builder.Configuration.GetConnectionString("DefaultConnection")`.
+
+```json
+// appsettings.json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=DESKTOP-4153DFB;Database=eSchoolDatabase;Trusted_Connection=True;TrustServerCertificate=True;"
+}
+```
+
+## 2. Performance & Database
+
+### N+1 Saves in Repositories
+**Location:** `BaseRepository.cs` and Services (e.g., `AttendanceService`)
+**Issue:**  `BaseRepository.AddAsync` and `UpdateAsync` call `SaveChangesAsync` immediately. In `AttendanceService.SaveAttendanceAsync`, these are called inside a loop. If a class has 30 students, this triggers 30 separate database commits.
+**Recommendation:** 
+1.  **Batch Operations:** Use `UpdateRangeAsync` and implement `AddRangeAsync` in `BaseRepository`.
+2.  **Unit of Work / Deferred Save:** Modify `AddAsync` and `UpdateAsync` to accept a boolean `autoSave` (default true), or create `Add` (void) methods that don't save, allowing the Service to call `SaveChangesAsync` once at the end.
+    *   *Example:* In `AttendanceService`, prepare a list of entities to add/update, then call `_attendanceRepository.UpdateRangeAsync(...)` or `_attendanceRepository.AddRangeAsync(...)`.
+
+### Generic distinct usage
+**Location:** `AttendanceService.GetTeacherClassesAsync`
+**Issue:**  `.Select(ls => ls.Class).Distinct()` might cause inefficient queries or client-side evaluation depending on EF Core version and `Class` equality comparison.
+**Recommendation:** Group by `Class.Id` and select the first, or select `ClassId` distincts first, then fetch Classes.
+
+## 3. Architecture & Code Quality
+
+### Exception Handling
+**Observation:** Custom exceptions exist (`InvalidNameException`, etc.), but generic handling in `Program.cs` is basic.
+**Recommendation:** Implement a Global Exception Handling Middleware or a Blazor Error Boundary that catches these domain exceptions and shows user-friendly `ISnackbar` notifications automatically.
+
+### Validation
+**Observation:** Logic seems to throw exceptions for invalid data.
+**Recommendation:** Integarte **FluentValidation**. Creating validators (e.g., `AttendanceRequestModelValidator`) keeps logic clean and allows checking rules before hitting the database or throwing exceptions.
+
+### AutoMapper Usage
+**Location:** `MapperProfile.cs`
+**Issue:** Some mappings mix logic (e.g., `IsRecorded = true`).
+**Recommendation:** Keep Mappers dumb. Business logic (defaults, state flags) is better placed in the Service layer or Entity constructors. You already started fixing this by moving logic to `AttendanceService`, which is good.
+
+## 4. UI/UX (Blazor)
+
+### Magic Strings & Localization
+**Issue:** UI text (labels, buttons) is hardcoded strings.
+**Recommendation:** If multi-language support is ever needed, move these to Resource files (`.resx`) or a Constants class.
+
+### Component Reusability
+**Observation:** `SchoolManagement.Attendance.cs` partial class approach is a bit unusual for just navigation.
+**Recommendation:** Usually navigation logic is simple enough for the main code-behind or inline. Ensure partial classes are grouped mainly by logical complexity (e.g., Data Loading vs Event Handling).
+
+## 5. Security
+
+### Authorization
+**Observation:** Custom Authorization implementation.
+**Recommendation:** Ensure `[Authorize]` attributes are applied to Pages effectively. Verify that `IAuthorizationService` checks not just roles but data ownership (e.g., Teacher X can only see Teacher X's data), which you have implemented in Service filters, which is good.
+
+---
+
+**Summary of Immediate Actions:**
+1. Fix Connection String.
+2. Optimize `AttendanceService` loop (remove N+1 saves).
+3. Introduce FluentValidation.

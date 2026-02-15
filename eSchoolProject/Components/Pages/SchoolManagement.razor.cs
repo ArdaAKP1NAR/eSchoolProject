@@ -147,6 +147,10 @@ namespace eSchoolProject.Components.Pages
         {
             NavigationManager.NavigateTo($"/lessonschedulemanagement/{schoolId}");
         }
+        private void NavigateToAttendance(long teacherId)
+        {
+            NavigationManager.NavigateTo($"/attendance/{teacherId}/{SchoolId}");
+        }
         protected override async Task OnInitializedAsync()
         {
             await GetSchoolByIdAsync();

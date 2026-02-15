@@ -88,6 +88,15 @@
 										</MudButton>
 									</CellTemplate>
 								</TemplateColumn>
+								<TemplateColumn Title="School Overview">
+									<CellTemplate>
+										<MudButton Variant="Variant.Outlined" Color="Color.Dark" StartIcon="@Icons.Material.Filled.ChevronRight"
+												   OnClick="() => NavigateToAttendance(context.Item.Id)">
+											Attendance
+										</MudButton>
+									</CellTemplate>
+								</TemplateColumn>
+							
 								<TemplateColumn Title="Update Teacher">
 									<CellTemplate>
 										<MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Edit" OnClick=" () => OpenTeacherPopupFromViewModel(context.Item)">

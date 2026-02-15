@@ -52,12 +52,34 @@ namespace eSchoolProject.Mapper
             CreateMap<Grade, GradeInputModel>().ReverseMap();
 
             CreateMap<LessonSchedule, LessonScheduleViewModel>()
-                .ForMember(dest => dest.TeacherId,
-                           opt => opt.MapFrom(src => src.Lesson.TeacherId));
+               .ForMember(dest => dest.TeacherId, opt => opt.MapFrom(src => src.TeacherId)) // Ensures direct mapping
+               .ForMember(dest => dest.StartTimeStr, opt => opt.MapFrom(src => src.StartTime.ToString(@"hh\:mm")))
+               .ForMember(dest => dest.EndTimeStr, opt => opt.MapFrom(src => src.EndTime.ToString(@"hh\:mm")))
+               .ForMember(dest => dest.ClassName, opt => opt.MapFrom(src => src.Class != null ? src.Class.ClassLevel + src.Class.Section : string.Empty))
+               .ForMember(dest => dest.LessonName, opt => opt.MapFrom(src => src.Lesson != null ? src.Lesson.Name : string.Empty))
+               .ForMember(dest => dest.TeacherName, opt => opt.MapFrom(src => src.Teacher != null ? src.Teacher.Name : string.Empty));
+
             CreateMap<LessonScheduleRequestModel, LessonSchedule>()
                 .ForMember(dest => dest.Lesson, opt => opt.Ignore())
                 .ForMember(dest => dest.Teacher, opt => opt.Ignore());
+
             CreateMap<LessonScheduleViewModel, LessonScheduleRequestModel>().ReverseMap();
+
+            // Attendance Mappings
+            CreateMap<Attendance, AttendanceViewModel>()
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student != null ? src.Student.Name : string.Empty))
+                .ForMember(dest => dest.StudentNumber, opt => opt.MapFrom(src => src.Student != null ? src.Student.StudentNumber.ToString() : string.Empty));
+
+            CreateMap<Student, AttendanceViewModel>()
+                .ForMember(dest => dest.StudentId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.StudentNumber, opt => opt.MapFrom(src => src.StudentNumber.ToString()));
+
+            CreateMap<AttendanceRequestModel, Attendance>()
+                 .ForMember(dest => dest.Student, opt => opt.Ignore())
+                 .ForMember(dest => dest.Lesson, opt => opt.Ignore());
+
+            CreateMap<AttendanceViewModel, AttendanceRequestModel>().ReverseMap();
         }
     }
 }
