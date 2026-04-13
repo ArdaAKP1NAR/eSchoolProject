@@ -7,7 +7,7 @@ using MudBlazor;
 
 namespace eSchoolProject.Components.Pages
 {
-    public partial class SchoolOverview : IDisposable
+    public partial class SchoolOverView : IDisposable
     {
         [Inject] private IServiceScopeFactory ServiceScopeFactory { get; init; } = default!;
         [Inject] private NavigationManager NavigationManager { get; init; } = default!;
