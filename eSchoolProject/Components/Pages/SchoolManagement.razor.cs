@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using eSchoolDatabase.Models;
 using eSchoolDatabase.RequestModel;
 using eSchoolDatabase.RequestModels;
@@ -138,7 +138,7 @@ namespace eSchoolProject.Components.Pages
 
             if (!teacher.Lessons.Any())
             {
-                Snackbar.Add("Bu ��retmenin atanm�� s�n�f� veya dersi bulunmamaktad�r.", Severity.Warning);
+                Snackbar.Add("Bu öðretmenin atanmýþ sýnýfý veya dersi bulunmamaktadýr.", Severity.Warning);
                 return;
             }
             NavigationManager.NavigateTo($"/gradepanel/{teacherId}");
@@ -165,6 +165,12 @@ namespace eSchoolProject.Components.Pages
         }
         private async Task OnSavedAsync()
         {
+            // Grid referanslarını güvenli şekilde çağırın
+            if (MudDataGridManagers != null) await MudDataGridManagers.ReloadServerData();
+            if (MudDataGridTeachers != null) await MudDataGridTeachers.ReloadServerData();
+            if (MudDataGridStudents != null) await MudDataGridStudents.ReloadServerData();
+            if (MudDataGridClasses != null) await MudDataGridClasses.ReloadServerData();
+
             IsClassPopupVisible = false;
             await GetSchoolByIdAsync();
         }

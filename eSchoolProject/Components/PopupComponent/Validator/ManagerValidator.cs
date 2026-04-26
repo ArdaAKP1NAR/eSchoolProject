@@ -1,4 +1,4 @@
-﻿using eSchoolDatabase.Models;
+using eSchoolDatabase.Models;
 using eSchoolDatabase.RequestModel;
 using FluentValidation;
 

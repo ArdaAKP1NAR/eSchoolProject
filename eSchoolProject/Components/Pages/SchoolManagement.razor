@@ -1,4 +1,4 @@
-﻿@page "/SchoolManagement/{SchoolId:long}"
+@page "/SchoolManagement/{SchoolId:long}"
 @using eSchoolDatabase.ViewModels.GridViewModels
 @if (schoolViewModel != null)
 {
@@ -126,7 +126,7 @@
 								<PropertyColumn Property="x => x.StudentNumber" Title="Student number" />
 								<PropertyColumn Property="x => x.IdentityNumber" Title="Identity number" />
 								<PropertyColumn Property="x => x.ParentNumber" Title="Parent number" />
-								<PropertyColumn Property="x => x.BirthdayDate" Title="Birthday date" />
+								<PropertyColumn Property="x => x.BirthdayDate" Title="Birthday date" Format="dd/MM/yyyy" />
 								<PropertyColumn Property="x => x.Address.District" Title="District" />
 								<PropertyColumn Property="x => x.Address.Street" Title="Street" />
 								<TemplateColumn Title="Update Student">

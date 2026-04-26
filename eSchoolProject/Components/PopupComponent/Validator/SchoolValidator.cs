@@ -1,4 +1,4 @@
-﻿using eSchoolDatabase.RequestModel;
+using eSchoolDatabase.RequestModel;
 using FluentValidation;
 
 namespace eSchoolProject.Components.PopupComponent.Validator

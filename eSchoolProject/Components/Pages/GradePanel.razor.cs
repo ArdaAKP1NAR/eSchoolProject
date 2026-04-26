@@ -1,4 +1,4 @@
-using eSchoolDatabase;
+ï»¿using eSchoolDatabase;
 using eSchoolDatabase.ViewModels;
 using eSchoolProject.Services;
 using eSchoolProject.Services.IServices;
@@ -62,7 +62,7 @@ namespace eSchoolProject.Components.Pages
             }
             catch (Exception ex)
             {
-                Snackbar.Add($"Hata oluþtu: {ex.Message}", Severity.Error);
+                Snackbar.Add($"Hata oluÅŸtu: {ex.Message}", Severity.Error);
             }
             StateHasChanged();
         }
@@ -72,7 +72,7 @@ namespace eSchoolProject.Components.Pages
         {
             if (SelectedLesson is null)
             {
-                Snackbar.Add("Lütfen önce bir ders seçin.", Severity.Warning);
+                Snackbar.Add("LÃ¼tfen Ã¶nce bir ders seÃ§in.", Severity.Warning);
                 return;
             }
 
@@ -105,7 +105,7 @@ namespace eSchoolProject.Components.Pages
 
             if (!gradesToSave.Any())
             {
-                Snackbar.Add("Girilecek not bulunamadý.", Severity.Warning);
+                Snackbar.Add("Girilecek not bulunamadÄ±.", Severity.Warning);
                 return;
             }
 
@@ -116,11 +116,11 @@ namespace eSchoolProject.Components.Pages
 
                 await gradeService.SaveGradesAsync(gradesToSave, CancellationTokenSource.Token);
 
-                Snackbar.Add("Notlar baþarýyla kaydedildi.", Severity.Success);
+                Snackbar.Add("Notlar baÅŸarÄ±yla kaydedildi.", Severity.Success);
             }
             catch (Exception ex)
             {
-                Snackbar.Add($"Hata oluþtu: {ex.Message}", Severity.Error);
+                Snackbar.Add($"Hata oluÅŸtu: {ex.Message}", Severity.Error);
             }
         }
         public void Dispose()

@@ -1,4 +1,4 @@
-﻿@page "/lessonsforclass/{ClassId:long}"
+@page "/lessonsforclass/{ClassId:long}"
 @using eSchoolDatabase.ViewModels.GridViewModels
 <MudCard Elevation="2">
 	<div class="m-3">
@@ -25,7 +25,7 @@
 					<CellTemplate>
 						<MudButton Variant="Variant.Outlined" Color="Color.Dark" StartIcon="@Icons.Material.Filled.Info"
 								   OnClick="() => OpenLessonPopup(context.Item)">
-							School Info
+							Lesson Detail
 						</MudButton>
 					</CellTemplate>
 				</TemplateColumn>

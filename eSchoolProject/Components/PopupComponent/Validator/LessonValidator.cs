@@ -1,4 +1,4 @@
-﻿using eSchoolDatabase.Repositories.Interface;
+using eSchoolDatabase.Repositories.Interface;
 using eSchoolDatabase.RequestModels;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
